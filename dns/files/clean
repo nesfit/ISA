@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+rm /etc/network/*i* &> /dev/null
+rm /etc/dhcp/* &> /dev/null
+rm /etc/radvd.conf &> /dev/null
+rm /etc/*reso* &> /dev/null
+rm /etc/bind/* &> /dev/null
+rm /var/cache/bind/* &> /dev/null
+rm /home/user/.ssh/* &> /dev/null
+
+ip addr flush dev eth0
+ip addr flush dev eth1
+
+tar -C / --overwrite -xf /root/isa3/default.tar
+
+#service networking restart &> /dev/null
+#service isc-dhcp-server restart &> /dev/null
+#service bind9 restart &> /dev/null
+
+systemctl restart networking.service
+systemctl stop bind9.service
+
+dhclient eth0 &> /dev/null
+
+shutdown -h now
