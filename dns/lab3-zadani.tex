@@ -1,0 +1,288 @@
+%
+%
+
+\documentclass{article}[10]
+\usepackage{a4wide}
+%\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage[czech]{babel}
+\usepackage[utf8]{inputenc}
+
+%\include{macro_lecture}
+\title{NTP, SSH, DNS, DNSSEC\\
+{\bf\large ISA - Postup laboratorního cvičení č.3}}
+
+\author{Libor Pol\v{c}\'{a}k\footnote{Vysoké učení technické v Brně,
+    {\tt\{ipolcak\}@fit.vutbr.cz}}}
+    \date{2016, verze 1.2}
+\begin{document}
+
+\maketitle
+
+\section*{Cíle laboratoře}
+\begin{itemize}
+  \item Základní seznámení se synchronizací času a protokolem NTP.
+  \item Zabezpečený terminál SSH a připojení pomocí klíčů.
+  \item Systém DNS.
+  \item Zabezpečení DNSSEC.
+\end{itemize}
+
+\section*{Základní instrukce}
+\begin{itemize}
+  \item Přihlaste se do OS Kali Linux (F3), user/password {\tt user}/{\tt user4lab}.
+  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
+  \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su}
+  (switch user).
+  \item V případě potřeby si otevřete další terminál v novém okně.
+  \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
+  nano, mcedit, vim, gedit).
+  \item Pracujte ve dvojicích, zkontrolujte, že máte počítač propojen
+    přímým kabelem s přístupovým přepínačem (rozhraní eth0, zdířka E na patch
+    panelu).
+  \item Příkazem {\tt systemctl stop NetworkManager.service} vypněte
+    NetworkManager spravující rozhraní eth1 (doporučené, volitelně; zadání dále
+    předpokládá, že je NetworkManager vypnutý).
+
+\end{itemize}
+
+
+\section{NTP}
+
+Vašim úkolem je zajistit synchronizaci hodin počítače. V rámci bezpečnosti je
+důležité provozovat počítač se správným časem kvůli časovým razítkům
+označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
+
+\begin{enumerate}
+
+  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. Ujistěte
+    se, že je nastavena synchronizace proti serveru {\tt ntp.fit.vutbr.cz}.
+
+  \item Zapněte démona pro NTP ({\tt systemctl start ntp.service}).
+    Sledujte postup synchronizace příkazem {\tt
+    watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
+    spuštěné a pokračujte dalšími úkoly.
+
+\end{enumerate}
+
+\section{Vzdálený terminál -- SSH}
+
+Vytvořte autentizační klíče pro komunikaci protokolem SSH (chráněný heslem i
+nechráněný). Pracujte pod uživatelem {\tt user}. Zkontrolujte, že pracujete pod
+uživatelem {\tt user} příkazem {\tt whoami}, který vypisuje jméno aktivního
+uživatele.
+
+Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
+
+\begin{enumerate}
+
+  \item Ukončete démona spravujícího hesla k použitým klíčům SSH: \\ {\tt killall
+    gnome-keyring-daemon}.
+
+  \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
+
+    \begin{enumerate}
+
+      \item Přihlaste se příkazem {\tt ssh {\em host}} na vzdálený počítač (např.
+        sousední stanici jménem hXX, kde XX je číslo počítače, uživatel {\tt user}).
+
+      \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl+D} spojení ukončete.
+
+    \end{enumerate}
+
+  \item {\bf Vytvoření veřejného a privátního klíče.}
+
+    \begin{enumerate}
+
+      \item Příkazem {\tt ssh-keygen} vygenerujte implicitní klíč. Neměňte jeho
+        název a zvolte heslo o délce alespoň pěti znaků.
+
+      \item Příkazem \verb|ssh-keygen -N "" -f ~/.ssh/nopass -C <login>@nopass| vygenerujte autentizační klíč bez hesla.
+
+      \item Příkazem {\tt ssh-keygen -N <heslo> -f \textasciitilde/.ssh/pass -C
+        <login>@pass} vygeneruje klíč s heslem jiným než pro výchozí klíč.
+
+      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (ls -l \textasciitilde/.ssh). Jak
+se liší práva mezi souborem s privátním a veřejným klíčem?
+
+    \end{enumerate}
+
+  \item {\bf Distribuce klíčů}
+
+    \begin{enumerate}
+
+      \item Všechny tři veřejné klíče si zkopírujte na vzdálený počítač
+        (např. {\tt  cat \textasciitilde/.ssh/*.pub | ssh hXX 'cat >>
+        .ssh/authorized\_keys'}.
+
+      \item Přihlaste se na vzdálený počítač příkazem {\tt ssh hXX}. Jaké heslo bylo nutné zadat?
+
+      \item Na vzdáleném počítači připojte obsah souboru, který jste zde nakopírovali na konec souboru
+        {\tt \textasciitilde/.ssh/authorized\_keys} \\ (např. {\tt cat /tmp/<login> >>
+        \textasciitilde/.ssh/authorized\_keys}).
+
+      \item Odhlaste se a zkuste se znovu přihlásit. Jaké heslo bylo nyní nutné zadat? Zkuste
+zadat špatné heslo a které další klíče se použily? Při experimentech můžete také
+využít tzv. verbose režim ssh ({\tt ssh -v}). Pro experimenty s identitou
+využijte přepínač {\tt -i}.
+
+    \end{enumerate}
+
+  \item {\bf Konfigurace použití klíčů}
+
+    \begin{enumerate}
+
+      \item Stejným způsobem nakopírujte své veřejné klíče ještě na další počítač v laboratoři.
+
+      \item Vytvořte soubor \textasciitilde/.ssh/config pomocí svého oblíbeného editoru a
+vyplňte podle vzoru (hostname definujte jen pro jeden ze dvou strojů, na který jste
+kopírovali veřejné klíče):
+\begin{verbatim}
+Host hXX hXX.netlab.fit.vutbr.cz
+ IdentityFile ~/.ssh/pass
+
+Host *
+ IdentityFile ~/.ssh/id_rsa
+ IdentityFile ~/.ssh/nopass
+\end{verbatim}
+      \item Přihlaste se postupně na oba počítače. Které klíče se použily? Co se stane, když
+pro klíč zadáte špatné heslo?
+%{\em Používejte FQDN, např. h01.netlab.fit.vutbr.cz.}
+
+    \end{enumerate}
+
+\newpage
+  \item {\bf Omezení použití klíčů}
+
+    Nyní bude naším cílem omezení použití klíče, který není chráněn heslem tak,
+    aby pomocí něj bylo možné na vzdáleném serveru vykonat jen konkrétní příkaz.
+
+    \begin{enumerate}
+
+      \item Přihlaste na počítač, kam jste nakopírovali své veřejné klíče a
+        upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
+        řádku s klíčem nopass (řádek poznáte tak, že končí řetězcem
+        {\tt <login>@nopass}) napíšete
+        \verb|command="ntpq -p" | (od původního
+        obsahu oddělený jednou mezerou).
+
+      \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste
+        příkazem {\tt ssh hXX -i \textasciitilde/.ssh/nopass}. Aplikovalo se
+        omezené využití klíče?
+
+    \end{enumerate}
+
+
+  \item {\bf Pohodlné opakované použití klíče zabezpečeného heslem.}
+
+    \begin{enumerate}
+
+      \item Spusťte program {\tt gnome-keyring-daemon}.
+
+      \item Připojte se ke vzdálenému počítači za použití klíče chráněného
+        heslem.
+
+      \item Odhlaste se a znovu přihlaste. Museli jste zadávat znovu heslo?
+
+    \end{enumerate}
+
+\end{enumerate}
+
+\section{Konfigurace DNS serveru}
+\begin{enumerate}
+
+  \item Pracujte ve dvojicích. Jeden z dvojice buden konfigurovat server (PC A)
+    a druhý počítač bude mít roli klienta (PC B). Propojte rozhraní eth1 (zdířka
+    D na patch panelu)
+    mezi počítači ve dvojici křížovým kabelem.
+  \item Nastavte statické IP adresy na rozhraní eth1 vašich počítačů v souboru
+    \\
+    {\tt /etc/network/interfaces}:
+\begin{verbatim}    
+auto eth1
+iface eth1 inet static
+    address 192.168.X.X
+    netmask 255.255.255.0
+\end{verbatim}    
+    Restartujte síťování {\tt systemctl restart networking.service}.
+    Otestujte konektivitu příkazem {\tt ping}. Pokud konektivita nefunguje,
+    ověřte nastavení IP adres {\tt ip a s} a zamyslete se, co je špatně.
+
+  \item Upravte konfigurační soubor {\tt /etc/bind/named.conf.options} (parametr
+    {\tt listen-on} sekce {\tt options}) tak, aby
+    PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní eth1.
+    Inspirovat se můžete již uvedeným paramterem {\tt listen-on-v6}, případně v
+    manuálových stránkách.
+  \item Na PC A rozšiřte konfiguraci DNS serveru tak, aby obsluhoval požadavky pro vámi
+    zvolenou doménu, např. {\tt isa.cz}. Doména bude obsahovat:
+    \begin{itemize}
+      \item Nameserver pojmenovaný {\tt server}.
+      \item Záznam typu A pro {\tt server}.
+      \item Záznam typu A pro jméno {\tt pcb} pro PC B.
+      \item Záznam typu CNAME pro jméno {\tt pca} ukazující na {\tt server}.
+    \end{itemize}
+    Inzerujte platnost vámi zasílaných záznamů 1 hodina.
+    Jako základ zónového souboru pro vaší
+    doménu můžete použít soubor {\tt /etc/bind/db.local}, či {\tt
+    /root/isa3/fit.vutbr.cz}.
+    Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/cache/bind}, zóny zaregistrujte v
+    souboru {\tt named.conf.local} (potřebné informace jsou k dispozici v
+    laboratorním manuálu).
+  \item V případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
+    (záznamy AAAA).
+  \item Nakonfigurujte reverzní překlad. Jako základ
+    zónového souboru s reverzní zónou můžete použít např. {\tt /etc/bind/db.127}.
+    Zkopírujte soubor do {\tt /var/cache/bind}, upravte jej a přidejte do
+    souboru {\tt named.conf.local}.
+  \item Spusťte DNS server příkazem {\tt systemctl start bind9.service}.
+    Ujistěte se, že v souboru {\tt /var/log/syslog} nejsou žádné chyby.
+  \item V souboru {\tt /etc/dhcp/dhclient.conf} nastavte na obou počítačích použití vlastního
+    serveru DNS běžícího na PC A, na konec souboru přidejte řádek
+    {\tt prepend domain-name-servers
+    192.168.X.X;}. Na obou počítačích restartujte síťování: {\tt systemctl restart networking.service}.
+    Ověřte nastavení IP adres a obsah souboru {\tt /etc/resolv.conf}.
+  \item Ověřte, že PC A používá pro překlad lokální DNS server ({\tt dig
+    localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
+    poslední části odpovědi.
+  \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
+  \item Ověřte zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
+  \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
+    {\tt wireshark}. Analyzujte si jednotlivé položky a porovnejte je s výpisem
+    programu {\tt dig}.
+
+\end{enumerate}
+
+\section{Zabezpečení DNS -- DNSSEC}
+
+\begin{enumerate}
+  \item Na PC B spusťte prohlížeč IceWeasel. Zobrazte si webové prezentace v
+    doménách {\tt www.fit.vutbr.cz} a {www.seznam.cz}. Všimněte si klíče v pravé
+    části adresního řádku.
+
+  \item Na PC A vytvořte zónové soubory pro domény {\tt fit.vutbr.cz} a {\tt
+    seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
+    PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
+    soubory přidejte do souboru {\tt /etc/bind/named.conf.local} a restartujte
+    Bind.
+
+  \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
+    Spusťte zde jednoduchý webový server příkazem {\tt python -m
+    SimpleHTTPServer 80}.
+
+  \item Na PC B ověřte, že se doménová jména {\tt www.seznam.cz} a {\tt
+    www.fit.vutbr.cz} překládají na IP adresu PC A.
+
+  \item Na PC B si zobrazte webové prezentace v doménách {\tt www.fit.vutbr.cz}
+    a {www.seznam.cz}. Všimněte si klíče v pravé části adresního řádku.
+
+  \item Volitelně zabezpečte DNS server pomocí DNSSEC. Postup hledejte v
+    laboratorním manuálu.
+
+\end{enumerate}
+
+\section{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item Počítač vypněte dávkou {\tt /root/isa3/clean}.
+\end{itemize}
+
+\end{document}
+%% END OF FILE 
