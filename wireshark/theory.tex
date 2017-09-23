@@ -85,8 +85,8 @@ Tento tool mimo jiné slouží také ke konfiguraci, ne jen k zobrazení konfigu
 
 Pro zobrazení obsahu routovací a arp tabulky, můžeme použít příkazy:
 \begin{itemize}
-\item \texttt{netstat -rn} - vypíše obsah routovací tabulky
-\item \texttt{arp -a} - zobrazí obsahu arp tabulky
+\item \texttt{netstat} - umí vypsat mimo jiné obsah routovací tabulky
+\item \texttt{arp} - zobrazí obsahu arp tabulky
 \end{itemize}
 
 
@@ -111,8 +111,7 @@ Některé významné logovací soubory:
 \begin{itemize}
 				\item \texttt{/var/log/messages} - obsahuje obecné zprávy systému (bez kritických a debugovacích)
 				\item \texttt{/var/log/auth.log} - zde jsou uloženy zprávy týkající se autentizace uživatelů
-				\item \texttt{/var/log/boot.log} - ukládá zprávy ohledně bootování systému, vždy poslední nabootování
-				\item \texttt{/var/log/mail.log} - zprávy týkající se emailové komunikace
+				\item \texttt{/var/log/kern.log} - ukládá zprávy týkající se jádra OS
 \end{itemize}
 
 Tyto logovací soubory můžeme prohlížet přímo pomocí standardních zobrazovacích příkazů.

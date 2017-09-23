@@ -1,29 +1,33 @@
 \section{Cíle cvičení}
 \begin{itemize}
-	\item Seznámení se se základní prací v OS Linux
-	\item Seznánemní se se základními tooly pro zjišťování konfigurace zařízení
-	\item Analýza síťového provozu pomocí Wireshark
+	\item Seznámení se se základní prací v OS Linux.
+	\item Seznámení se se základními nástroji pro zjišťování konfigurace zařízení.
+	\item Analýza síťového provozu pomocí Wireshark.
 \end{itemize}
 
 \section{Zadání}
-Přihlaste se jako uživatel user. Veškeré potřebné příkazy následně spouštějte jako \texttt{sudo}.
+Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
+
 \subsection{Zjišťování konfigurace}
-V této části se budeme zabývat převážně síťovou konfigurací systému.
+V této části se budeme zabývat převážně zjišťováním síťové konfigurace systému.
+
 \begin{enumerate}
 \item Vypište konfiguraci vašeho stroje (IP adresu, masku, síť, broadcastovou adresu, default gateway).
-\item Otestujte konektivitu k default gateway, následně konektivitu do internetu.
-\item Zobrazte si záznamy v routovací a arp tabulce.
+\item Otestujte konektivitu k default gateway a následně konektivitu do internetu.
+\item Zobrazte si záznamy v routovací a ARP tabulce.
 \item Vypište implicitní servery DNS.
-\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping google}, byl ping proveden vůči ip adrese 8.8.8.8. Zapište jak a který soubor jste upravili.
-\item Vypište aktivní tcp spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek.
+\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping google}, byl ping proveden vůči IP adrese 8.8.8.8. Zapište jak a který soubor jste upravili.
+\item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek.
 \item Zobrazte události zaznamenané v logu za dnešní den.
+\item Pokuste se spustit Wireshark jako \texttt{sudo}. Následně nalezněte v logu zprávu, která byla zaznamenána v případě neúspěšného přihlášení.
 \end{enumerate}
 
 \subsection{Wireshark}
-V této části cvičení se budeme zabývat analýzou a zachytáváním provozu v programu Wireshark. Spuštění wireshark provedete příkazem \texttt{wireshark-gtk} jako \texttt{sudo}.
+V této části cvičení se budeme zabývat analýzou a zachytáváním provozu v programu Wireshark. Spuštění Wireshark provedete příkazem \texttt{wireshark} jako \texttt{root}.
+
 \begin{enumerate}
-\item Pomocí programu wireshark začněte zachytávat pouze HTTP komunikaci. (Jakmile začnete zachytávat, spusťe si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do svého domovského adresáře.
-\item Zahajte zachytávání komunikace. Odstraňte ARP záznamy (příkaz \texttt{arp}). Zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů, zapište obsah sender, target mac a ip adresy pro dvojici ARP request a response. Zapište co jste zadali do filtru.
-\item Ve wireshark si otevřte soubor s příponou \texttt{.pcap} z adresáře \texttt{isa1}. Zobrazte si graf síťových toků a zakreslete jej.
-\item Zachyťte pouze HTTP a DNS provoz. Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů. Zkuste opakovaně načítat stejnou stránku. Proč v některých případech není zachycena DNS komuniace?
+\item Pomocí programu Wireshark začněte zachytávat pouze HTTP komunikaci. Jakmile začnete zachytávat, spusťte si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do svého domovského adresáře.
+\item Zahajte zachytávání komunikace. Odstraňte ARP záznamy (příkaz \texttt{arp}). Zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů, zapište obsah sender, target MAC a IP adresy pro dvojici ARP request a response. Zapište, co jste zadali do filtru.
+\item Ve Wireshark si otevřete soubor s příponou \texttt{.pcap} z adresáře \texttt{isa1}. Zobrazte si graf síťových toků a zakreslete jej.
+\item Zachyťte pouze HTTP a DNS provoz. Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů. Zkuste opakovaně načítat stejnou stránku. Proč v některých případech není zachycena DNS komunikace?
 \end{enumerate}
