@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cp /root/isa1/.hosts /etc/hosts &> /dev/null
+
+rm -rf /root/*.pcap &> /dev/null
+rm -rf /home/user/*.pcap &> /dev/null
+
+
+shutdown -h now

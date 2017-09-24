@@ -1,11 +1,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Zjišťování konfigurace zařízení}
-Detailní popis včetně možných voleb a příkladu použití k jednotlivým níže zmíněným příkazům můžete nalézt v manuálových stránkách (\texttt{man <příkaz>}).
-\subsection{Základní orientace v Linuxu}
-Většina práce v OS Linux bude probíhat v terminálu. Terminál na školních PC spustíte pomocí Alt+F2, zde zadáte "\texttt{gnome-terminal}". Případně můžete vybrat aplikaci terminálu z postraní nabídky.
+Detailní popis včetně možných voleb a příkladu použití k~jednotlivým níže zmíněným příkazům můžete nalézt v~manuálových stránkách (\texttt{man <příkaz>}).
+\subsection{Základní orientace v~Linuxu}
+Většina práce v~OS Linux bude probíhat v~terminálu. Terminál na školních PC spustíte pomocí \texttt{Alt+F2}, zde zadáte "\texttt{gnome-terminal}". Případně můžete vybrat aplikaci terminálu z~postraní nabídky.
 \subsubsection{Hierarchie souborového systému}
-Všechny soubory jsou uloženy v souborovém systému. Ten je organizován jako invertovaný strom adresářů,
+Všechny soubory jsou uloženy v~souborovém systému. Ten je organizován jako invertovaný strom adresářů,
 kde kořenovým adresářem je \texttt{root} adresář (označení \texttt{"/"}). Ten obsahuje podadresáře,
 kde každý má svůj standardizovaný účel pro zařazení různých souborů.
 
@@ -13,42 +13,42 @@ Některé podadresáře a jejich význam:
 \begin{itemize}
 				\item \textbf{/etc} - obsahuje konfigurační soubory systému,
 				\item \textbf{/var} - proměnlivá boot perzistentní data, dynamicky se mění, obsahuje databáze, cache adresáře, obsah www stránek (\texttt{/var/html/www}), logy (\texttt{/var/log}),
-				\item \textbf{/dev} - obsahuje speciální soubory pro přístup k hardware zařízením.
+				\item \textbf{/dev} - obsahuje speciální soubory pro přístup k~hardware zařízením.
 \end{itemize}
 
 \subsubsection{Základní příkazy}
-Některé základní příkazy pro práci v terminálu OS Linux:
+Některé základní příkazy pro práci v~terminálu OS Linux:
 \begin{itemize}
-				\item \texttt{cd} - posun v adresářové hierarchii,
+				\item \texttt{cd} - posun v~adresářové hierarchii,
 				\item \texttt{ls} - zobrazení obsahu adresáře,
 				\item \texttt{cp} - kopírování souborů,
 				\item \texttt{mv} - přesun souborů,
 				\item \texttt{mkdir} - vytvoření adresáře,
 				\item \texttt{touch} - vytvoření prázdného souboru,
 				\item \texttt{head} - zobrazení x řádků od začátku souboru,
-				\item \texttt{tail} - zobrazení x řádků z konce souboru,
+				\item \texttt{tail} - zobrazení x řádků z~konce souboru,
 				\item \texttt{cat} - zobrazení obsahu souboru,
-				\item \texttt{grep} - filtrování/hledání v textu,
-				\item \texttt{sed} - editace textu v příkazové řádce,
+				\item \texttt{grep} - filtrování/hledání v~textu,
+				\item \texttt{sed} - editace textu v~příkazové řádce,
 				\item \texttt{awk} - skenování a zpracování textu,
-				\item \texttt{ps} - zobrazení informací o běžících procesech.
+				\item \texttt{ps} - zobrazení informací o~běžících procesech.
 \end{itemize}
 
 Mezi command line editory patří například \texttt{nano} nebo \texttt{vim}. Kromě nich můžete taktéž použít grafické editory, například \texttt{gedit}.
 
 \subsubsection{Uživatelé}
-Každý uživatel v OS Linux má své jedinečné \texttt{uid}. Každý proces (program)
-v systému je spuštěn pod nějakým uživatelem. Každý soubor je vlastněn uživatelem
+Každý uživatel v~OS Linux má své jedinečné \texttt{uid}. Každý proces (program)
+v~systému je spuštěn pod nějakým uživatelem. Každý soubor je vlastněn uživatelem
 a omezen přístupovými právy. Tato přístupová práva se vztahují taktéž na procesy
 spuštěné daným uživatelem.
 
 \begin{itemize}
 				\item \texttt{root} - super uživatel, má veškerá práva a kontrolu nad systémem.
 				\item \texttt{user} - pouze základní správa, bez možnosti zasahovat do systémového nastavení.
-				\item \texttt{sudo} - delegace některých práv super uživatele na normálního uživatele (nastavení v \texttt{/etc/sudoers}).
+				\item \texttt{sudo} - delegace některých práv super uživatele na normálního uživatele (nastavení v~\texttt{/etc/sudoers}).
 \end{itemize}
 
-Při správě OS se pokud možno snažíme vyhnout nastavování systému jako \texttt{root}. K tomuto slouží \texttt{sudo},
+Při správě OS se pokud možno snažíme vyhnout používání systému jako \texttt{root}. K~tomuto slouží \texttt{sudo},
 kde má daný uživatel přesně specifikováno, které operace smí se systémem provádět, a je pak lépe dohledatelné,
 kdo co nastavil.
 
@@ -65,7 +65,7 @@ Spouštění příkazů jako \texttt{sudo}:
 
 \subsection{Síťová konfigurace zařízení}
 Ke zjišťování síťové konfigurace na daném zařízení můžeme použít několik nástrojů,
-které jsou na OS Linux k dispozici.
+které jsou na OS Linux k~dispozici.
 
 \subsubsection{Zobrazení konfigurace}
 Jedním ze základních příkazů je \texttt{ip}. Pomocí tohoto příkazu můžeme zjistit
@@ -73,38 +73,38 @@ konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah r
 
 \begin{itemize}
 				\item \texttt{ip address} - zobrazí adresu na všech síťových zařízení.
-				\item \texttt{ip route} - zobrazí všechna pravidla v routovací tabulce.
+				\item \texttt{ip route} - zobrazí všechna pravidla v~routovací tabulce.
 				\item \texttt{ip link} - vylistuje všechna síťová zařízení.
-				\item \texttt{ip neighbor} - zobrazí obsah ARP záznamů
+				\item \texttt{ip neighbor} - zobrazí obsah ARP záznamů.
 \end{itemize}
 
-Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k jejímu zobrazení. \footnote{Obdobou tohoto nástroje je \texttt{ifconfig}.}
+Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobrazení. \footnote{Obdobou tohoto nástroje je \texttt{ifconfig}.}
 
 %- nmcli
 
-Alternativou k zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
+Alternativou k~zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
 \begin{itemize}
 \item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky
 \item \texttt{arp} - zobrazí obsah ARP tabulky
 \end{itemize}
 
 
-K zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové adresy slouží příkaz \texttt{sockstat} (\texttt{ss}).
+K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové adresy slouží příkaz \texttt{sockstat} (\texttt{ss}).
 
 \subsubsection{Konfigurační soubory a logy}
-Na OS Linux je veškeré nastavení systému a služeb uloženo v adresáři \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s příslušným názvem. Pro lepší přehlednost je možné vytvářet více konfiguračních souborů, pro tyto účely zde pak existují adresáře \texttt{"nazevsluzby.d/"} (například \texttt{/etc/rsyslog.d/}). Veškeré nastavení v souborech v těchto adresářích je pak aplikováno na danou službu.
+Na OS Linux je veškeré nastavení systému a služeb uloženo v~adresáři \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s~příslušným názvem. Pro lepší přehlednost je možné vytvářet více konfiguračních souborů, pro tyto účely zde pak existují adresáře \texttt{"nazevsluzby.d/"} (například \texttt{/etc/rsyslog.d/}). Veškeré nastavení v~souborech v~těchto adresářích je pak aplikováno na danou službu.
 
 Některé ze základních podstatných konfiguračních souborů:
 \begin{itemize}
 				\item \texttt{/etc/hostname} - obsahuje hostname systému.
-				\item \texttt{/etc/hosts} - obsahuje mapování hostname na ip adresu (zde můžete libovolné adrese přiřadit hostname, následné použití tohoto hostname předchází samotnému vyhledání pomocí DNS resolveru).
+				\item \texttt{/etc/hosts} - obsahuje mapování hostname na IP adresu (zde můžete libovolné adrese přiřadit hostname, následné použití tohoto hostname předchází samotnému vyhledání pomocí DNS resolveru).
 				\item \texttt{/etc/host.conf} - obsahuje konfiguraci specifickou pro resolver.
 				\item \texttt{/etc/resolv.conf} - obsahuje direktivy specifikující výchozí servery, na které je poslán dotaz pro překlad doménového jména na IP adresu.
 				\item \texttt{/etc/rsyslog.conf} - obsahuje nastavení syslogu, rozřazování jednotlivých zpráv do příslušných logovacích souborů.
 \end{itemize}
 
 
-Veškeré podstatné události jsou zaznamenávány do logů. Všechny logovací soubory jsou uloženy v adresáři \texttt{/var/log}. Tyto soubory (logy) jsou cyklicky promazávány po určitém čase či po dosažení určité velikosti. Dobu, po kterou jsou logy udržovány, lze nastavit v konfiguračním souboru \texttt{/etc/logrotate.conf}.
+Veškeré podstatné události jsou zaznamenávány do logů. Všechny logovací soubory jsou uloženy v~adresáři \texttt{/var/log}. Tyto soubory (logy) jsou cyklicky promazávány po určitém čase či po dosažení určité velikosti. Dobu, po kterou jsou logy udržovány, lze nastavit v~konfiguračním souboru\\\texttt{/etc/logrotate.conf}.
 
 Některé významné logovací soubory:
 \begin{itemize}
@@ -120,21 +120,21 @@ Systémové události můžeme také prohlížet pomocí nástroje \texttt{journ
 Příklad použití \texttt{journalctl}:
 \begin{itemize}
 				\item \texttt{journalctl -n <x>} - zobrazí posledních x záznamů.
-				\item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s danou syslog prioritou.
-				\item \texttt{journalctl -u <unit|patern>} - umožní vyfiltrovat pouze záznamy s daným paternem/službou.
+				\item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s~danou syslog prioritou.
+				\item \texttt{journalctl -u <unit|patern>} - umožní vyfiltrovat pouze záznamy s~daným paternem/službou.
 				\item \texttt{journalctl -f} - zobrazí kontinuálně posledních 10 událostí.
-				\item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v daném rozmezí.
+				\item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v~daném rozmezí.
 \end{itemize}
 
 
 \subsubsection{Aktivní zjišťování}
-Zjišťování dostupnosti zařízení a konektivity. K tomuto účelu poslouží příkazy:
+Zjišťování dostupnosti zařízení a konektivity. K~tomuto účelu poslouží příkazy:
 
 \begin{itemize}
-				\item \texttt{ping ipv4|domain} - zašle ICMP ECHO\_REQUEST k danému hostu (pro ipv4).
-				\item \texttt{ping6 ipv6|domain} - zašle ICMP ECHO\_REQUEST k danému hostu (pro ipv6).
-				\item \texttt{traceroute ipv4|domain} - zobrazí cestu, kudy packet prochází skrz síť k danému hostu (pro ipv4).
-				\item \texttt{traceroute6 ipv6|domain} - zobrazí cestu, kudy packet prochází skrz síť k danému hostu (pro ipv6).
+				\item \texttt{ping ipv4|domain} - zašle ICMP ECHO\_REQUEST k~danému hostu (pro ipv4).
+				\item \texttt{ping6 ipv6|domain} - zašle ICMP ECHO\_REQUEST k~danému hostu (pro ipv6).
+				\item \texttt{traceroute ipv4|domain} - zobrazí cestu, kudy packet prochází skrz síť k~danému hostu (pro ipv4).
+				\item \texttt{traceroute6 ipv6|domain} - zobrazí cestu, kudy packet prochází skrz síť k~danému hostu (pro ipv6).
 				\item \texttt{tcptraceroute ipv4/ipv6|domain} - \texttt{traceroute} používající TCP.
 \end{itemize}
 
@@ -155,25 +155,25 @@ Pro přihlášení na vzdálený host můžeme použít dva nástroje:
 
 
 \section{Analýza Wireshark}
-Wireshark je aplikace sloužící k analýze protokolů a zachytávání paketů. Zachytává síťový provoz z jednotlivých síťových zařízení (jak fyzických, tak virtuálních) a umožňuje inspekci jednotlivých polí v daných paketech.
+Wireshark je aplikace sloužící k~analýze protokolů a zachytávání paketů. Zachytává síťový provoz z~jednotlivých síťových zařízení (jak fyzických, tak virtuálních) a umožňuje inspekci jednotlivých polí v~daných paketech.
 
 Alternativou ke grafickému Wireshark je command line nástroj \texttt{tcpdump}. Wireshark má oproti \texttt{tcpdump} například integrované volby pro řazení, filtrování a jiné.
 
 
 \subsubsection{Zachytávání provozu}
-Zachytávat provoz můžeme z libovolného síťového zařízení, dokonce z více zařízení najednou.
+Zachytávat provoz můžeme z~libovolného síťového zařízení, dokonce z~více zařízení najednou.
 
 Odchytíme pomocí \texttt{Capture -> Interfaces...} a zde vybereme zařízení, které chceme snímat. Spustíme pomocí \texttt{Start}. Takto odchytíme veškerý provoz.
 
-Existuje zde volba filtrace provozu již při zachytávání. Tato vlastnost může být užitečná při dlouhodobějším zachytávání, především z hlediska redukce množství ukládaných paketů.
+Existuje zde volba filtrace provozu již při zachytávání. Tato vlastnost může být užitečná při dlouhodobějším zachytávání, především z~hlediska redukce množství ukládaných paketů.
 
-Paketové filtry můžeme aplikovat před spuštěním zachytávání. Použijeme \texttt{Options} a v poli \texttt{Capture Filter:} můžeme zvolit jeden z předdefinovaných filtrů, případně specifikovat vlastní.
+Paketové filtry můžeme aplikovat před spuštěním zachytávání. Použijeme \texttt{Options} a v~poli \texttt{Capture Filter:} můžeme zvolit jeden z~předdefinovaných filtrů, případně specifikovat vlastní.
 
 Odchycený provoz můžeme uložit do souboru (přípona \texttt{.pcap}). Následně je možné tyto soubory znovu analyzovat.
 
 
 \subsubsection{Filtrovací operátory}
-V případě, že například zachytáváme veškerý provoz, kde je velké množství různých paketů. Je užitečné z těchto paketů vyfiltrovat a zobrazit pouze ty nám relevantní. K tomuto slouží tzv. display filtry, jejich syntax popisuje následující tabulka.
+V některých situacích, napříkad pokud zachytáváme veškerý provoz, je velmi vhodné použít filtrování. Jelikož zde pracujeme s velkým množstvím různých paketů, můžeme si tak vyfiltrovat pouze ty relevantní. K tomu slouží tzv. display filtry, jejichž syntax je popsána v Tabulce 1.
 \begin{center}
 \begin{table}[h]
 \centering
@@ -194,9 +194,9 @@ V případě, že například zachytáváme veškerý provoz, kde je velké mno�
 
 
 \subsection{Flow graph}
-Wireshark umožňuje zobrazit vybranou komunikaci v flow grafu. Zde můžeme přehledně vidět, které stroje, rozlišené ip adresou, spolu komunikují a kdo komu, zasílá kterou zprávu v jakém pořadí.
-Flow graf si zobrazíme pomocí \texttt{Statistics -> Flow Graph..}, zde si vybereme, co chceme zobrazit.
+Wireshark umožňuje zobrazit vybranou komunikaci v~\texttt{flow graph}. Zde můžeme přehledně vidět, které stroje, rozlišené IP adresou, spolu komunikují a kdo komu, zasílá kterou zprávu v~jakém pořadí.
+Flow graph si zobrazíme pomocí \texttt{Statistics -> Flow Graph..}, zde si vybereme, co chceme zobrazit.
 \subsection{Zobrazení streamu}
-Zachycenou komunikaci vidíme v podobě jednotlivých paketů. Pokud například zachytíme HTTP komunikaci, jeden paket nese většinou pouze část obsahu HTTP zprávy. V tomto případě pro zobrazení celé zprávy, celého streamu můžeme použít volbu \texttt{Flow <protokol> Stream}, která nám zobrazí obsah celého streamu. Zobrazení provedeme tak, že vybereme jeden zachycený paket, označíme ho a následně \texttt{Analyze -> Follow <protokol> Stream}.
+Zachycenou komunikaci vidíme v~podobě jednotlivých paketů. Pokud například zachytíme HTTP komunikaci, jeden paket nese většinou pouze část obsahu HTTP zprávy. V tomto případě můžeme pro zobrazení celé zprávy (celého streamu) použít volbu \texttt{Flow <protokol> Stream}. Zobrazení provedeme tak, že vybereme jeden zachycený paket, označíme ho a následně \texttt{Analyze -> Follow <protokol> Stream}.
 \subsection{Čas}
-V rámci zachytávání paketů, každý záznam nese informaci o čase. Defaultně je zde čas zobrazen v sekundách, od počátku zachytávání komunikace. Nicméně v \texttt{Edit -> Time Display Format} můžeme vybrat konkrétní zobrazení času a zjistit tak například ve který den byl daný paket zachycen.
+V rámci zachytávání paketů nese každý záznam informaci o čase. Defaultně je zde čas zobrazen v~sekundách, od počátku zachytávání komunikace. Nicméně v~\texttt{Edit -> Time Display Format} můžeme vybrat konkrétní zobrazení času a zjistit tak například, ve který den byl daný paket zachycen.
