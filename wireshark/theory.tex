@@ -69,7 +69,7 @@ které jsou na OS Linux k~dispozici.
 
 \subsubsection{Zobrazení konfigurace}
 Jedním ze základních příkazů je \texttt{ip}. Pomocí tohoto příkazu můžeme zjistit
-konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah routovací tabulky aj.
+konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah routovací tabulky aj. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{ip-<volba>}.
 
 \begin{itemize}
 				\item \texttt{ip address} - zobrazí adresu na všech síťových zařízení.
@@ -84,8 +84,8 @@ Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobraz
 
 Alternativou k~zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
 \begin{itemize}
-\item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky
-\item \texttt{arp} - zobrazí obsah ARP tabulky
+\item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky (volba \texttt{-rn})
+\item \texttt{arp} - zobrazí obsah ARP tabulky (také umožňuje provádět správu, například odstranit záznamy)
 \end{itemize}
 
 
@@ -199,4 +199,4 @@ Flow graph si zobrazíme pomocí \texttt{Statistics -> Flow Graph..}, zde si vyb
 \subsection{Zobrazení streamu}
 Zachycenou komunikaci vidíme v~podobě jednotlivých paketů. Pokud například zachytíme HTTP komunikaci, jeden paket nese většinou pouze část obsahu HTTP zprávy. V tomto případě můžeme pro zobrazení celé zprávy (celého streamu) použít volbu \texttt{Flow <protokol> Stream}. Zobrazení provedeme tak, že vybereme jeden zachycený paket, označíme ho a následně \texttt{Analyze -> Follow <protokol> Stream}.
 \subsection{Čas}
-V rámci zachytávání paketů nese každý záznam informaci o čase. Defaultně je zde čas zobrazen v~sekundách, od počátku zachytávání komunikace. Nicméně v~\texttt{Edit -> Time Display Format} můžeme vybrat konkrétní zobrazení času a zjistit tak například, ve který den byl daný paket zachycen.
+V rámci zachytávání paketů nese každý záznam informaci o čase. Defaultně je zde čas zobrazen v~sekundách, od počátku zachytávání komunikace. Nicméně v~\texttt{Wiew -> Time Display Format} můžeme vybrat konkrétní zobrazení času a zjistit tak například, ve který den byl daný paket zachycen.
