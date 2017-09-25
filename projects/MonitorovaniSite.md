@@ -45,7 +45,7 @@ Libovolné debugovací hlášky, chybové zprávy týkající se problémů nap�
 * 1 a následující -- chybové stavy dokumentované v dokumentaci a README
 
 ## Dokumentace
-Pro vytvoření kvalitní dokumentace se řiďte fakultními [pokyny pro psaní textu](http://www.fit.vutbr.cz/info/szz/psani_textu.php.cs) a také [pravidly pro bibliografické citace](http://www.fit.vutbr.cz/info/szz/bib_citace.php.cs). Můžete vyjít z [šablony](http://www.fit.vutbr.cz/info/szz/sablona2017d.zip) pro BP/DP a upravit ji.
+Pro vytvoření kvalitní dokumentace se řiďte fakultními [pokyny pro psaní textu](http://www.fit.vutbr.cz/info/szz/psani_textu.php.cs) a také [pravidly pro bibliografické citace](http://www.fit.vutbr.cz/info/szz/bib_citace.php.cs). Můžete vyjít z [šablony](http://www.fit.vutbr.cz/info/szz/sablona2017d.zip) pro BP/DP a upravit ji. Soupis častých chyb naleznete v zadání Ing. Holkoviče.
 
 ## Oficiální komunikační kanál
 Všechny svoje dotazy směřujte do fóra projektu *Monitorování sítě (Jan Pluskal)*. Na emailové dotazy nečekejte odpověď. Neváhejte využít fórum pro diskuzi a vyjasnění probému navzájem. Vaše aktivita bude kladně hodnocena při případné reklamaci.
