@@ -44,12 +44,16 @@ Libovolné debugovací hlášky, chybové zprávy týkající se problémů nap�
 * 0 -- úspěšné ukončení
 * 1 a následující -- chybové stavy dokumentované v dokumentaci a README
 
+## Dokumentace
+Pro vytvoření kvalitní dokumentace se řiďte fakultními [pokyny pro psaní textu](http://www.fit.vutbr.cz/info/szz/psani_textu.php.cs) a také [pravidly pro bibliografické citace](http://www.fit.vutbr.cz/info/szz/bib_citace.php.cs). Můžete vyjít z [šablony](http://www.fit.vutbr.cz/info/szz/sablona2017d.zip) pro BP/DP a upravit ji.
+
 ## Oficiální komunikační kanál
 Všechny svoje dotazy směřujte do fóra projektu *Monitorování sítě (Jan Pluskal)*. Na emailové dotazy nečekejte odpověď. Neváhejte využít fórum pro diskuzi a vyjasnění probému navzájem. Vaše aktivita bude kladně hodnocena při případné reklamaci.
 
 ## Odevzdání
 Dodržení správného formátu odevzdání je nezbytné, pojmenování souborů je *case-sensitive*. Odevzdává se jeden soubor *xlogin00.tar*, tedy nekomprimovaný pouze tarnutý obsah. Struktura archivu *xlogin00.tar*:
 * [src/] # dobrovolné (doporučené) umístění zdrojových kódů
+* [doc/] # dobrovolné (doporučené) umístění LaTeX zdrojových kódů
 * Makefile
 * README
 * manual.pdf
