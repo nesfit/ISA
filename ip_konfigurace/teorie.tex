@@ -19,7 +19,7 @@ příkazů pro manipulaci systémových služeb:
     \item \texttt{systemctl status [služba]} vypíše informace aktuálního stavu
         služby a několik posledních řádků systémových logů této služby. Tento
         příkaz můžete použít i bez specifikace služby, dostanete tak informace
-        o všech aktuálně spuštěných službách.
+        o~všech aktuálně spuštěných službách.
 \end{itemize}
 
 Jméno služby má typicky tvar \texttt{<aplikace>.service}, například
@@ -31,7 +31,7 @@ Pro zobrazení kompletních logů konkrétní systémové služby můžete použ
 Detailní popis včetně možných voleb a příkladů použití můžete nalézt
 v~manuálových stránkách.
 
-\section{Adresy v IPv4 sítí}\label{ipv4-teorie}
+\section{Adresy v~IPv4 sítí}\label{ipv4-teorie}
 
 \subsection{Formát adresy}
 IPv4 adresa je délky 32 bitů a preferovaný zápis má formát {\tt X.X.X.X}, kde
@@ -46,9 +46,9 @@ Adresa dvě části:
     \item adresa sítě ({\bf prefix}) a
     \item adresa uzlu.
 \end{itemize}
-Délka prefixu se zapisuje v desítkovém tvaru za lomítko. {\tt 192.168.0.1/24}
+Délka prefixu se zapisuje v~desítkovém tvaru za lomítko. {\tt 192.168.0.1/24}
 
-V síti s daným prefixem existují 2 speciální adresy, které nelze použít pro
+V~síti s~daným prefixem existují 2 speciální adresy, které nelze použít pro
 adresování jednotlivých uzlů:
 \begin{itemize}
     \item adresa sítě - adresa uzlu je nulová, např. 192.168.0.0/24
@@ -56,7 +56,7 @@ adresování jednotlivých uzlů:
         např. 192.168.0.255/24
 \end{itemize}
 
-\section{Adresy v IPv6 sítí}\label{ipv6-teorie}
+\section{Adresy v~IPv6 sítí}\label{ipv6-teorie}
 
 \subsection{Formát adresy}
 IPv6 adresa je délky 128 bitů a zapsaných ve formátu {\tt X:X:X:X:X:X:X:X}, kde
@@ -67,31 +67,31 @@ FEDC:BA98:7654:3210:fedc:ba98:7654:3210
 1080:0000:0000:0000:0008:0800:200C:417a
 \end{verbatim}
 
-Preferovaný formát je dále upraven v RFC 5952\footnote{https://tools.ietf.org/html/rfc5952}, které definuje následující
+Preferovaný formát je dále upraven v~RFC 5952\footnote{https://tools.ietf.org/html/rfc5952}, které definuje následující
 pravidla:
 \begin{itemize}
     \item Nuly na začátku každého 16 bitového čísla je potřeba vynechat (např.
         80 namísto 0080 a 0 namísto 0000).
     \item Více nulových bloků lze nejvýše jednou nahradit znakem {\tt ::}, a
         MUSÍ být nahrazena nejdelší možná posloupnost takových nulových bloků.
-        V případě více shodně dlouhých posloupností, nahrazuje se ta nejvíce
+        V~případě více shodně dlouhých posloupností, nahrazuje se ta nejvíce
         vlevo.
     \item Znak {\tt ::} nesmí nahrazovat samostatný nulový blok.
     \item Znaky "a", "b", "c", "d", "e", "f" hexadecimální soustavy se vždy
         píšou malými písmeny.
 \end{itemize}
-Adresy z předchozího příkladu tedy budou vypadat následovně:\\
+Adresy z~předchozího příkladu tedy budou vypadat následovně:\\
 \begin{verbatim}
 fedc:ba98:7654:3210:fedc:ba98:7654:3210
 1080::8:800:200c:417a
 \end{verbatim}
 
-Stejně jako v IPv4 má adresa dvě části: \emph{adresa sítě ({\bf prefix})} a
-\emph{adresa uzlu}. Délká prefixu se zapisuje v desítkovém tvaru za lomítko
+Stejně jako v~IPv4 má adresa dvě části: \emph{adresa sítě ({\bf prefix})} a
+\emph{adresa uzlu}. Délká prefixu se zapisuje v~desítkovém tvaru za lomítko
 (např. {\tt 1080::/60}).
 
 \subsection{Rozdělení adres}
-IPv6 adresy je možno rozdělit podle rozsahu. Typicky může jít o tři
+IPv6 adresy je možno rozdělit podle rozsahu. Typicky může jít o~tři
 možnosti -- adresy na lince (neprojdou za router), lokální adresy (ULA, nejsou
 routovatelné ve veřejné sítí) a veřejné adresy.
 
@@ -126,10 +126,10 @@ Síťová část ULA adresy se stává ze 4 části:
         jej získat. Původní standard (RFC
         3513\footnote{https://tools.ietf.org/html/rfc3513} a RFC
         4291\footnote{https://tools.ietf.org/html/rfc4291}) doporučoval použití
-        EUI-64. V současnosti byla tato metoda nahrazena RFC
+        EUI-64. V~současnosti byla tato metoda nahrazena RFC
         7217\footnote{https://tools.ietf.org/html/rfc7217}. Pro ochranu
         soukromí jsou další specifika automatické generace identifikátorů
-        definovány v RFC 4941\footnote{https://tools.ietf.org/html/rfc4941}.
+        definovány v~RFC 4941\footnote{https://tools.ietf.org/html/rfc4941}.
 \end{description}
 
 \begin{table}[ht!]
@@ -147,7 +147,7 @@ Lokální síť je tedy složená ze tří části:
 \begin{itemize}
     \item unikátní prefix délky 48 bitů,
     \item 16 bitový identifikátor podsítě,
-    \item adresa uzlu o délce 64 bitů.
+    \item adresa uzlu o~délce 64 bitů.
 \end{itemize}
 
 \subsection{Manuální konfigurace IP Adres}\label{ip-manual}
@@ -156,9 +156,9 @@ dnešní cvičení budeme potřebovat následující příkazy:
 \begin{itemize}
     \item \verb_ip link set [rozhraní] up/down_ pro zapnutí/vypnutí rozhraní
     \item \verb_ip addr add/del [IP adresa]/[prefix] dev [rozhraní]_ pro
-        přidání/odstranění adresy z rozhraní
-    \item \verb_ip addr flush dev [rozhraní]_ pro odstranění všech adres z
-        rozhraní
+        přidání/odstranění adresy z~rozhraní
+    \item \verb_ip addr flush dev [rozhraní]_ pro odstranění všech adres
+z~rozhraní
     \item \verb_ip route add default via [IP adresa]_ pro nastavení výchozí
         brány
     \item \verb_ip link_, \verb_ip addr_, \verb_ip route_ zobrazí aktuální
@@ -167,7 +167,7 @@ dnešní cvičení budeme potřebovat následující příkazy:
 
 \subsection{Dynamická konfigurace IPv4 - DHCP}\label{dhcp}
 Pro dynamickou konfiguraci IP adres je potřeba aby byl na síti přístupný
-nakonfigurovaný DHCP server a klienti, kteří si o IP adresu požádají. Kromě
+nakonfigurovaný DHCP server a klienti, kteří si o~IP adresu požádají. Kromě
 přiřazení IP adres má DHCP server na starosti i šíření jiných informací
 důležitých pro bezproblémovou funkčnost sítě. Jednou takovou informací je IP
 adresa doporučeného DNS serveru pro klienty na síti.
@@ -183,7 +183,7 @@ subnet [IP adresa sítě] netmask [maska] {
     range [první přiřaditelná IP adresa] [poslední přiřaditelná IP adresa];
 }
 \end{verbatim}
-Dodatečné informace o konfiguračních možnostech najdete v manuálových stránkách
+Dodatečné informace o~konfiguračních možnostech najdete v~manuálových stránkách
 {\tt man dhcpd.conf} případně {\tt man dhcpd}.
 
 Službu DHCP serveru možno spustit pomocí příkazu:
@@ -191,26 +191,26 @@ Službu DHCP serveru možno spustit pomocí příkazu:
 systemctl start isc-dhcp-server.service
 \end{verbatim}
 
-DHCP klient je implementován v aplikaci \texttt{dhclient}. Může být spuštěn bez
-parametrů pro všechna aktivní síťová rozhraní nebo lépe s jménem konkrétního
+DHCP klient je implementován v~aplikaci \texttt{dhclient}. Může být spuštěn bez
+parametrů pro všechna aktivní síťová rozhraní nebo lépe s~jménem konkrétního
 síťového rozhraní, které má být konfigurováno:
 \begin{verbatim}
 dhclient -v [rozhraní]
 \end{verbatim}
 Argument \texttt{-v} zajistí, že aplikace vypíše detailní informace.
-Chybu týkající se {\tt smbd.service} někdy zobrazovanou v laboratoři můžete ignorovat.
+Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
 
 \subsection{Dynamická konfigurace IPv6}\label{dyn-ipv6}
 Dynamická konfigurace IPv6 se dělí na {\bf bezstavovou} a {\bf stavovou}
 konfiguraci. Na cvičeních se budeme zabývat jen bezstavovou. Bezstavová
 konfigurace byla navržena tak, aby stačilo připojit zařízení do sítě a
 automaticky si klient vygeneroval nějakou adresu a ihned mohl komunikovat se
-světem. K tomu klient potřebuje znát prefix sítě do které byl připojen.
+světem. K~tomu klient potřebuje znát prefix sítě do které byl připojen.
 K~tomuto účelu se používají zprávy označované jako Routing Advertisement (RA).
 Tyto a ještě další zprávy jsou součásti procesu Neighbor Discovery (RFC
 4861\footnote{https://tools.ietf.org/html/rfc4861}).
 
-Na počítačích v laboratoři je nainstalovaná systémová služba {\tt radvd.service},
+Na počítačích v~laboratoři je nainstalovaná systémová služba {\tt radvd.service},
 která je schopna vysílat zprávy RA. Aplikaci je možno nakonfigurovat pomocí
 souboru {\tt /etc/radvd.conf}.
 
