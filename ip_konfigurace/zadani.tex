@@ -88,8 +88,8 @@ správnou IPv6 adresu.
 Dynamická IPv6 konfigurace je popsaná v sekci \ref{dyn-ipv6} Teorie.
 
 \begin{enumerate}
-    \item Na obou počítačích smažte manuálně nakonfigurované adresy z
-        předcházející úlohy.
+    \item Na obou počítačích si ponechte IP adresy nakonfigurované během
+        předcházejících úkolů.
     \item Na jednom z počítačů nakonfigurujte službu \texttt{radvd.service} tak
         aby ve Vaší síti (rozhraní eth1) šířila informace o prefixu sítě, který
         jste si vygenerovali pro manuální konfiguraci.
@@ -98,8 +98,8 @@ Dynamická IPv6 konfigurace je popsaná v sekci \ref{dyn-ipv6} Teorie.
         Tím Váš počítač začne plnit roli směrovače pro IPv6 provoz a bude moci
         šířit RA zprávy.
     \item Spusťte službu \texttt{radvd.service}
-    \item Na obou počítačích potvrďte správnost nakonfigurovaných adres (příkaz
-        \texttt{ip address}) a funkčnost sítě pomocí \texttt{ping6}.
+    \item Potvrďte správnost nově nakonfigurovaných adres (příkaz \texttt{ip
+        address}) a funkčnost sítě pomocí \texttt{ping6}.
     \item Pro zajímavost se můžete podívat na obsah RA zpráv pomocí aplikace
         \texttt{radvdump}, nebo \texttt{wireshark} (filter \texttt{icmpv6.type
         == 134}).

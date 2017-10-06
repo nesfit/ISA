@@ -174,7 +174,8 @@ adresa doporučeného DNS serveru pro klienty na síti.
 
 Na Vašich počítačích máte nainstalovanou serverovou aplikaci ISC DHCP, která
 poskytuje služby DHCP serveru. Aplikace se konfiguruje pomocí souboru
-\verb_/etc/dhcp/dhcpd.conf_.
+\verb_/etc/dhcp/dhcpd.conf_. Systémová služba se jmenuje
+\texttt{isc-dhcp-server.service}.
 
 Příklad obsahu konfiguračního souboru:
 \begin{verbatim}
@@ -185,11 +186,6 @@ subnet [IP adresa sítě] netmask [maska] {
 \end{verbatim}
 Dodatečné informace o~konfiguračních možnostech najdete v~manuálových stránkách
 {\tt man dhcpd.conf} případně {\tt man dhcpd}.
-
-Službu DHCP serveru možno spustit pomocí příkazu:
-\begin{verbatim}
-systemctl start isc-dhcp-server.service
-\end{verbatim}
 
 DHCP klient je implementován v~aplikaci \texttt{dhclient}. Může být spuštěn bez
 parametrů pro všechna aktivní síťová rozhraní nebo lépe s~jménem konkrétního
