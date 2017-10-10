@@ -222,12 +222,12 @@ První z~těchto souborů se používá pro statický překlad doménového jmé
 
 Dynamický překlad, neboli překlad pomocí DNS serveru, vyžaduje existenci konfiguračního souboru {\tt /etc/resolv.conf}, který obvykle obsahuje jedenkrát volbu {\tt search} a jednu nebo více voleb {\tt nameserver}.
 \begin{description}
-  \item[serach] definuje tzv. searchlist, neboli seznam domén (max. 6), které se budou prohledávat, pokud je požadavek na překlad neúplného doménového jména. Tedy má-li tato volba podobu {\tt search fit.vutbr.cz}, pak při pokusu přeložit jméno {\em merlin} se při neúspěchu pokusí systém také přeložit jméno {\em merlin.fit.vutbr.cz}.
+  \item[search] definuje tzv. searchlist, neboli seznam domén (max. 6), které se budou prohledávat, pokud je požadavek na překlad neúplného doménového jména. Tedy má-li tato volba podobu {\tt search fit.vutbr.cz}, pak při pokusu přeložit jméno {\em merlin} se při neúspěchu pokusí systém také přeložit jméno {\em merlin.fit.vutbr.cz}.
   \item[nameserver] se uvádí právě s~jedním parametrem, který definuje IP adresu DNS serveru, který se systém pokusí kontaktovat. Může se jednat jak o~IPv4 tak o~IPv6 adresu.
 \end{description}
 Další možnosti, které může soubor obsahovat, lze nalézt v~manuálových stránkách {\tt man resolv.conf}.
 
-V~posledním z~těchto tří souboru lze definovat, v~jakém pořadí se předchozí dvě volby využijí. Standardně se nejprve zkouší statický překlad a poté dynamický. Tato volba umožňuje lokálně si předefinovat, IP adresu vrácenou pro konkrétní doménové jméno.
+V~souboru {\tt /etc/host.conf} lze definovat, v~jakém pořadí se předchozí dvě volby využijí. Standardně se nejprve zkouší statický překlad a poté dynamický. Toto výchozí nastavení umožňuje lokální předefinování překladu z doménového jména na IP adresu.
 
 Pokud se síť na klientovi konfiguruje dynamicky, pak je soubor {\tt /etc/resolv.conf} upravován automaticky. Při statické konfiguraci musí být obsah souboru upraven ručně.
 
@@ -361,7 +361,7 @@ Další záznamy mají obecný tvar:
 \begin{verbatim}
 jméno  ttl  třída  typ  <na typu závislá data>
 \end{verbatim}
-Jméno běžně bývá ve tvaru relativním. Pokud není hodnota TTL jiná než je výchozí pro celou zónu, pak se může vynechat. Třída záznamu se běžně používá pouze {\tt IN} (Internet). Kromě typu SOA a NS, se v~laboratorním cvičení použijí záznamy typu {\tt AAAA} a {\tt PTR}. Typ {\tt AAAA} se chová stejně jako záznam typu {\tt A}, který se používá pro IPv4. Typově závislými daty je v~tomto případě adresa IPv6, resp. IPv4. Příklad:
+Jméno běžně bývá ve tvaru relativním. Pokud není hodnota TTL jiná než je výchozí pro celou zónu, pak se může vynechat. Třída záznamu se běžně používá pouze {\tt IN} (Internet). Kromě typu SOA a NS, se v~laboratorním cvičení použijí záznamy typu {\tt A}, {\tt PTR} a volitelně {\tt AAAA}. Typ {\tt AAAA} se chová stejně jako záznam typu {\tt A}, který se používá pro IPv4. Typově závislými daty je v~tomto případě adresa IPv6, resp. IPv4. Příklad:
 \begin{verbatim}
 host  IN A  192.168.0.1
 \end{verbatim}
@@ -409,7 +409,7 @@ DNSSEC rozšiřuje službu DNS o~bezpečnostní prvky, jejichž cílem je zabrá
 asymetrické kryptografie pro podepisování zón. Přesněji řečeno se podepíše každý
 záznam v~zóně a tyto podpisy se zveřejní jako speciální typ záznamu. Protože není možné, aby resolver měl uložený veřejný klíč od každé zóny, používá se metoda sestavení důvěryhodného řetězce s~tím, že resolver v~tomto případě potřebuje mít uložen pouze veřejný klíč nejvyšší domény. Aby tento systém fungoval, musí nadřazená doména obsahovat nejen záznamy typu {\tt NS} ale i záznam typu {\tt DS} -- speciální typ záznamu obsahující hash klíče a název domény. Principiálně samozřejmě může mít resolver uložen veřejné klíče více zón.
 
-Pro vytvoření klíčů a podepsaní zóny není třeba zpracovávat každý záznam samostatně. Součástí aplikace balíčku {\em bind} jsou aplikace, kterým stačí zadat vhodné parametry, a ty zajistí vytvoření všech potřebných souborů. Pak již jen stačí správně nakonfigurovat aplikaci {\tt named}, aby tyto soubory používala.
+Pro vytvoření klíčů a podepsaní zóny není třeba zpracovávat každý záznam samostatně. Součástí balíčku {\em bind} jsou aplikace, kterým stačí zadat vhodné parametry, a ty zajistí vytvoření všech potřebných souborů. Pak již jen stačí správně nakonfigurovat aplikaci {\tt named}, aby tyto soubory používala.
 
 \subsection{Klíče}
 Není to nezbytně nutné, ale obecně se doporučuje používat v~DNSSec dva typy klíčů:
