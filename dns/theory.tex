@@ -383,7 +383,9 @@ dnssec-signzone}, kterému se pouze předá parametrem název souboru, který ob
 \begin{verbatim}
 dnssec-signzone -o example.com labXX.zone
 \end{verbatim}
-Výstupem tohoto souboru je soubor se stejným názvem jako vstupní soubor rozšířený o~příponu {\em .signed}. Pokud je požadován jiný název výstupního souboru, lze toho docílit volbou {\tt -f}. Takto vzniklý soubor má požadovaný tvar zónového souboru. Stačí jen upravit {\tt /etc/namedb/named.conf}, aby místo původního zónového souboru (bez podpisů) začal používat nově vzniklý soubor, který obsahuje i podpisy záznamů.
+Parametr \verb|-o| specifikuje origin a \verb|labXX.zone| je jméno zónového
+souboru (vstupního souboru).
+Výstupem tohoto příkazu je soubor se stejným názvem jako vstupní soubor rozšířený o~příponu {\em .signed}. Pokud je požadován jiný název výstupního souboru, lze toho docílit volbou {\tt -f}. Takto vzniklý soubor má požadovaný tvar zónového souboru. Stačí jen upravit {\tt /etc/namedb/named.conf}, aby místo původního zónového souboru (bez podpisů) začal používat nově vzniklý soubor, který obsahuje i podpisy záznamů.
 
 V~souboru podepsané zóny se objevily nové typy záznamů {\tt DNSKEY}, {\tt RRSIG} a {\tt NSEC}. První z~nich je typ, který nese data o~veřejné části klíče. {\tt RRSIG} obsahuje samotný podpis plus další informace -- typ podepsaného záznamu, jeho TTL, časy od kdy a do kdy je podpis platný a ID klíče, kterým byl podpis proveden. Poslední ze záznamu ({\tt NSEC}) obsahuje informaci o~následujícím záznamu v~abecedně seřazené zóně. Tento záznam se využívá při odpovědi pro dotaz na neexistující záznam. Protože součásti podpisu je i časové vymezeni jeho platnosti, je nutné provádět znovupodepsání zóny. To by se mělo provést dříve, než vyprší platnost starých záznamů (nutné počítat se zkrácením hodnotou TTL, po kterou mohou být staré záznamy uloženy v~cache paměti).
 
