@@ -109,7 +109,7 @@ iface eth1 inet static
 
 \end{enumerate}
 
-\section{Zabezpečení DNS -- DNSSEC}
+\section{Jednoduchý útok na DNS}
 
 \begin{enumerate}
   \item Na PC B spusťte prohlížeč IceWeasel. Zobrazte si webové stánky v
@@ -132,10 +132,27 @@ iface eth1 inet static
   \item Na PC B si zobrazte webové prezentace v doménách {\tt www.fit.vutbr.cz}
     a {\tt www.seznam.cz}. Všimněte si klíče v pravé části adresního řádku.
 
-  \item Volitelně zabezpečte DNS server pomocí DNSSEC. Postup hledejte
-    v~teoretické části zadání.
+\end{enumerate}
+
+\section{Zabezpečení DNS -- DNSSEC}
+
+\begin{enumerate}
+
+  \item Vygenerujte Key Signing Key (KSK) a Zone Signing Key. Zkontrolujte, že
+    jste vytvořili dva páry klíčů.
+
+  \item Přidejte záznamy typu DNSKEY do zónového souboru (podle uvážení přímo,
+    či pomocí direktivy \verb|$INCLUDE|).
+
+  \item Podepište zónový soubor příkazem \verb|dnssec-signzone|.
+
+  \item Upravte konfiguraci {\tt named.conf.local} tak, aby se jako zónový
+    soubor použil soubor obsahující podepsané záznamy.
+
+  \item Zkontrolujte nasazení DNSSEC. Je nasazení úplné?
 
 \end{enumerate}
+
 
 \section{Ukončení práce v laboratoři}
 \begin{itemize}
