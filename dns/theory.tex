@@ -307,7 +307,7 @@ jsou neplatné, protože na dotaz by vrátily:
                                host.moje.domena.cz.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa.
 \end{verbatim}}
 
-Pokud se dělá změna v~zónovém souboru, vždy by se mělo upravit i sériové číslo zóny a to tak, aby bylo vždy větší než předchozí hodnota. Také je nutné nechat aplikaci restartovat.
+Po každé změně zónového souboru by se vždy mělo upravit i sériové číslo zóny a to tak, aby bylo vždy větší než předchozí hodnota. Také je nutné aplikaci načíst změněnou konfiguraci.
 \begin{verbatim}
 systemctl restart bind9.service
 \end{verbatim}
