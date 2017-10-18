@@ -2,7 +2,6 @@
 \section*{Cíle laboratoře}
 \begin{itemize}
   \item Základní seznámení se synchronizací času a protokolem NTP.
-  \item Zabezpečený terminál SSH a připojení pomocí klíčů.
   \item Systém DNS.
   \item Zabezpečení DNSSEC.
 \end{itemize}
@@ -41,123 +40,6 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
     Sledujte postup synchronizace příkazem {\tt
     watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
     spuštěné a pokračujte dalšími úkoly.
-
-\end{enumerate}
-
-\section{Vzdálený terminál -- SSH}
-
-Pracujte pod uživatelem {\tt user}. Zkontrolujte, že pracujete pod
-uživatelem {\tt user} příkazem {\tt whoami}, který vypisuje jméno aktivního
-uživatele.
-
-Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
-
-\begin{enumerate}
-
-  \item Ukončete démona spravujícího hesla k použitým klíčům SSH: \\ {\tt killall
-    gnome-keyring-daemon}.
-
-  \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
-
-    \begin{enumerate}
-
-      \item Přihlaste se příkazem {\tt ssh {\em host}} na vzdálený počítač (např.
-        sousední stanici jménem hXX, kde XX je číslo počítače, uživatel {\tt user}).
-
-      \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl+D} spojení ukončete.
-
-    \end{enumerate}
-
-  \item {\bf Vytvoření veřejného a privátního klíče.}
-
-    \begin{enumerate}
-
-      \item Příkazem {\tt ssh-keygen} vygenerujte implicitní klíč. Neměňte jeho
-        název a zvolte heslo o délce alespoň pěti znaků.
-
-      \item Příkazem \verb|ssh-keygen -N "" -f ~/.ssh/nopass -C <login>@nopass| vygenerujte autentizační klíč bez hesla.
-
-      \item Příkazem {\tt ssh-keygen -N <heslo> -f \textasciitilde/.ssh/pass -C
-        <login>@pass} vygeneruje klíč s heslem jiným než pro výchozí klíč.
-
-      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (ls -l \textasciitilde/.ssh). Jak
-se liší práva mezi souborem s privátním a veřejným klíčem?
-
-    \end{enumerate}
-
-  \item {\bf Distribuce klíčů}
-
-    \begin{enumerate}
-
-      \item Všechny tři veřejné klíče si zkopírujte na vzdálený počítač do
-        souboru \verb|.ssh/authorized_keys|.
-        (např. {\verb&cat ~/.ssh/*.pub | ssh hXX "cat >> .ssh/authorized_keys"&}).
-
-      Jaké heslo bylo nutné zadat?
-
-      \item Zkuste se znovu přihlásit na stejný vzdálený počítač. Jaké heslo bylo nyní nutné zadat? Zkuste
-zadat špatné heslo a pozorujte, které další klíče se použily. Při experimentech můžete také
-využít tzv. verbose režim ssh ({\tt ssh -v}). Pro experimenty s identitou
-využijte přepínač~{\tt -i}.
-
-    \end{enumerate}
-
-  \item {\bf Konfigurace použití klíčů}
-
-    \begin{enumerate}
-
-      \item Stejným způsobem nakopírujte své veřejné klíče ještě na další počítač v laboratoři.
-
-      \item Na svém počítači vytvořte soubor \textasciitilde/.ssh/config pomocí svého oblíbeného editoru a
-vyplňte podle vzoru (hostname definujte jen pro jeden ze dvou strojů, na který jste
-kopírovali veřejné klíče):
-\begin{verbatim}
-Host hXX hXX.netlab.fit.vutbr.cz
- IdentityFile ~/.ssh/pass
-
-Host *
- IdentityFile ~/.ssh/id_rsa
- IdentityFile ~/.ssh/nopass
-\end{verbatim}
-      \item Přihlaste se postupně na oba počítače. Které klíče se použily? Co se stane, když
-pro některý klíč zadáte špatné heslo?
-%{\em Používejte FQDN, např. h01.netlab.fit.vutbr.cz.}
-
-    \end{enumerate}
-
-  \item {\bf Omezení použití klíčů}
-
-    Nyní bude naším cílem omezit použití klíče, který není chráněn heslem tak,
-    aby pomocí něj bylo možné na vzdáleném serveru vykonat pouze konkrétní příkaz.
-
-    \begin{enumerate}
-
-      \item Přihlaste se na počítač, kam jste nakopírovali své veřejné klíče a
-        upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
-        řádku s klíčem nopass (řádek poznáte tak, že končí řetězcem
-        {\tt <login>@nopass}) napíšete
-        \verb|command="ntpq -p" | (od původního
-        obsahu oddělený jednou mezerou).
-
-      \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste
-        příkazem {\tt ssh hXX -i \textasciitilde/.ssh/nopass}. Aplikovalo se
-        omezené využití klíče?
-
-    \end{enumerate}
-
-
-  \item {\bf Pohodlné opakované použití klíče zabezpečeného heslem.}
-
-    \begin{enumerate}
-
-      \item Spusťte program {\tt gnome-keyring-daemon}.
-
-      \item Připojte se ke vzdálenému počítači za použití klíče chráněného
-        heslem.
-
-      \item Odhlaste se a znovu přihlaste. Museli jste zadávat znovu heslo?
-
-    \end{enumerate}
 
 \end{enumerate}
 
