@@ -92,7 +92,8 @@ iface eth1 inet static
     Zkopírujte soubor do {\tt /var/cache/bind}, upravte jej a přidejte do
     souboru {\tt named.conf.local}.
   \item Spusťte DNS server příkazem {\tt systemctl start bind9.service}.
-    Ujistěte se, že v souboru {\tt /var/log/syslog} nejsou žádné chyby.
+    Ujistěte se, že v souboru {\tt /var/log/syslog} nejsou žádné chyby. Případné
+    chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
   \item V souboru {\tt /etc/dhcp/dhclient.conf} nastavte na obou počítačích použití vlastního
     serveru DNS běžícího na PC A, na konec souboru přidejte řádek \\
     {\tt prepend domain-name-servers
