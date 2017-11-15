@@ -1,0 +1,38 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+
+\title{NTP, DNS, DNSSEC\\
+{\bf\large ISA - Laboratorní cvičení č.3}}
+
+\author{Vysoké učení technické v Brně}
+%Toto cviční připravil Libor Polčák s využitím textů Patrika Halfara a Martina
+%Holkoviče.
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/dns}}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+\input{lab4-zadani}
+
+\newpage
+\setcounter{section}{0}
+\section*{Teorie}
+\input{theory}
+
+%% BIBLIOGRAPHY
+\bibliography{../rfc,local}
+\bibliographystyle{plain}
+
+\newpage
+\thispagestyle{empty}
+
+\end{document}
+%% END OF FILE 
