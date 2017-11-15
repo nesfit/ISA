@@ -1,14 +1,16 @@
 
 \section*{Cíle laboratoře}
 \begin{itemize}
-  \item Základní seznámení se synchronizací času a protokolem NTP.
-  \item Systém DNS.
-  \item Zabezpečení DNSSEC.
+  \item Seznámení se signalizačním protokolem SIP.
+  \item Peer-to-peer VoIP pomocí signalizace SIP.
+  \item Komunikace VoIP pomocí signalizace SIP přes ústřednu.
 \end{itemize}
 
 \section*{Základní instrukce}
 \begin{itemize}
+  \item Připojte k počítači headset se sluchátky a mikrofonem.
   \item Přihlaste se do OS Kali Linux (F3), user/password {\tt user}/{\tt user4lab}.
+  \item V pravé horní části obrazovky {\bf zkontrolujte nastavení zvuku}. Sluchátka a mikrofon nastavte na optimální hlasitost.
   \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
   \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su}
   (switch user).
@@ -18,144 +20,72 @@
   \item Pracujte ve dvojicích, zkontrolujte, že máte počítač propojen
     přímým kabelem s přístupovým přepínačem (rozhraní eth0, zdířka E na patch
     panelu).
-  \item Příkazem {\tt systemctl stop NetworkManager.service} vypněte
-    NetworkManager spravující rozhraní eth1 (doporučené, volitelně; zadání dále
-    předpokládá, že je NetworkManager vypnutý).
+
 
 \end{itemize}
 
 \section*{Úkoly}
-\section{NTP}
-
-Vašim úkolem je zajistit synchronizaci hodin počítače. V rámci bezpečnosti je
-důležité provozovat počítač se správným časem kvůli časovým razítkům
-označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
+\section{Peer-to-peer VoIP pomocí signalizace SIP}
+Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači bez použití ústředny (spojení peer-to-peer).
 
 \begin{enumerate}
-
-  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. Ujistěte
-    se, že je nastavena synchronizace proti serveru {\tt ntp.fit.vutbr.cz}.
-
-  \item Zapněte démona pro NTP ({\tt systemctl start ntp.service}).
-    Sledujte postup synchronizace příkazem {\tt
-    watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
-    spuštěné a pokračujte dalšími úkoly.
-
+    \item Zapněte program Linphone a vyčkejte až se spustí okno programu.
+    \item V menu Options {\bf zrušte} volbu {\bf Always start video}.
+    \item V menu Options $\rightarrow$ Preferences $\rightarrow$ Manage SIP accounts nastavte pole Your username na hodnotu {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
+    \item Spusťte síťový analyzátor Wireshark a začněte zachytávat pakety na rozhraní, kterým jste připojeni k síti.
+    \item Po spuštění nastavte filtr tak, aby zobrazoval pouze protokol SIP (Filter: sip).
+    \item V hlavním okně programu zadejte do pole {\bf SIP addres or phone number} SIP adresu Vašeho souseda: {\bf sip:10YY@10.10.10.1YY}, kde {\bf YY} je číslo počítače Vašeho souseda.
+    \item Zavolejte Vašemu sousedovi stisknutím zeleného telefonu. Na druhém počítači přijměte hovor, vyzkoušejte, zda se se sousedem navzájem slyšíte a po chvíli hovor ukončete.
+(V případě problémů se zvukem zkontrolujte, zda není v systému ztlumen mikrofon, či audio výstup, případně v aplikaci Linphone v menu Options $\rightarrow$ Preferences $\rightarrow$ Multimedia settings zkontrolujte nastavení zvukových zařízení.) 
+    \item Proveďte analýzu navazování spojení v odchycených datech ve Wiresharku. Využijte podpory v menu {\bf Telephony $\rightarrow$ VoIP Calls}, kde uvidíte jednotlivé zaznamenané hovory. Vyberte příslušný hovor a pro zobrazení průběhu klikněte na volbu {\bf Flow}.
+    \item Zakreslete spojení do grafu v protokolu. Uveďte, pomocí kterých protokolů a mezi jakými IP adresami a porty probíhá signalizace a přenos dat. Zjistěte použitý kodek pro přenos hlasu.
 \end{enumerate}
+Názvy a čísla podporovaných kodeků lze zobrazit v SIP/SDP zprávě v sekci {\bf Session Initiation Protocol} $\rightarrow$ {\bf Message body} $\rightarrow$ {\bf Session description protocol}:
+\begin{figure}[h!]
+  \centering
+  \fbox{\includegraphics[width=145mm]{img/3a.png}}
+\end{figure}
 
-\section{Konfigurace DNS serveru}
+\noindent Informace o tom, který z podporovaných kodeků byl skutečně použit získáte z RTP paketů (Filter: RTP) podle čísla v poli {\bf Payload type}.
+\begin{figure}[h!]
+  \centering
+  \fbox{\includegraphics[width=105mm]{img/3b.png}}
+\end{figure}
+
+
+\section{Komunikace VoIP pomocí signalizace SIP přes ústřednu}
+Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači pomocí SIP ústředny vašeho ISP.
+
+\subsection{Analýza registrace a odregistrace}
 \begin{enumerate}
-
-  \item Pracujte ve dvojicích. Jeden z dvojice bude konfigurovat server (PC A)
-    a druhý počítač bude mít roli klienta (PC B). Propojte rozhraní eth1 (zdířka
-    D na patch panelu)
-    mezi počítači ve dvojici křížovým kabelem.
-  \item Nastavte statické IP adresy na rozhraní eth1 vašich počítačů v souboru
-    \\
-    {\tt /etc/network/interfaces}:
-\begin{verbatim}    
-auto eth1
-iface eth1 inet static
-    address 192.168.X.X
-    netmask 255.255.255.0
-\end{verbatim}    
-    Restartujte síťování {\tt systemctl restart networking.service}.
-    Otestujte konektivitu příkazem {\tt ping}. Pokud konektivita nefunguje,
-    ověřte nastavení IP adres {\tt ip a s} a zamyslete se, co je špatně.
-
-  \item Upravte konfigurační soubor {\tt /etc/bind/named.conf.options} (parametr
-    {\tt listen-on} v~sekci {\tt options}) tak, aby
-    PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní eth1.
-    Inspirovat se můžete již uvedeným paramterem {\tt listen-on-v6}, případně v
-    manuálových stránkách.
-  \item Na PC A rozšiřte konfiguraci DNS serveru tak, aby obsluhoval požadavky pro vámi
-    zvolenou doménu, např. {\tt isa.cz}. Doména bude obsahovat:
-    \begin{itemize}
-      \item Nameserver pojmenovaný {\tt server}.
-      \item Záznam typu A pro {\tt server}.
-      \item Záznam typu A pro jméno {\tt pcb}, který odkazuje na IP adresu
-        počítače PC B.
-      \item Záznam typu CNAME pro jméno {\tt pca} ukazující na {\tt server}.
-    \end{itemize}
-    Inzerujte platnost vámi zasílaných záznamů 1 hodina.
-    Jako základ zónového souboru pro vaší
-    doménu můžete použít soubor {\tt /etc/bind/db.local}, či {\tt
-    /root/isa3/fit.vutbr.cz}.
-    Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/cache/bind},
-    nezapomeňte zaregistrovat zóny
-    v~souboru {\tt named.conf.local} (potřebné informace jsou k dispozici
-    v~teoretické části).
-  \item V případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
-    (záznamy AAAA).
-  \item Nakonfigurujte reverzní překlad. Jako základ
-    zónového souboru s reverzní zónou můžete použít např. {\tt /etc/bind/db.127}.
-    Zkopírujte soubor do {\tt /var/cache/bind}, upravte jej a přidejte do
-    souboru {\tt named.conf.local}.
-  \item Spusťte DNS server příkazem {\tt systemctl start bind9.service}.
-    Ujistěte se, že v souboru {\tt /var/log/syslog} nejsou žádné chyby. Případné
-    chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
-  \item V souboru {\tt /etc/dhcp/dhclient.conf} nastavte na obou počítačích použití vlastního
-    serveru DNS běžícího na PC A, na konec souboru přidejte řádek \\
-    {\tt prepend domain-name-servers
-    192.168.X.X;} \\ Na obou počítačích restartujte síťování: {\tt systemctl restart networking.service}.
-    Ověřte nastavení IP adres a obsah souboru {\tt /etc/resolv.conf}.
-  \item Ověřte, že PC A používá pro překlad lokální DNS server ({\tt dig
-    localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
-    poslední části odpovědi.
-  \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
-  \item Ověřte zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
-  \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
-    {\tt wireshark}. Analyzujte si jednotlivé položky a porovnejte je s výpisem
-    programu {\tt dig}.
-
+    \item Spusťte znovu zachytávání paketů v aplikaci Wireshark tlačítkem \includegraphics[width=3mm]{img/ws_start.png}.
+    \item Vraťte se do hlavního okna aplikace Linphone. V menu Options $\rightarrow$ Manage SIP accounts zkontrolujte, zda je v poli Your username uloženo {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
+    \item Ve stejném okně v sekci {\bf Proxy accounts} klikněte na {\bf Add} a vyplňte následující pole: \\
+    ~\\
+    {\bf Your SIP identity:} 	{\tt sip:userXX@isa.fit} \\
+    {\bf SIP proxy address:}	{\tt sip:10.10.10.222} \\
+    ~\\
+	Po potvrzení budete vyzvání k zadání uživatelského jména a hesla, zadejte: \\
+    {\bf userID:} 	{\tt userXX} \\
+    {\bf Password:}	{\tt hesloXX}
+    \item Tímto jste provedli registraci k ústředně. Pokud jste vše nastavili správně, mělo by se ve spodní části hlavního okna zobrazit {\bf Registration on ... successfull} \\
+    {\it (V případě neúspěchu v nastavení účet odeberte znovu přidejte. Pokud ani toto nepomohlo, ukončene Linphone, spusťte znovu /root/isa4/clean.sh a postupujte znovu od kroku 1)}
+    \item Klikněte na tlačítko Zakázat, kterým se odregistrujete ze serveru.
+    \item V menu {\bf Options} $\rightarrow$ {\bf Manage SIP accounts} vyberte v sekci {\bf Proxy accounts} vytvořený SIP účet a klikněte na {\bf Remove}, čímž by měla proběhnout odregistrace od ústředny.
+    \item Ve Wiresharku analyzujte registraci a odregistraci a zakresleslete jejich průběh do protokolu. Vyplňte požadované údaje a zjistěte, v čem se liší paket, kterým se registrujete, od paketu, kterým se odregistrujete.
 \end{enumerate}
 
-\section{Jednoduchý útok na DNS}
 
+\subsection{Analýza hovoru přes ústřednu}
 \begin{enumerate}
-  \item Na PC B spusťte prohlížeč IceWeasel. Zobrazte si webové stánky v
-    doménách {\tt www.fit.vutbr.cz} a {www.seznam.cz}. Všimněte si klíče v pravé
-    části adresního řádku.
-
-  \item Na PC A vytvořte zónové soubory pro domény {\tt fit.vutbr.cz} a {\tt
-    seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
-    PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
-    soubory přidejte do souboru {\tt /etc/bind/named.conf.local} a restartujte
-    Bind.
-
-  \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
-    Spusťte zde jednoduchý webový server příkazem {\tt python -m
-    SimpleHTTPServer 80}.
-
-  \item Na PC B ověřte, že se doménová jména {\tt www.seznam.cz} a {\tt
-    www.fit.vutbr.cz} překládají na IP adresu PC A.
-
-  \item Na PC B si zobrazte webové prezentace v doménách {\tt www.fit.vutbr.cz}
-    a {\tt www.seznam.cz}. Všimněte si klíče v pravé části adresního řádku.
-
+    \item Znovu se registrujte k ústředně.
+    \item Obnovte zachytávání paketů v aplikaci Wireshark tlačítkem  \includegraphics[width=3mm]{img/ws_start.png}.
+    \item V hlavním okně programu zadejte do pole {\bf SIP addres or phone number} SIP adresu Vašeho souseda: {\bf sip:10YY@10.10.10.222}, kde YY je opět číslo počítače Vašeho souseda.
+    \item Zavolejte Vašemu sousedovi a proveďte analýzu hovoru podobně jako u Peer-to-peer hovoru.
+    \item Zakreslete průběh spojení do grafu v protokolu. Uveďte, mezi kterými IP adresami a porty probíhá signalizace a mezi kterými přenos dat. Vyplňte, které protokoly se používají pro signalizaci a které pro přenos. Dále zjistěte, jaký kodek pro přenos hlasu byl použit.
 \end{enumerate}
-
-\section{Zabezpečení DNS -- DNSSEC}
-
-\begin{enumerate}
-
-  \item Vygenerujte Key Signing Key (KSK) a Zone Signing Key. Zkontrolujte, že
-    jste vytvořili dva páry klíčů.
-
-  \item Přidejte záznamy typu DNSKEY do zónového souboru (podle uvážení přímo,
-    či pomocí direktivy \verb|$INCLUDE|).
-
-  \item Podepište zónový soubor příkazem \verb|dnssec-signzone|.
-
-  \item Upravte konfiguraci {\tt named.conf.local} tak, aby se jako zónový
-    soubor použil soubor obsahující podepsané záznamy.
-
-  \item Zkontrolujte nasazení DNSSEC. Je nasazení úplné?
-
-\end{enumerate}
-
 
 \section{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Počítač vypněte dávkou {\tt /root/isa3/clean}.
+  \item Počítač vypněte jako root skriptem {\tt /root/isa4/clean}.
 \end{itemize}
