@@ -1,54 +1,20 @@
-LATEX=cslatex
-#LATEX=latex
-BIBTEX=bibtex
-DVIPS=dvips
-PS2PDF=ps2pdf13
-PSNUP=psnup 
-CC=gcc
-CFLAGS=-Wall
-LATEX2HTML=tth -e2
-TREX=trex
+TEX=latex
+BIB=bibtex
+PDF=cv5
 
-all: management.pdf
+all: $(PDF).pdf
 
-%: %.ps
-#%.two: %.ps.2
+$(PDF).dvi: $(PDF).tex theory.tex lab5-zadani.tex Makefile local.bib  ../rfc.bib
+	$(TEX) $<
+	$(BIB) $(PDF)
+	$(TEX) $<
+	$(TEX) $<
 
-%.o: %.c
-	$(CC) $(CFLAGS) -o $@ $<
-
-# implicit rules
-
-%.dvi: %.tex
-	$(LATEX) $<
-#	$(BIBTEX) $*
 %.ps: %.dvi
-	$(DVIPS) $<
+	dvips -f -t a4 $< > $@
+
 %.pdf: %.ps
-	$(PS2PDF) $< $@
-%.2ps: %.ps
-	$(PSNUP) -2 $< > $@
-%.4ps: %.ps
-	$(PSNUP) -l -4 $< > $@
-%.html: %.tex
-	$(LATEX2HTML) $< > $@
+	ps2pdf14 -sPAPERSIZE=letter $<
 
-cleantrex:
-	rm -f form_red oc.out *~ fic_implcontrainte_err.txt fic_mincontrainte_err.txt
-
-%.aut:  cleantrex %.if %.cnd
-	rm -f $*.tr $*.tr.dot
-	$(TREX) -init $*.if -c $*.cnd -cp $(CP) -sg $*.aut  -res $*.res -tr $*.tr -e
-
-# local dependences
-$(SOURCE).dvi: $(SOURCE).tex
-$(SOURCE).ps: $(SOURCE).dvi
-$(SOURCE).pdf: $(SOURCE).ps
-$(SOURCE).ps.2: $(SOURCE).ps
-$(SOURCE).html: $(SOURCE).tex
-
-# cleaning
-clean: 
-	rm -f *.dvi *.ps *.ps.2 
-cleanall:
-	rm -f *~ *.log *.aux *.dvi *.ps.2 *bbl *blg
+clean:
+	rm *.aux *.dvi *.log *.blg *.bbl
