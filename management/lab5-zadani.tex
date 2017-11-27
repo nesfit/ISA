@@ -1,0 +1,439 @@
+%\include{macro_lecture}
+\section*{Cíl laboratorního cvičení}
+\begin{itemize}
+  \item seznámit se s nástroji pro správu sítě
+  \item naučit se práci s nástrojem SSH a správu klíčů 
+  \item naučit se pracovat s protokolem Syslog a nástrojem rsyslog
+  \item konfiguraci nástrojů pro práci s protokolem SNMP
+  \item otestovat práci se syslog a SNMP
+  \item seznámit se s protokolem NetFlow
+  \item naučit se pracovat s nástroji {\tt nfsen} a {\tt nfdump}
+\end{itemize}
+
+\section*{Pokyny}
+\begin{itemize}
+  \item Do zadání nepište, slouží pro další skupiny. PDF verzi zadání
+  i šablony konfiguračních souborů lze najít v IS u předmětu ISA.
+  \item Na konci laboratorního cvičení nezapomeňte na poslední bod,
+  tj. na {\bf Ukončení práce v laboratoři}!
+\end{itemize}
+
+\newpage
+%\section{Laboratorní úlohy}
+\section{Vzdálený terminál -- SSH}
+
+Pracujte pod uživatelem {\tt user}. Zkontrolujte, že pracujete pod
+uživatelem {\tt user} příkazem {\tt whoami}, který vypisuje jméno aktivního
+uživatele.
+
+Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
+
+\begin{enumerate}
+
+  \item Ukončete démona spravujícího hesla k použitým klíčům SSH: \\ {\tt killall
+    gnome-keyring-daemon}.
+
+  \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
+
+    \begin{enumerate}
+
+      \item Přihlaste se příkazem {\tt ssh {\em host}} na vzdálený počítač. Jako {\em host} použijte 
+            jméno {\tt hNN}, kde NN je číslo stanice souseda. Uživatele není nutné specifikovat.
+
+      \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl-D} spojení ukončete.
+
+    \end{enumerate}
+
+  \item {\bf Vytvoření veřejného a privátního klíče.}
+
+    \begin{enumerate}
+
+      \item Příkazem {\tt ssh-keygen} vygenerujte implicitní klíč. Neměňte jeho
+        název a zvolte heslo o délce alespoň osmi znaků.
+
+      \item Příkazem \verb|ssh-keygen -N "" -f ~/.ssh/nopass -C <login>@nopass| vygenerujte autentizační klíč bez hesla.
+
+      \item Příkazem {\tt ssh-keygen -N <heslo> -f \textasciitilde/.ssh/pass -C
+        <login>@pass} vygeneruje klíč s heslem jiným než pro výchozí klíč.
+
+      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (ls -l \textasciitilde/.ssh). Jak
+se liší práva mezi souborem s privátním a veřejným klíčem?
+
+    \end{enumerate}
+
+  \item {\bf Distribuce klíčů}
+
+    \begin{enumerate}
+
+      \item Všechny tři veřejné klíče si zkopírujte na vzdálený počítač do
+        souboru \verb|.ssh/authorized_keys|.
+        (např. {\verb&cat ~/.ssh/*.pub | ssh hXX "cat >> .ssh/authorized_keys"&}).
+
+      Jaké heslo bylo nutné zadat?
+
+      \item Zkuste se znovu přihlásit na stejný vzdálený počítač. Jaké heslo bylo nyní nutné zadat? Zkuste
+zadat špatné heslo a pozorujte, které další klíče se použily. Při experimentech můžete také
+využít tzv. verbose režim ssh ({\tt ssh -v}). Pro experimenty s identitou
+využijte přepínač~{\tt -i}.
+
+    \end{enumerate}
+
+  \item {\bf Konfigurace použití klíčů}
+
+    \begin{enumerate}
+
+      \item Stejným způsobem nakopírujte své veřejné klíče ještě na další počítač v laboratoři.
+
+      \item Na svém počítači vytvořte soubor \textasciitilde/.ssh/config a pomocí textového editoru přidejte
+nasledující konfiguraci (hostname definujte jen pro jeden ze dvou strojů, na který jste
+kopírovali veřejné klíče):
+\begin{verbatim}
+Host hNN hNN.netlab.fit.vutbr.cz
+ IdentityFile ~/.ssh/pass
+
+Host *
+ IdentityFile ~/.ssh/id_rsa
+ IdentityFile ~/.ssh/nopass
+\end{verbatim}
+      \item Přihlaste se postupně na oba počítače. Které klíče se použily? Co se stane, když
+pro některý klíč zadáte špatné heslo?
+
+    \end{enumerate}
+
+  \item {\bf Omezení použití klíčů}
+
+    Nyní bude naším cílem omezit použití klíče, který není chráněn heslem tak,
+    aby pomocí něj bylo možné na vzdáleném serveru vykonat pouze konkrétní příkaz.
+
+    \begin{enumerate}
+
+      \item Přihlaste se na počítač, kam jste nakopírovali své veřejné klíče a
+        upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
+        řádku s klíčem nopass (řádek poznáte tak, že končí řetězcem
+        {\tt <login>@nopass}) napíšete
+        \verb|command="ntpq -p" | (od původního
+        obsahu oddělený jednou mezerou).
+
+      \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste
+        příkazem {\tt ssh hXX -i \textasciitilde/.ssh/nopass}. Aplikovalo se
+        omezené využití klíče?
+
+    \end{enumerate}
+
+
+  \item {\bf Pohodlné opakované použití klíče zabezpečeného heslem.}
+
+    \begin{enumerate}
+
+      \item Spusťte program {\tt gnome-keyring-daemon}.
+
+      \item Připojte se ke vzdálenému počítači za použití klíče chráněného
+        heslem.
+
+      \item Odhlaste se a znovu přihlaste. Museli jste zadávat znovu heslo?
+
+    \end{enumerate}
+
+      \item {\bf HTTP proxy pomocí SSH tunelu}
+
+    \begin{enumerate}
+
+      \item Navštivte stránku {\tt www.fit.vutbr.cz}. Všimněte si vaší IP adresy v levém dolním rohu stránky.
+
+      \item Přihalšte se na server fakultní server merlin pomocí SSH příkazu:\\{\tt ssh -D 8080 -N xloginNN@merlin.fit.vutbr.cz}.
+
+      \item V prohlížeči jděte do nastavení proxy a nastavte adresu pro SOCKS5 na 127.0.0.1 a port 8080.
+
+      \item Znovu navštivte stránku {\tt www.fit.vutbr.cz}. Jaká je nyní zobrazena IP adresa?
+
+    \end{enumerate}
+
+\end{enumerate}
+
+
+\section{Syslog}
+  \begin{itemize}
+    \item Úkol: 
+    \begin{itemize}
+      \item Seznámit se s protokolem Syslog, který slouží pro přenos
+      logovacích zpráv ze spravovaných zařízení. Pojmem Syslog je často označováno také
+      programové vybavení implementující samotný přenos, třídění a ukládání zpráv na disk.
+      \item Rozdělte se do dvojic. V každé dvojici zvolte jednu stanici jako klient a
+      druhou jako server a nakonfigurujte přeposílání veškerých Syslog zpráv 
+      z klienta na server. Mějte na paměti možné zneužití Syslog protokolu útočníkem a omezte
+      na straně serveru příjem pouze na zprávy od daného klienta
+      a klientovi zamezte příjem jakýchkoliv zpráv ze sítě.
+      \item Pro práci využijte nástroj {\tt rsyslogd}, který bude sloužit jako server i klient. K
+      otestování využijte nástroj {\tt logger}.
+      \item Na klientovi následně omezte přeposílání pouze na zprávy konkrétního typu.
+    \end{itemize}
+    \item Příkazy:
+       \begin{itemize}
+            \item {\tt rsyslogd(8)} -- démon pro Syslog.
+            \item {\tt rsyslog.conf(5)} -- Popis konfigurace rsyyslog démona.
+            \item {\tt logger(1)} -- Nástroj pro generování Syslog zpráv.
+            \item {\tt tcpdump(1)}
+        \end{itemize}
+    \item Postup:
+       \begin{enumerate}
+            \item Rozdělte se do dvojic a určete server a klient stanici.
+
+            \item {\bf Na serveru} nakonfigurujte syslog démona tak, aby ukládal veškeré zprávy
+         od klienta do souboru {\tt /var/log/logclient.log}. Při editaci souboru {\tt
+         /etc/syslog.conf} použijte jako oddělovač výhradně
+         tabulátor nikoliv mezeru. Na začátek souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo a oddělte ho od zbytku pravidel
+         prázdným řádkem:
+
+            \item {\bf Na serveru} povolte naslouchání na síťovém soketu. Do souboru {\tt /etc/rsyslog.conf} přidejte/
+            odkomentujte tyto řádky:
+
+\begin{verbatim}
+  module(load="imtcp")
+  input(type="imtcp" port="514")
+\end{verbatim}
+
+
+            \item {\bf Na serveru} je nutné vytvořit soubor pro logování, v opačném případě by
+         Syslog démon do souboru nezapisoval:
+\begin{verbatim}
+ touch /var/log/logclient.log
+\end{verbatim} 
+
+            \item {\bf Na klientovi} zakažte programu rsyslogd naslouchat na síťovém soketu, tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
+\begin{verbatim}
+  module(load="imudp")
+  input(type="imudp" port="514")
+
+  module(load="imtcp")
+  input(type="imtcp" port="514")
+\end{verbatim} 
+
+            \item {\bf Na klientovi} nakonfigurujte rsyslog démona tak, aby odesílal veškeré zprávy
+         z klienta na serveri pomocí TCP. Jako oddělovač použijte výhradně
+         tabulátor nikoliv mezery. Do souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo:
+\begin{verbatim} 
+ *.*<TAB>@@<domenove_jmeno_serveru>:<číslo_portu>
+\end{verbatim}
+
+            \item {\bf Na serveru i klientovi} restartujte Syslog démona: 
+\begin{verbatim}
+  systemctl restart rsyslog
+\end{verbatim} 
+
+            \item {\bf Z klienta} ověřte správnou konfiguraci vygenerováním testovací Syslog 
+         zprávy pomocí nástroje {\tt logger}:
+\begin{verbatim} 
+  logger <obsah_zprávy>
+\end{verbatim} 
+        
+            \item Zpráva byla přeposlána na server, kde ji lze najít na konci souboru
+         {\tt /var/log/logclient.log}.
+
+\begin{verbatim} 
+  tail -f /var/log/logclient.log
+\end{verbatim} 
+
+            \item  Na klientovi pokračujte v generování Syslog zpráv a 
+         na serveru sledujte příchozí Syslog zprávy pomocí {\tt tcpdump}. Na jakém
+         portu a jakým protokolem jsou Syslog zprávy zasílány. Dále vysvětlete,
+         co znamená zvýšený výskyt DNS komunikace po každém příchodu Syslog
+         paketu~\footnote{Jedná se o překlad zdrojové IP adresy Syslog paketu na doménové
+         jméno, aby bylo možné ověřit shodu jmen povolených klientů}.
+
+            \item Otevřete si manuálovou stránku rsyslog.conf a zjistěte, jaké zařízení a priority
+         zpráv Syslog poskytuje. 
+\begin{verbatim} 
+  man rsyslog.conf
+\end{verbatim} 
+        
+         \item Ze znalosti zařízení a priorit nakonfigurujte klienta, aby posílal na server 
+         pouze zprávy při selhání autentizace, tj. upravte již existující pravidlo pro přeposílání
+         veškerých zpráv na server v souboru {\tt /etc/rsyslog.conf}. Nezapomeňte restartovat Syslog démona. 
+         
+\begin{verbatim} 
+  Syntax pravidel: <facility>.<priority><TAB><action>
+\end{verbatim} 
+         \item Ze serveru se následně pokuste o neúspěšné ssh připojení na klienta a podívejte se
+         do souboru {\tt /var/log/logclient.log} jakou zprávu zaslal klient serveru.
+
+
+       \end{enumerate}
+   \end{itemize}
+
+\section{SNMP}
+  \begin{itemize}
+    \item Úkol: 
+    \begin{itemize}
+      \item Seznámit se s  protokolem SNMP, který slouží pro přenos
+      informací o stavu spravovaných zařízení (např. hodnot čítačů). Během tohoto cvičení si
+      vyzkoušíte práci se synchronními SNMP událostmi, tj. model komunikace dotaz-odpověď.
+      \item Každou stanici nakonfigurujte tak, aby lokálně umožňovala čtení i zápis SNMP
+      proměnných a při vzdáleném přístupu k SNMP proměnným pouze čtení.
+    \end{itemize}
+    \item Příkazy:
+       \begin{itemize}
+            \item {\tt snmpd(8)} -- SNMP démon.
+            \item {\tt snmpd.conf(5)} -- Popis konfigurace SNMP démona.
+            \item {\tt snmpwalk(1)} -- Nástroj pro procházení a získávání podstromu hodnot SNMP
+         proměnných.
+            \item {\tt snmpget(1)} -- Nástroj pro získání hodnoty SNMP proměnné.
+            \item {\tt snmpset(1)} -- Nástroj pro změnu hodnoty SNMP proměnné.
+        \end{itemize}
+    \item Postup:
+       \begin{enumerate}        
+            \item Otevřete si soubor {\tt /etc/snmp/snmpd.conf} pro editaci a postupně
+         v něm proveďte základní konfiguraci:
+           \begin{enumerate}
+               \item Zvolte si vlastní název komunity - např. PUBLIC
+           \item Nastavte agenta, aby poslouchal na všech lokálních adresách \texttt{agentAddress
+           udp:0.0.0.0:161}
+               \item Namapujte sítě, ze kterých bude možné přistupovat k SNMP
+           hodnotám. Povolte počítačům v učebně zápis pro čtení {\tt rocommunity
+           <COMMUNITY> 10.10.10.0/24} a lokálnímu počítači i zápis {\tt rwcommunity <COMMUNITY>
+           localhost}
+           \item V konfiguračním souboru ještě nastavte SNMP proměnnou \texttt{sysContact}
+           na Vámi vymyšlenou hodnotu. Takto nastaven8 proměnná bude vždy pouze pro čtení bez ohledu
+           na nastavení přístupových pravidel.
+           \item Nastavte proměnnou sysLocation pomocí příkazu {\tt snmpset}
+\begin{verbatim}
+  snmpset -v1 -c <nazev_komunity> localhost 1.3.6.1.2.1.1.6.0 s <retezec>
+\end{verbatim}
+           \end{enumerate}
+            \item Spusťte službu {\tt snmpd}.
+\begin{verbatim}
+  systemctl start snmpd
+\end{verbatim} 
+            \item Ověřte, že služba běží. Na kterých portech naslouchá?
+\begin{verbatim}
+  systemctl status snmpd
+  ss -atun | grep snmpd
+  ps -ax | grep snmpd | grep -v grep
+\end{verbatim} 
+          \item Příkazem {\tt snmpwalk} přečtěte podstrom {\tt system} a zjistěte jak váš
+          soused nastavil proměnné {\tt sysLocation} a {\tt sysContact}. Např.:
+\begin{verbatim}
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno>
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.6.0
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.4.0
+\end{verbatim}
+
+          \item Pokud znáte OID (Object Identifier) proměnné v databázi MIB (Management Information Base), pak
+          můžete získat hodnotu této proměnné
+          přímo pomocí {\tt snmpget}, např. počet bytů odeslaných na rozhraní eth0:
+\begin{verbatim}
+  snmpwalk -v 1 -c <nazev_komunity> \
+           <domenove_jmeno_souseda> 1.3.6.1.2.1.2.2.1.16
+  snmpget -v 1 -c <nazev_komunity> \
+           <domenove_jmeno_souseda> 1.3.6.1.2.1.2.2.1.16.2
+\end{verbatim}
+          \item Zkuste nastavit svému sousedovi proměnnou sysLocation
+          pomocí nástroje {\tt snmpset}:
+\begin{verbatim}
+  snmpget -v 1 -c <nazev_komunity> <domenove_jmeno_souseda> 1.3.6.1.2.1.1.6.0
+
+  snmpset -v 1 -c <nazev_komunity> <domenove_jmeno_souseda> \
+    1.3.6.1.2.1.1.6.0 s <nova_hodnota>i
+\end{verbatim}
+          \item Proč předchozí pokus o nastavení proměnné sousedovi selhal? Zkuste nyní
+          nastavit svoji proměnnou popisující název Vašeho počítače
+          pomocí nástroje {\tt snmpset}:
+\begin{verbatim}
+  snmpget -v 1 -c <nazev_komunity> localhost 1.3.6.1.2.1.1.6.0
+
+  snmpset -v 1 -c <nazev_komunity> localhost \
+    1.3.6.1.2.1.1.6.0 s <nove_jmeno_pocitace>
+
+  snmpget -v 1 -c <nazev_komunity> localhost 1.3.6.1.2.1.1.6.0
+\end{verbatim}
+
+\end{enumerate}
+\end{itemize}
+
+\section{NetFlow}
+  \begin{itemize}
+    \item Úkol:
+        \begin{itemize}
+            \item Seznámit se možnostmi měření provozu pomocí NetFlow. NetFlow slouží pro
+            přenos statistik o jednotlivých tocích dat vznikajících při komunikaci po síti.
+            Záznamy NetFlow, s nimiž budete během cvičení pracovat, jsou
+            pořízeny z napojení sítě VUT a anonymizovány. V druhé části úkolu
+            budete pracovat s daty pořízenými sondou FlowMon, která monitoruje
+            dění v síti společností .
+            \item Seznámit se s nástrojem {\tt nfsen}, který graficky zobrazuje záznamy
+            NetFlow ve webovém prohlížeči. Seznámit se s nástrojem {\tt nfdump}, který slouží k dotazování na uložená data NetFlow.
+        \end{itemize}
+    \item Příkazy:
+        \begin{itemize}
+            \item {\tt nfdump}
+        \end{itemize}
+    \item Postup:
+        \begin{enumerate}
+            \item Naučte se používat nástroj {\tt nfdump}, který slouží k dotazovaní se nad záznamy NetFlow.
+                \begin{enumerate}
+                    \item Na Vašem počítači se v adresáři {\tt /home/user/isa3/netflow} nachází
+               \footnote{Není-li tomu tak, adresář vytvořte. Netflow data
+               získejte pomocí příkazů {\tt fetch
+               http://FIXME} a {\tt tar xvf
+               nfcapd-isa.tar}}
+               anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu {\tt
+               nfdump}, který využjte ke kladení dotazů nad NetFlow daty.
+                    \item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
+                    \item Dotažte se na následující statistiky. TOP 20 IP adres podle počtu přenesených bajtů. 
+                        \begin{itemize}
+                            \item V manuálové stránce si najděte, co dělají přepínače {\tt -R , -s, -n}.
+                            \item Nezapomeňte, že zpracováváte několik souborů o celkové
+              velikosti 600\,MB, tedy vytvoření statistiky chvíli potrvá!
+                        \end{itemize}
+                    \item Zjistěte, jak velké datové přenosy připadají na jednotlivé protokoly. (Statistika protokolů)
+                        \begin{itemize}
+                            \item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
+                        \end{itemize}
+                    \item Na základě získaných statistik se zamyslete nad velikostí sítě.
+               \footnote{Jedná se o anonymizovaná data z páteřní sítě VUT
+               získaná za 1 hodinu provozu od 21 hodin} 
+                    \item Zaměřte se na konkrétní stanici v síti, např. {\tt 194.179.74.239} a
+               zjistěte, s kým komunikovala, a odhalte podezřelou aktivitu tohoto uživatele.
+               \footnote{Příliš mnoho jedno paketových telnet spojení během krátké doby na různé počítače ale stejný port 23 ukazuje na skenovací aktivitu útočníka.}
+\begin{verbatim}
+ nfdump -R /home/user/isa3/netflow -o long -c 100 \
+ "src ip 194.179.74.239"
+\end{verbatim} 
+
+                \end{enumerate}
+        \item Přihlašte se na sondu FlowMon, běžící ve společnosti Flowmon Networks
+            \begin{enumerate}
+                \item webová stránka: {\tt https://demo.invra.cz}, login: {\tt demo}, heslo: {\tt demo}.
+                      Neměňte žádné nastavení.
+                \item Seznamte se s jednotlivými stránkami, které vytváří program {\tt nfsen}.
+                   \begin{itemize}
+                     \item {\bf Přehled} -- Stručný přehled statistik pro provoz
+                     \item {\bf Zdroje} -- Zdroje NetFlow dat 
+                     \item {\bf Profily} -- Nastavení pro specifický typ provozu 
+                     \item {\bf Analýza} -- Podrobné informace o nasbíraných datech za určité období
+                     \item {\bf Reporty} -- Vytvoření reportu za určité období
+                     \item {\bf Alerty} -- Hlášení pro specifické události
+                   \end{itemize}
+             \item Úkoly:
+                \begin{itemize}
+                   \item Zjistěte, jaké IM protokoly se v této síti používají.
+                   \item Zjistěte, jaké P2P protokoly se v této síti používají.
+                   \item Který protokol transportní vrstvy se používá
+                   nejčastěji? Jaký má přibližně podíl na celkovém provozu v
+                   síti? Jak se tento podíl mění v průběhu dne, týdne? Zamyslete
+                   se, proč tomu tak je.
+                \end{itemize}
+            \end{enumerate}       
+        \end{enumerate} 
+    \item Pro zájemce:
+        \begin{itemize}
+            \item Zájemci si mohou na stránce {\tt https://demo.invea.cz} projít
+      ostatní moduly vystavěné nad protokolem. Neměňte žádné nastavení.
+        \end{itemize}
+    \end{itemize}
+ 
+\section*{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item Pod uživatelem {\tt root} spusťte dávku {\tt /root/isa3/isa3} pro zrušení
+  vytvořených konfiguračních souborů a pro vypnutí počítače.
+\end{itemize}

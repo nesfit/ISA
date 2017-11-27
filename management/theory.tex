@@ -1,0 +1,208 @@
+%%%%%%%%%%%%%%%%%%%%
+\section{Secure Shell}
+\label{ssh}
+
+Základní funkcí protokolu Secure Shell (SSH) \cite{rfc4253} je umožnění bezpečného přístupu
+ ke vzdálenému počítači přes nezabezpečenou síť. Díky tomu, že je protokol SSH navržen obecně,
+ lze pomocí něj zabezpečovat i další služby, jako je např. X Window, přístup ke vzdálenému
+ souborovému systému (SFTP, sshfs, scp), tunelování portů TCP apod. Protokol SSH zajišťuje
+ šifrování dat, autentizaci, integritu dat a volitelně také kompresi přenášených dat.
+
+V~rámci předmětu ISA se zaměříme pouze na malou část možností, které protokol SSH přináší. V~rámci
+ cvičení si vyzkoušíme protokol SSH pro terminálový přístup ke vzdálenému stroji a ukážeme si
+ využití přihlašování ke vzdálenému počítači pomocí klíčů. Dále si vyzkoušíme, jak využít SSH
+ k~vytvoření jednoduché HTTP proxy.
+
+Jednou z~nejčastěji používaných aplikací pro využití protokolu SSH je sada programů OpenSSH.
+ Balíček programů obsahuje kromě klienta {\tt ssh} i serverovou aplikaci {\tt sshd}, program
+ pro generování SSH klíčů {\tt ssh-keygen}, agenta pro usnadnění práce s~SSH klíči {\tt ssh-agent}
+ a další. My budeme předpokládat, že na počítačích, na které se budeme snažit připojit
+ již běží SSH server {\tt sshd}. Konfigurace tohoto programu je nad rámec tohoto manuálu. Zájemci
+ mohou nalézt podrobnější informace v~manuálové stránce {\tt sshd\_config(5)}, či v~jiných návodech.
+
+\subsection{Připojení ke~vzdálenému počítači}
+
+Pro připojení se k~počítači pojmenovaném \emph{h01} a otevření příkazového řádku na vzdáleném
+ stroji je možné použít příkaz:
+
+\begin{verbatim}
+ssh h01
+\end{verbatim}
+
+Příkaz ssh má celou řadu parametrů, které jsou detailně popsány v~manuálové stránce {\tt ssh(1)}.
+ Z~těch nejčastěji používaných zmíníme alespoň změnu uživatelského jména ({\tt -l}), specifikování
+ TCP portu vzdáleného serveru ({\tt -p}), zvýšení výřečnosti programu ({\tt -v}, tento parametr
+ lze použít i vícekrát), zapnutí tunelování protokolu X Windows ({\tt -X}, {\tt -Y})
+ a přesměrování portů ({\tt -L}). Často zadávané parametry se specifikují v konfiguračním souboru
+ \verb|~/.ssh/config|. Popis tohoto souboru obsahuje manuálová stránka {\tt ssh\_config(5)}.
+
+Po připojení ke vzdálenému serveru jsou informace o~použitém spojení dostupné např. v~rámci
+ proměnných prostředí. Proměnné prostředí související s~protokolem SSH je možné zobrazit
+ příkazem {\tt env | grep SSH}. Následující výpis ukazuje příklad proměnných po připojí
+ k~serveru {\tt merlin} protokolem IPv6:
+
+\begin{verbatim}
+local $ ssh merlin6.fit.vutbr.cz 
+merlin $ env | grep SSH
+SSH_CLIENT=2001:67c:1220:80c:e138:4d11:c04c:c675 54514 22
+SSH_TTY=/dev/pts/30
+SSH_CONNECTION=2001:67c:1220:80c:e138:4d11:c04c:c675 54514 2001:67c:1220:8b0::93e5:b013 22
+\end{verbatim}
+
+Z~výpisu vidíme, že připojení bylo realizováno na IPv6 adresu {\tt 2001:67c:1220:8b0::93e5:b013}
+ z~počítače s~adresou {\tt 2001:67c:1220:80c:e138:4d11:c04c:c675}. Byl použit zdrojový port č. 54514,
+ na straně serveru byl použit standardní protokol 22. Po připojení využíval vzdálený uživatel
+ terminál č. 30. Odhlášení ze vzdáleného počítače probíhá standardními prostředky pro ukončení
+ shellu, např. příkaz {\tt exit}, nebo vložení konce souboru klávesovou zkratkou {\tt Ctrl-D}.
+
+\subsection{Kopírování souborů mezi počítači}
+
+Pro kopírování souborů protokolem SSH je často využívaná utilita {\tt scp}. Cesta na vzdáleném
+ serveru je specifikována v~následujícím formátu: {\tt uživatel@jménoserveru:cesta}.
+ Následující příkaz zkopíruje lokální soubor isa na vzdálený počítač h01 do
+ složky fit umístěné v~domovské složce uživatele student.
+
+\begin{verbatim}
+scp isa student@h01:fit/
+\end{verbatim}
+
+\subsection{SSH jako proxy a tunelování portů}
+Díky velmi obecné implementaci lze protokolem SSH tunelovat jakýkoli typ provozu. Je tedy možné
+ např. zajistit šifrování provozu po určitou část komunikace, konkretně po stanici, ke které
+ se připojujeme SSH protokolem, nebo přesměrovat provoz z~některého portu na jiný port. Následujcí
+ příkaz nám otevře SSH spojení, které pak můžeme použít jako proxy ve webovém prohlížeči.
+
+\begin{verbatim}
+  ssh -D 12345 -N student@sshserver
+\end{verbatim}
+
+Po autentizaci stačí pak v~prohlížeči zadat jako nastavení proxy server localhost s~portem 12345
+ a~provoz bude směrován nejprve na localhost, poté půjde ssh spojením na sshserver, kde bude převeden
+ na běžný HTTP/HTTPS provoz a~poslán dále. 
+
+\subsection{Klíče protokolu SSH}
+
+Klíče protokolu SSH mají několik výhod. Díky nim není nutné posílat heslo pro přístup ke vzdálenému
+ stroji přes síť, byť v~šifrované podobě. Délka používaných klíčů znesnadňuje potenciálnímu
+ útočníkovi útok hrubou silou, protože síla klíče bývá typicky vyšší než síla běžně používaných
+ hesel. Ve spojení s~agentem pro správu klíče může uživatel přistupovat ke vzdálenému serveru bez
+ nutnosti opakovaného zadávání hesla. Agent může být nastaven, aby pro použitý klíč nevyžadoval
+ heslo po zbytek sezení, či po určitý počet minut.
+
+SSH klíč se obvykle generují utilitou {\tt ssh-keygen}. Po spuštění bez parametrů je vytvořen pár
+ klíčů algoritmem RSA o~délce 2048\,B. Uživateli je nabídnuto umístění souboru,
+ které může změnit. Dále je uživatel požádán o~zadání passfráze, od které se očekává, že bude
+ silnější než heslo. Parametr {\tt -t} nastavuje jiný typ šifrovacího algoritmu,
+ parametr {\tt -b} mění délku klíče, parametrem {\tt -f} specifikuje umístění souboru, parametr
+ {\tt -C} upravuje popis klíče, další parametry popisuje manuálová stránka {\tt ssh-keygen(1)}.
+ Následující příklad vygeneruje klíč o~délce 4096\,B, který nebude chráněn passfrázi:
+
+\begin{verbatim}
+ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/nopass -C nopass
+\end{verbatim}
+
+Po vytvoření klíčů vzniknou dva soubory. Ten který je bez přípony {\tt .pub} je soukromý klíč,
+ který by měl zůstat tajný a uživatel, který jej vytvořil by jej neměl dále distribuovat.
+ Soubor s~příponou {\tt .pub} je určen pro další distribuci, protože data zašifrovaná tímto
+ klíčem dešifruje pouze tajný soukromý klíč.
+
+\subsection{Konfigurace použití klíčů}
+
+Nejdříve je potřeba distribuovat soubor s~veřejným klíčem na vzdálený počítač. K~tomu slouží
+ např. program {\tt scp}. Každý z~uživatelů si může specifikovat sadu klíčů pro přístup k~danému
+ stroji v~souboru \verb|~/.ssh/authorized_keys|. Nový klíč do tohoto souboru přidáme např. takto
+ (všimněte si, že se klíč přidává na konec souboru pomocí \verb|>>|):
+
+\begin{verbatim}
+cat id_rsa.pub >> ~/.ssh/authorized_keys
+\end{verbatim}
+
+Nyní se již můžeme připojit ke vzdálenému počítači pomocí vytvořených klíčů. Pokud jsme klíč
+ na lokálním počítači umístili do výchozího umístění, je klíč použit automaticky. Pokud jsme
+ zvolili jiné umístění, je potřeba program {\tt ssh} informovat o~umístění klíče parametrem
+ {\tt -i}, nebo volbou {\tt IdentityFile} v~konfiguračním souboru. Informace o hledaných
+ klíčích jsou zobrazeny po použití parametru {\tt -v}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Syslog}
+Protokol Syslog \cite{rfc5424} popisuje způsoby a formát pro záznam systémových událostí. Je využíván
+ především v~unixových systémech pro záznam událostí jednak prvků součástí systém, jednak pro
+ události běžících programů. 
+
+Součástí záznamů býva zpravidla časová značka, zařízení (facility), závažnost záznamu (severity)
+ a samotný záznam. V~některých implementacích se může objevit i doménové jméno či IP adresa. Záznam
+ může být uložen lokálně (např. soubor \verb|/var/log/messages|) nebo lze záznamy přeposílat
+ na vzdálený server. Takové záznamy se pak objeví v syslogu daného serveru. Součástí záznamů může být
+ i doménové jméno resp. IP adresa původce záznamu. V~položce facility pak může být uvedena součást
+ systému (jádro, auutentizační zprávy,apod.) nebo přímo název programu, případně jeho PID.
+
+Závažnost záznamu je rozdělena na 8 úrovní od nejzávažnější (0) po ladící informace (7). Obvykle
+ jsou v syslogu zaznamenávány událostí od úrovně varování (4). Úplný seznam úrovní pak vypadaá takto:
+\begin{table}[!h]
+	\centering
+	\begin{tabular}[!h]{|c|l|l|}
+	\hline
+	\shortstack{Závažnost} & & Popis \\
+	\hline
+	0 & EMERGENCY & Nejvyšší závažnost, systém je nestabilní\\
+	1 & ALERT & Událost vyžadující okamžitou akci.\\
+	2 & CRITICAL & Kritická chyba systému (např. HW chyby) \\
+	3 & ERROR & Chyba programu.\\
+	4 & WARNING & Varování programu.\\
+	5 & NOTICE & Důležité informační záznamy (např. změna nastavení)\\
+	6 & INFORMATIONAL & Informační zprávy nevyžadující speciální pozornost\\
+	7 & DEBUG & Ladicí informace\\
+	\hline
+	\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simple Network Monitoring Protocol}
+SNMP \cite{rfc1157} je protokol určený k monitorování stavu zařízení. Protokol podporuje nejen čtení
+ provozních paramterů připojených stanic (využití paměti, zatížení CPU apod.), ale i nastevní
+ některých paramterů těchto stanic.
+Protokol je provozován nad UDP na portech 161 a 162 pro asynchronní zprávy (traps). V případě
+ potřeby přenášení větších bloků informací lze SNMP provozovat i nad TCP \cite{rfc3430}.
+
+Stanice zapojené v síti dělíme na "správce" a sledovaná zařízení. Správcovské stanice slouží
+ ke shromažďování informací ze sleedovaných zařízení a jejich případné prezentaci.
+Požadované informace mohou získat buď synchronní komunikací způsobem požadavek-odpověď, nebo mohou
+ získávat informace od sledovaných stanic asynchronně pomocí tzv. traps. Tyto zprávy jsou odesílány
+ přímo sledovanými zařízeními. Sbírané informace jsou pak uloženy v databázi MIB
+ (Management Information Base). Každa položka je identifikována pomocí OID (Object Identifier),
+ podobně jako v~LDAP. Příkladem může být položka sysLocation uložená pod OID {\tt 1.3.6.1.2.1.1.6.0}.
+ Seznam dostupných OID lze najít na stránce {\tt http://www.oidview/mibs/0/RFC1213-MIB.html}.
+Sledovaná zařízení provozují v síti SNMP programy pro získávání potřebných informací tzv. SNMP agenty.
+ Ti sbírají data, a také slouží ke zpracování požadavků ze správcoských stanic.
+
+Zařízení v síti SNMP jsou rozdělena do logických celků, komunit, identifikovaných textovým
+ řetězcem. Komunita slouží k autentizaci zařízení v síti a definuje přístup k informacím MIB.
+ Určuje tedy, které hodnoty a vlastnosti je povoleno v dané komunitě sledovat, případně nastavovat.
+ Příklad takového nastavení může být následující: 
+\begin{verbatim}
+rocommunity public 10.0.0.0/24
+rocommunity public 192.168.0.0/24 1.3.6.1.2.1.1
+rwcommunity public localhost
+\end{verbatim}
+Konfigurace v příkladu umožňuje zařízením v síti 10.0.0.0/24 přístup k MIB komunity public pouze
+ pro čtení. Při pokusu o zápis do jakékoli proměnné skončí akce neúspěchem, že proměnná neexistuje.
+ Pro stanice v síti 192.168.0.0/24 je přístup pro čtení omezen pouze na základní szstémové informace
+ (podstrom system). Při lokálním přístupu však budou záznamy přístupné i pro zápis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cisco NetFlow}
+Formát záznamu NetFlow umožňuje ukládání informací o IP provozu na síťovém zařízení. Formát byl
+ vytvořen firmou Cisco jako funkcionalita jejich zařízení. Ve verzi 9 pak byl standartizován
+ jako RFC 3954 \cite{rfc3954}.
+
+NetFlow záznamy jsou využívány k~monitorování a analýze provozu v~síti. Data obsahují záznamy
+ o IP adresách, portech, počty přenesených paketů či bajtů apod. Data jsou uchovávána pro
+ tzv. toky neboli flow. Toky jsou identifikovány pěticí zdrojová a cílová IP adresa,
+ zdrojový a cílový port a protokol transportní vrstvy. Tok je chápán jako jednosměrná komunikace.
+
+Infrastruktura pro sběr a uchovánvání NetFlow dat sestává z~kolektoru a sond. Kolektorem je míněna
+ stanice, která sbírá data ze sítě a provádí jejich uchování. Sondou pak může být jakékoli zařízení
+ ať už směrovač, přepínač nebo zařízení přímo vyhrazené pro tuto činnost. Sběr dat může probíhat
+ pro všechny toky, nebo může být prováděno vzorkování či agregace. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
