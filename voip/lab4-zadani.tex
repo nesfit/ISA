@@ -30,8 +30,8 @@ Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači bez p
 
 \begin{enumerate}
     \item Zapněte program Linphone a vyčkejte až se spustí okno programu.
-    \item V menu Options {\bf zrušte} volbu {\bf Always start video}.
-    \item V menu Options $\rightarrow$ Preferences $\rightarrow$ Manage SIP accounts nastavte pole Your username na hodnotu {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
+    \item V menu {\bf Options} \underline{zrušte volbu} {\bf Always start video}.
+    \item V menu {\bf Options} $\rightarrow$ {\bf Preferences} $\rightarrow$ {\bf Manage SIP accounts} nastavte pole Your username na hodnotu {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
     \item Spusťte síťový analyzátor Wireshark a začněte zachytávat pakety na rozhraní, kterým jste připojeni k síti.
     \item Po spuštění nastavte filtr tak, aby zobrazoval pouze protokol SIP (Filter: sip).
     \item V hlavním okně programu zadejte do pole {\bf SIP addres or phone number} SIP adresu Vašeho souseda: {\bf sip:10YY@10.10.10.1YY}, kde {\bf YY} je číslo počítače Vašeho souseda.
@@ -59,7 +59,7 @@ Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači pomoc
 \subsection{Analýza registrace a odregistrace}
 \begin{enumerate}
     \item Spusťte znovu zachytávání paketů v aplikaci Wireshark tlačítkem \includegraphics[width=3mm]{img/ws_start.png}.
-    \item Vraťte se do hlavního okna aplikace Linphone. V menu Options $\rightarrow$ Manage SIP accounts zkontrolujte, zda je v poli Your username uloženo {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
+    \item Vraťte se do hlavního okna aplikace Linphone. V menu {\bf Options} $\rightarrow$ {\bf Preferences} {\bf $\rightarrow$} Manage SIP accounts zkontrolujte, zda je v poli Your username uloženo {\bf 10XX}, kde {\bf XX je číslo Vašeho počítače}.
     \item Ve stejném okně v sekci {\bf Proxy accounts} klikněte na {\bf Add} a vyplňte následující pole: \\
     ~\\
     {\bf Your SIP identity:} 	{\tt sip:userXX@isa.fit} \\
@@ -70,8 +70,7 @@ Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači pomoc
     {\bf Password:}	{\tt hesloXX}
     \item Tímto jste provedli registraci k ústředně. Pokud jste vše nastavili správně, mělo by se ve spodní části hlavního okna zobrazit {\bf Registration on ... successfull} \\
     {\it (V případě neúspěchu v nastavení účet odeberte znovu přidejte. Pokud ani toto nepomohlo, ukončene Linphone, spusťte znovu /root/isa4/clean.sh a postupujte znovu od kroku 1)}
-    \item Klikněte na tlačítko Zakázat, kterým se odregistrujete ze serveru.
-    \item V menu {\bf Options} $\rightarrow$ {\bf Manage SIP accounts} vyberte v sekci {\bf Proxy accounts} vytvořený SIP účet a klikněte na {\bf Remove}, čímž by měla proběhnout odregistrace od ústředny.
+    \item V menu {\bf Options} $\rightarrow$ {\bf Preferences} $\rightarrow$ {\bf Manage SIP accounts} vyberte v sekci {\bf Proxy accounts} vytvořený SIP účet a klikněte na {\bf Remove}, čímž by měla proběhnout odregistrace od ústředny.
     \item Ve Wiresharku analyzujte registraci a odregistraci a zakresleslete jejich průběh do protokolu. Vyplňte požadované údaje a zjistěte, v čem se liší paket, kterým se registrujete, od paketu, kterým se odregistrujete.
 \end{enumerate}
 
