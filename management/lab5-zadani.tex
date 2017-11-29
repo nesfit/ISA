@@ -163,14 +163,14 @@ pro některý klíč zadáte špatné heslo?
       z klienta na server. Mějte na paměti možné zneužití Syslog protokolu útočníkem a omezte
       na straně serveru příjem pouze na zprávy od daného klienta
       a klientovi zamezte příjem jakýchkoliv zpráv ze sítě.
-      \item Pro práci využijte nástroj {\tt rsyslogd}, který bude sloužit jako server i klient. K
-      otestování využijte nástroj {\tt logger}.
+      \item Pro práci využijte nástroj {\tt rsyslogd}, který bude sloužit jako server i klient.
+      K~otestování využijte nástroj {\tt logger}.
       \item Na klientovi následně omezte přeposílání pouze na zprávy konkrétního typu.
     \end{itemize}
     \item Příkazy:
        \begin{itemize}
             \item {\tt rsyslogd(8)} -- démon pro Syslog.
-            \item {\tt rsyslog.conf(5)} -- Popis konfigurace rsyyslog démona.
+            \item {\tt rsyslog.conf(5)} -- Popis konfigurace rsyslog démona.
             \item {\tt logger(1)} -- Nástroj pro generování Syslog zpráv.
             \item {\tt tcpdump(1)}
         \end{itemize}
@@ -178,28 +178,14 @@ pro některý klíč zadáte špatné heslo?
        \begin{enumerate}
             \item Rozdělte se do dvojic a určete server a klient stanici.
 
-            \item {\bf Na serveru} nakonfigurujte syslog démona tak, aby ukládal veškeré zprávy
-         od klienta do souboru {\tt /var/log/logclient.log}. Při editaci souboru {\tt
-         /etc/syslog.conf} použijte jako oddělovač výhradně
-         tabulátor nikoliv mezeru. Na začátek souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo a oddělte ho od zbytku pravidel
-         prázdným řádkem:
-
-            \item {\bf Na serveru} povolte naslouchání na síťovém soketu. Do souboru {\tt /etc/rsyslog.conf} přidejte/
-            odkomentujte tyto řádky:
-
+            \item {\bf Na serveru} povolte naslouchání na síťovém soketu. Do souboru {\tt /etc/rsyslog.conf} přidejte:
 \begin{verbatim}
-  module(load="imtcp")
-  input(type="imtcp" port="514")
+  module(load="imudp")
+  input(type="imudp" port="514")
 \end{verbatim}
 
-
-            \item {\bf Na serveru} je nutné vytvořit soubor pro logování, v opačném případě by
-         Syslog démon do souboru nezapisoval:
-\begin{verbatim}
- touch /var/log/logclient.log
-\end{verbatim} 
-
-            \item {\bf Na klientovi} zakažte programu rsyslogd naslouchat na síťovém soketu, tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
+            \item {\bf Na klientovi} zakažte programu rsyslogd naslouchat na síťovém soketu,
+tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
 \begin{verbatim}
   module(load="imudp")
   input(type="imudp" port="514")
@@ -209,10 +195,10 @@ pro některý klíč zadáte špatné heslo?
 \end{verbatim} 
 
             \item {\bf Na klientovi} nakonfigurujte rsyslog démona tak, aby odesílal veškeré zprávy
-         z klienta na serveri pomocí TCP. Jako oddělovač použijte výhradně
-         tabulátor nikoliv mezery. Do souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo:
+         z klienta na serveri pomocí TCP. Jako oddělovač použijte výhradně tabulátor nikoliv mezery.
+         Do souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo:
 \begin{verbatim} 
- *.*<TAB>@@<domenove_jmeno_serveru>:<číslo_portu>
+ *.*<TAB>@<doménové_jméno_serveru>:<číslo_portu>
 \end{verbatim}
 
             \item {\bf Na serveru i klientovi} restartujte Syslog démona: 
@@ -223,14 +209,14 @@ pro některý klíč zadáte špatné heslo?
             \item {\bf Z klienta} ověřte správnou konfiguraci vygenerováním testovací Syslog 
          zprávy pomocí nástroje {\tt logger}:
 \begin{verbatim} 
-  logger <obsah_zprávy>
+  logger -d <obsah_zprávy>
 \end{verbatim} 
         
             \item Zpráva byla přeposlána na server, kde ji lze najít na konci souboru
          {\tt /var/log/logclient.log}.
 
 \begin{verbatim} 
-  tail -f /var/log/logclient.log
+  tail -f /var/log/messages | grep <doménové_jméno_klienta>
 \end{verbatim} 
 
             \item  Na klientovi pokračujte v generování Syslog zpráv a 
@@ -254,7 +240,7 @@ pro některý klíč zadáte špatné heslo?
   Syntax pravidel: <facility>.<priority><TAB><action>
 \end{verbatim} 
          \item Ze serveru se následně pokuste o neúspěšné ssh připojení na klienta a podívejte se
-         do souboru {\tt /var/log/logclient.log} jakou zprávu zaslal klient serveru.
+         do souboru {\tt /var/log/messages} jakou zprávu zaslal klient serveru.
 
 
        \end{enumerate}
@@ -288,11 +274,11 @@ pro některý klíč zadáte špatné heslo?
            \item Nastavte agenta, aby poslouchal na všech lokálních adresách \texttt{agentAddress
            udp:0.0.0.0:161}
                \item Namapujte sítě, ze kterých bude možné přistupovat k SNMP
-           hodnotám. Povolte počítačům v učebně zápis pro čtení {\tt rocommunity
+           hodnotám. Povolte počítačům v učebně přístup pro čtení {\tt rocommunity
            <COMMUNITY> 10.10.10.0/24} a lokálnímu počítači i zápis {\tt rwcommunity <COMMUNITY>
            localhost}
            \item V konfiguračním souboru ještě nastavte SNMP proměnnou \texttt{sysContact}
-           na Vámi vymyšlenou hodnotu. Takto nastaven8 proměnná bude vždy pouze pro čtení bez ohledu
+           na Vámi vymyšlenou hodnotu. Takto nastavená proměnná bude vždy pouze pro čtení bez ohledu
            na nastavení přístupových pravidel.
            \item Nastavte proměnnou sysLocation pomocí příkazu {\tt snmpset}
 \begin{verbatim}
@@ -314,8 +300,8 @@ pro některý klíč zadáte špatné heslo?
 \begin{verbatim}
   snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno>
   snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1
-  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.6.0
-  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.4.0
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.6.0 #proměnná sysLocation
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.4.0 #proměnná sysContact
 \end{verbatim}
 
           \item Pokud znáte OID (Object Identifier) proměnné v databázi MIB (Management Information Base), pak
@@ -333,7 +319,7 @@ pro některý klíč zadáte špatné heslo?
   snmpget -v 1 -c <nazev_komunity> <domenove_jmeno_souseda> 1.3.6.1.2.1.1.6.0
 
   snmpset -v 1 -c <nazev_komunity> <domenove_jmeno_souseda> \
-    1.3.6.1.2.1.1.6.0 s <nova_hodnota>i
+    1.3.6.1.2.1.1.6.0 s <nova_hodnota>
 \end{verbatim}
           \item Proč předchozí pokus o nastavení proměnné sousedovi selhal? Zkuste nyní
           nastavit svoji proměnnou popisující název Vašeho počítače
@@ -358,8 +344,7 @@ pro některý klíč zadáte špatné heslo?
             přenos statistik o jednotlivých tocích dat vznikajících při komunikaci po síti.
             Záznamy NetFlow, s nimiž budete během cvičení pracovat, jsou
             pořízeny z napojení sítě VUT a anonymizovány. V druhé části úkolu
-            budete pracovat s daty pořízenými sondou FlowMon, která monitoruje
-            dění v síti společností .
+            budete pracovat s daty pořízenými sondou FlowMon.
             \item Seznámit se s nástrojem {\tt nfsen}, který graficky zobrazuje záznamy
             NetFlow ve webovém prohlížeči. Seznámit se s nástrojem {\tt nfdump}, který slouží k dotazování na uložená data NetFlow.
         \end{itemize}
@@ -371,39 +356,31 @@ pro některý klíč zadáte špatné heslo?
         \begin{enumerate}
             \item Naučte se používat nástroj {\tt nfdump}, který slouží k dotazovaní se nad záznamy NetFlow.
                 \begin{enumerate}
-                    \item Na Vašem počítači se v adresáři {\tt /home/user/isa3/netflow} nachází
-               \footnote{Není-li tomu tak, adresář vytvořte. Netflow data
-               získejte pomocí příkazů {\tt fetch
-               http://FIXME} a {\tt tar xvf
-               nfcapd-isa.tar}}
-               anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu {\tt
-               nfdump}, který využjte ke kladení dotazů nad NetFlow daty.
+                    \item Na Vašem počítači se v adresáři {\tt /home/user/isa5/netflow} nachází
+                    anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu {\tt
+                    nfdump}, který využjte ke kladení dotazů nad NetFlow daty.
                     \item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
                     \item Dotažte se na následující statistiky. TOP 20 IP adres podle počtu přenesených bajtů. 
                         \begin{itemize}
                             \item V manuálové stránce si najděte, co dělají přepínače {\tt -R , -s, -n}.
-                            \item Nezapomeňte, že zpracováváte několik souborů o celkové
-              velikosti 600\,MB, tedy vytvoření statistiky chvíli potrvá!
+                            \item Nezapomeňte, že zpracovávanáý data jsou relativně objemná. Dosažení výsledku tedy chvili potrvá.
                         \end{itemize}
                     \item Zjistěte, jak velké datové přenosy připadají na jednotlivé protokoly. (Statistika protokolů)
                         \begin{itemize}
                             \item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
                         \end{itemize}
                     \item Na základě získaných statistik se zamyslete nad velikostí sítě.
-               \footnote{Jedná se o anonymizovaná data z páteřní sítě VUT
-               získaná za 1 hodinu provozu od 21 hodin} 
-                    \item Zaměřte se na konkrétní stanici v síti, např. {\tt 194.179.74.239} a
-               zjistěte, s kým komunikovala, a odhalte podezřelou aktivitu tohoto uživatele.
-               \footnote{Příliš mnoho jedno paketových telnet spojení během krátké doby na různé počítače ale stejný port 23 ukazuje na skenovací aktivitu útočníka.}
+                    \item Zaměřte se na některé konkrétní stanice a zjistěte, s kým komunikovaly.
+                    Vykazují stanice nějakou podezřelou aktivitu?
+                    \footnote{př.: Velký počet jednopaketových toků na mnoho stanic se shodným cílovým portem ukauzuje na skenování}
 \begin{verbatim}
- nfdump -R /home/user/isa3/netflow -o long -c 100 \
- "src ip 194.179.74.239"
+ nfdump -R /home/user/isa5/netflow -o long -c 100 "src ip <zdrojová adresa>"
 \end{verbatim} 
 
                 \end{enumerate}
         \item Přihlašte se na sondu FlowMon, běžící ve společnosti Flowmon Networks
             \begin{enumerate}
-                \item webová stránka: {\tt https://demo.invra.cz}, login: {\tt demo}, heslo: {\tt demo}.
+                \item webová stránka: {\tt https://demo.invea.cz}, login: {\tt demo}, heslo: {\tt demo}.
                       Neměňte žádné nastavení.
                 \item Seznamte se s jednotlivými stránkami, které vytváří program {\tt nfsen}.
                    \begin{itemize}
@@ -434,6 +411,6 @@ pro některý klíč zadáte špatné heslo?
  
 \section*{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Pod uživatelem {\tt root} spusťte dávku {\tt /root/isa3/isa3} pro zrušení
+  \item Pod uživatelem {\tt root} spusťte dávku {\tt /root/isa5/clean} pro zrušení
   vytvořených konfiguračních souborů a pro vypnutí počítače.
 \end{itemize}

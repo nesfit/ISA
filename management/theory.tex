@@ -164,16 +164,21 @@ SNMP \cite{rfc1157} je protokol určený k monitorování stavu zařízení. Pro
 Protokol je provozován nad UDP na portech 161 a 162 pro asynchronní zprávy (traps). V případě
  potřeby přenášení větších bloků informací lze SNMP provozovat i nad TCP \cite{rfc3430}.
 
-Stanice zapojené v síti dělíme na "správce" a sledovaná zařízení. Správcovské stanice slouží
- ke shromažďování informací ze sleedovaných zařízení a jejich případné prezentaci.
+Stanice zapojené v síti dělíme na "správce" (Network Management station, NMS0 a~sledovaná zařízení.
+ Správcovské stanice slouží ke shromažďování informací ze sledovaných zařízení a jejich případné prezentaci.
 Požadované informace mohou získat buď synchronní komunikací způsobem požadavek-odpověď, nebo mohou
  získávat informace od sledovaných stanic asynchronně pomocí tzv. traps. Tyto zprávy jsou odesílány
  přímo sledovanými zařízeními. Sbírané informace jsou pak uloženy v databázi MIB
  (Management Information Base). Každa položka je identifikována pomocí OID (Object Identifier),
  podobně jako v~LDAP. Příkladem může být položka sysLocation uložená pod OID {\tt 1.3.6.1.2.1.1.6.0}.
- Seznam dostupných OID lze najít na stránce {\tt http://www.oidview/mibs/0/RFC1213-MIB.html}.
-Sledovaná zařízení provozují v síti SNMP programy pro získávání potřebných informací tzv. SNMP agenty.
- Ti sbírají data, a také slouží ke zpracování požadavků ze správcoských stanic.
+ Seznam OID podle standrardu RFC 1213\cite{rfc1213} lze najít na stránce
+\begin{verbatim}
+    http://www.oidview/mibs/0/RFC1213-MIB.html.
+\end{verbatim}
+Na stejném portálu najdete i MIB specifické pro výrobce jiných zařízení.
+
+Sledované stanice provozují v~síti SNMP programy pro získávání potřebných informací tzv. SNMP agenty.
+ Ti sbírají data a zpracovávají požadavky z~NMS.
 
 Zařízení v síti SNMP jsou rozdělena do logických celků, komunit, identifikovaných textovým
  řetězcem. Komunita slouží k autentizaci zařízení v síti a definuje přístup k informacím MIB.
