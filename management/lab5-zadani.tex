@@ -198,7 +198,7 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
 \end{verbatim} 
 
             \item {\bf Na klientovi} nakonfigurujte rsyslog démona tak, aby odesílal veškeré zprávy
-         z klienta na serveri pomocí TCP. Jako oddělovač použijte výhradně tabulátor nikoliv mezery.
+         z klienta na serveri pomocí UDP. Jako oddělovač použijte výhradně tabulátor nikoliv mezery.
          Do souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo:
 \begin{verbatim} 
  *.*<TAB>@<doménové_jméno_serveru>:<číslo_portu>
@@ -216,7 +216,7 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
 \end{verbatim} 
         
             \item Zpráva byla přeposlána na server, kde ji lze najít na konci souboru
-         {\tt /var/log/logclient.log}.
+         {\tt /var/log/messages}.
 
 \begin{verbatim} 
   tail -f /var/log/messages | grep <doménové_jméno_klienta>
@@ -243,7 +243,7 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
   Syntax pravidel: <facility>.<priority><TAB><action>
 \end{verbatim} 
          \item Ze serveru se následně pokuste o neúspěšné ssh připojení na klienta a podívejte se
-         do souboru {\tt /var/log/messages} jakou zprávu zaslal klient serveru.
+         do souboru pro autentizační záznamy, jakou zprávu zaslal klient serveru.
 
 
        \end{enumerate}
