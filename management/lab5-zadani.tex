@@ -370,13 +370,9 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
                             \item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
                         \end{itemize}
                     \item Na základě získaných statistik se zamyslete nad velikostí sítě.
-                    \item Zaměřte se na některé konkrétní stanice a zjistěte, s kým komunikovaly.
-                    Vykazují stanice nějakou podezřelou aktivitu?
-                    \footnote{př.: Velký počet jednopaketových toků na mnoho stanic se shodným cílovým portem ukauzuje na skenování}
-\begin{verbatim}
- nfdump -R /home/user/isa5/netflow -o long -c 100 "src ip <zdrojová adresa>"
-\end{verbatim} 
-
+                    \item Vyfiltrujte si toky se zdrojovou IP 162.35.0.190. Zaměřte se na čísla portů.
+                    Je aktivita zdroje něčím podezřelá?\footnote{Velké množství krátkých toků se
+                     stejným cílem a postupně stoupajícími čísly portů ukazuje na vertikální skenování.}
                 \end{enumerate}
         \item Přihlašte se na sondu FlowMon, běžící ve společnosti Flowmon Networks
             \begin{enumerate}
