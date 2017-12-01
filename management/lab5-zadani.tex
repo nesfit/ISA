@@ -140,7 +140,10 @@ pro některý klíč zadáte špatné heslo?
 
       \item Navštivte stránku {\tt www.fit.vutbr.cz}. Všimněte si vaší IP adresy v levém dolním rohu stránky.
 
-      \item Přihalšte se na server fakultní server merlin pomocí SSH příkazu:\\{\tt ssh -D 8080 -N xloginNN@merlin.fit.vutbr.cz}.
+      \item Přihalšte se na fakultní server merlin pomocí SSH příkazu:
+\begin{verbatim}
+  ssh -D 8080 -N xloginNN@merlin.fit.vutbr.cz
+\end{verbatim}
 
       \item V prohlížeči jděte do nastavení proxy a nastavte adresu pro SOCKS5 na 127.0.0.1 a port 8080.
 
@@ -271,13 +274,15 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
          v něm proveďte základní konfiguraci:
            \begin{enumerate}
                \item Zvolte si vlastní název komunity - např. PUBLIC
-           \item Nastavte agenta, aby poslouchal na všech lokálních adresách \texttt{agentAddress
-           udp:0.0.0.0:161}
+           \item Nastavte agenta, aby poslouchal na všech lokálních adresách:
+\begin{verbatim}
+agentAddress udp:0.0.0.0:161
+\end{verbatim}
                \item Namapujte sítě, ze kterých bude možné přistupovat k SNMP
            hodnotám. Povolte počítačům v učebně přístup pro čtení {\tt rocommunity
            <COMMUNITY> 10.10.10.0/24} a lokálnímu počítači i zápis {\tt rwcommunity <COMMUNITY>
            localhost}
-           \item V konfiguračním souboru ještě nastavte SNMP proměnnou \texttt{sysContact}
+           \item V konfiguračním souboru ještě nastavte SNMP proměnnou {\tt sysContact}
            na Vámi vymyšlenou hodnotu. Takto nastavená proměnná bude vždy pouze pro čtení bez ohledu
            na nastavení přístupových pravidel.
            \item Nastavte proměnnou sysLocation pomocí příkazu {\tt snmpset}
@@ -300,8 +305,8 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
 \begin{verbatim}
   snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno>
   snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1
-  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.6.0 #proměnná sysLocation
-  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.4.0 #proměnná sysContact
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.6.0
+  snmpwalk -v 1 -c <nazev_komunity> <domenove_jmeno> 1.3.6.1.2.1.1.4.0
 \end{verbatim}
 
           \item Pokud znáte OID (Object Identifier) proměnné v databázi MIB (Management Information Base), pak
@@ -362,7 +367,7 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
                     \item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
                     \item Dotažte se na následující statistiky. TOP 20 IP adres podle počtu přenesených bajtů. 
                         \begin{itemize}
-                            \item V manuálové stránce si najděte, co dělají přepínače {\tt -R , -s, -n}.
+                            \item V manuálové stránce si najděte, co dělají přepínače {\tt -R, -s, -n}.
                             \item Nezapomeňte, že zpracovávanáý data jsou relativně objemná. Dosažení výsledku tedy chvili potrvá.
                         \end{itemize}
                     \item Zjistěte, jak velké datové přenosy připadají na jednotlivé protokoly. (Statistika protokolů)

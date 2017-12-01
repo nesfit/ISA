@@ -46,7 +46,8 @@ local $ ssh merlin6.fit.vutbr.cz
 merlin $ env | grep SSH
 SSH_CLIENT=2001:67c:1220:80c:e138:4d11:c04c:c675 54514 22
 SSH_TTY=/dev/pts/30
-SSH_CONNECTION=2001:67c:1220:80c:e138:4d11:c04c:c675 54514 2001:67c:1220:8b0::93e5:b013 22
+SSH_CONNECTION=2001:67c:1220:80c:e138:4d11:c04c:c675 \
+  54514 2001:67c:1220:8b0::93e5:b013 22
 \end{verbatim}
 
 Z~výpisu vidíme, že připojení bylo realizováno na IPv6 adresu {\tt 2001:67c:1220:8b0::93e5:b013}
@@ -133,11 +134,14 @@ Součástí záznamů býva zpravidla časová značka, zařízení (facility), 
  a samotný záznam. V~některých implementacích se může objevit i doménové jméno či IP adresa. Záznam
  může být uložen lokálně (např. soubor \verb|/var/log/messages|) nebo lze záznamy přeposílat
  na vzdálený server. Takové záznamy se pak objeví v syslogu daného serveru. Součástí záznamů může být
- i doménové jméno resp. IP adresa původce záznamu. V~položce facility pak může být uvedena součást
- systému (jádro, auutentizační zprávy,apod.) nebo přímo název programu, případně jeho PID.
+ i doménové jméno resp. IP adresa původce záznamu.
+
+V~položce facility je uvedena součást systému (jádro, autentizační zprávy,apod.) nebo
+ přímo název programu, případně jeho PID. Kompletní seznam zařízení lze najít ve starším RFC 3164
+ \cite{rfc3164}.
 
 Závažnost záznamu je rozdělena na 8 úrovní od nejzávažnější (0) po ladící informace (7). Obvykle
- jsou v syslogu zaznamenávány událostí od úrovně varování (4). Úplný seznam úrovní pak vypadaá takto:
+ jsou v syslogu zaznamenávány událostí od úrovně varování (4). Úplný seznam úrovní pak vypadá takto:
 \begin{table}[!h]
 	\centering
 	\begin{tabular}[!h]{|c|l|l|}
@@ -156,6 +160,7 @@ Závažnost záznamu je rozdělena na 8 úrovní od nejzávažnější (0) po la
 	\end{tabular}
 \end{table}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Simple Network Monitoring Protocol}
 SNMP \cite{rfc1157} je protokol určený k monitorování stavu zařízení. Protokol podporuje nejen čtení
@@ -171,11 +176,10 @@ Požadované informace mohou získat buď synchronní komunikací způsobem pož
  přímo sledovanými zařízeními. Sbírané informace jsou pak uloženy v databázi MIB
  (Management Information Base). Každa položka je identifikována pomocí OID (Object Identifier),
  podobně jako v~LDAP. Příkladem může být položka sysLocation uložená pod OID {\tt 1.3.6.1.2.1.1.6.0}.
- Seznam OID podle standrardu RFC 1213\cite{rfc1213} lze najít na stránce
+ Seznam OID podle standrardu RFC 1213 \cite{rfc1213} lze najít na stránce
 \begin{verbatim}
     http://www.oidview/mibs/0/RFC1213-MIB.html.
 \end{verbatim}
-Na stejném portálu najdete i MIB specifické pro výrobce jiných zařízení.
 
 Sledované stanice provozují v~síti SNMP programy pro získávání potřebných informací tzv. SNMP agenty.
  Ti sbírají data a zpracovávají požadavky z~NMS.
