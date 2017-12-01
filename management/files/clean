@@ -8,12 +8,10 @@ rm -f ~root/id_rsa*
 rm -f ~root/.ssh/*
 
 #revert default configurations for SNMP and syslog
-tar -C / --overwrite -xf defaults.tar
+tar -C / --overwrite -xf /root/isa5/defaults.tar
 
 #shutdown SNMP and syslog
 systemctl stop snmpd.service
-systemctl -f disable snmpd.service
 systemctl stop rsyslog.service
-systemctl -f disable rsyslog.service
 
 shutdown -h now
