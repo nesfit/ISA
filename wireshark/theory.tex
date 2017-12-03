@@ -85,11 +85,14 @@ Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobraz
 Alternativou k~zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
 \begin{itemize}
 \item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky (volba \texttt{-rn})
-\item \texttt{arp} - zobrazí obsah ARP tabulky (také umožňuje provádět správu, například odstranit záznamy)
 \end{itemize}
 
+Příkaz \texttt{arp} zobrazí obsah ARP tabulky a také umožňuje provádět její
+správu (například odstranit záznamy).
 
-K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové adresy slouží příkaz \texttt{ss} (\texttt{sockstat}).
+K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové
+adresy slouží příkaz \texttt{ss} (\texttt{sockstat}). Příkaz \texttt{lsof -ni}
+zobrazuje otevřená spojení.
 
 \subsubsection{Konfigurační soubory a logy}
 Na OS Linux je veškeré nastavení systému a služeb uloženo v~adresáři \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s~příslušným názvem. Pro lepší přehlednost je možné vytvářet více konfiguračních souborů, pro tyto účely zde pak existují adresáře \texttt{"nazevsluzby.d/"} (například \texttt{/etc/rsyslog.d/}). Veškeré nastavení v~souborech v~těchto adresářích je pak aplikováno na danou službu.
