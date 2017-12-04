@@ -114,6 +114,9 @@ pro některý klíč zadáte špatné heslo?
         \verb|command="ntpq -p" | (od původního
         obsahu oddělený jednou mezerou).
 
+      \item Na vzdáleném počítači spusťte službu NTP příkazem {\tt systemctl
+        start ntp} (jak root),
+
       \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste
         příkazem {\tt ssh hXX -i \textasciitilde/.ssh/nopass}. Aplikovalo se
         omezené využití klíče?
