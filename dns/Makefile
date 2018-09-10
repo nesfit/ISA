@@ -1,8 +1,6 @@
 all: cv3.pdf
 
-cv3.dvi: cv3.tex theory.tex lab3-zadani.tex Makefile local.bib  ../rfc.bib
-	latex $<
-	bibtex cv3
+cv3.dvi: cv3.tex lab3-zadani.tex Makefile
 	latex $<
 	latex $<
 
