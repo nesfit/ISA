@@ -20,17 +20,28 @@
 
 Tento laboratorní manuál slouží jako referenční příručka pro laboratorní cvičení
 předmětu ISA -- Síťové aplikace a správa sítí. Očekává se, že si studenti před
-účastí na jednotlivých cvičeních přečtou odpovídající kapitoly pro dané cvičení.
+účastí na jednotlivých cvičeních přečtou sekce potřebné pro dané cvičení.
+
+Sekce \ref{adresy_ipv4}, \ref{adresy_ipv6}, \ref{basics} a \ref{wireshark} jsou
+potřebné pro všechny cvičení. Cvičení \emph{Konfigurace IPv4, DHCP, IPv6} navíc
+předpokládá znalosti ze sekce~\ref{ipconfig}. Ve cvičení \emph{NTP, DNS,
+DNSSEC} se využívají sekce \ref{ntp}, \ref{dns} a \ref{dnssec}. Cvičení
+\emph{Konfigurace a analýza přenosů VoIP} předpokládá znalosti uvedené v
+sekci~\ref{sip}. Cvičení \emph{Správa a monitorování sítě} staví na informacích
+uvedených v sekcích \ref{ssh}, \ref{syslog} a \ref{netflow}.
 
 \setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
 
-\input{ipconfig}
+\input{ipaddr}
 \input{basics}
+\input{wireshark}
+\input{ipconfig}
 \input{dns}
 \input{management}
 \input{voip}
+\input{ntp}
 
 \newpage
 

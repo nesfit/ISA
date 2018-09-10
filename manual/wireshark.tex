@@ -1,0 +1,49 @@
+
+\section{Analýza síťového provozu programem Wireshark}
+\label{wireshark}
+
+Wireshark je aplikace sloužící k~analýze protokolů a zachytávání paketů. Zachytává síťový provoz z~jednotlivých síťových zařízení (jak fyzických, tak virtuálních) a umožňuje inspekci jednotlivých polí v~daných paketech.
+
+Alternativou ke grafickému Wireshark je command line nástroj \texttt{tcpdump}. Wireshark má oproti \texttt{tcpdump} například integrované volby pro řazení, filtrování a jiné.
+
+
+\subsection{Zachytávání provozu}
+Zachytávat provoz můžeme z~libovolného síťového zařízení, dokonce z~více zařízení najednou.
+
+Odchytíme pomocí \texttt{Capture -> Interfaces...} a zde vybereme zařízení, které chceme snímat. Spustíme pomocí \texttt{Start}. Takto odchytíme veškerý provoz.
+
+Existuje zde volba filtrace provozu již při zachytávání. Tato vlastnost může být užitečná při dlouhodobějším zachytávání, především z~hlediska redukce množství ukládaných paketů.
+
+Paketové filtry můžeme aplikovat před spuštěním zachytávání. Použijeme \texttt{Options} a v~poli \texttt{Capture Filter:} můžeme zvolit jeden z~předdefinovaných filtrů, případně specifikovat vlastní.
+
+Odchycený provoz můžeme uložit do souboru (přípona \texttt{.pcap}). Následně je možné tyto soubory znovu analyzovat.
+
+
+\subsection{Filtrovací operátory}
+V některých situacích, napříkad pokud zachytáváme veškerý provoz, je velmi vhodné použít filtrování. Jelikož zde pracujeme s velkým množstvím různých paketů, můžeme si tak vyfiltrovat pouze ty relevantní. K tomu slouží tzv. display filtry, jejichž syntax je popsána v Tabulce 1.
+\begin{center}
+\begin{table}[h]
+\centering
+\def\arraystretch{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Porovnávání} & \texttt{==, >=, <=, !=, contains}\\
+\textbf{Logické operátory} & \texttt{||, or, \&\&, and, !, not}\\
+\textbf{Kombinace filtrů} & \texttt{(ip.src==192.168.0.105 and udp.port==53)}\\
+\textbf{Filtrování na základě existence pole} & \texttt{http.cookie or http.set\_cookie}\\
+\textbf{Filtrování specifických bytů} & \texttt{eth.src[4:2]==22:1b}\\
+\textbf{Regex filtrování} & \texttt{http.host \&\& !http.host matches "\.com\$"}\\
+\hline
+\end{tabular}
+\caption{Filtrovací operátory}
+\end{table}
+\end{center}
+
+
+\subsection{Flow graph}
+Wireshark umožňuje zobrazit vybranou komunikaci v~\texttt{flow graph}. Zde můžeme přehledně vidět, které stroje, rozlišené IP adresou, spolu komunikují a kdo komu, zasílá kterou zprávu v~jakém pořadí.
+Flow graph si zobrazíme pomocí \texttt{Statistics -> Flow Graph..}, zde si vybereme, co chceme zobrazit.
+\subsection{Zobrazení streamu}
+Zachycenou komunikaci vidíme v~podobě jednotlivých paketů. Pokud například zachytíme HTTP komunikaci, jeden paket nese většinou pouze část obsahu HTTP zprávy. V tomto případě můžeme pro zobrazení celé zprávy (celého streamu) použít volbu \texttt{Flow <protokol> Stream}. Zobrazení provedeme tak, že vybereme jeden zachycený paket, označíme ho a následně \texttt{Analyze -> Follow <protokol> Stream}.
+\subsection{Čas}
+V rámci zachytávání paketů nese každý záznam informaci o čase. Defaultně je zde čas zobrazen v~sekundách, od počátku zachytávání komunikace. Nicméně v~\texttt{View -> Time Display Format} můžeme vybrat konkrétní zobrazení času a zjistit tak například, ve který den byl daný paket zachycen.
