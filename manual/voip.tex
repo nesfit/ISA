@@ -1,6 +1,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Teorie: Signalizační protokol SIP}
+\section{Signalizační protokol SIP}
 \label{sip}
 Session Initiation Protocol (SIP, RFC 3261, červen 2002) je textový aplikační protokol pro signalizaci VoIP, který provádí:
 \begin{itemize}
@@ -58,32 +58,28 @@ To: <sip:541151118@cesnet.cz>
     směru pak prochází shora dolů všemi servery, které jsou uvedené ve Via. Každý server zpracuje paket,
     odstraní svůj vlastní záznam a odešle ho na následující adresu ve Via. Poslední záznam Via je IP adresa
     a číslo portu klienta.
-    \begin{figure}[h!]
-        \centering
-        \fbox{\includegraphics[width=125mm]{img/via.png}}
-    \end{figure}
+    \begin{verbatim}
+    via: SIP/2.0/UDP 10.11.12.51:5062;rport;branch=z9hG4bk2079031997
+    \end{verbatim}
     
     \item {\bf From} - Adresa odesílatele SIP zprávy. Obsahuje SIP URI a nepovinně zobrazitelné jméno (display-name).
     Display-name (zde {\tt user03}) je určeno pouze pro „lidského uživatele“.
     U registrace obsahuje pole From SIP URI adresu uživatele, který je zodpovědný za registraci. Pokud se nejedná o registraci třetí strany, je hodnota stejná jako To.
-    \begin{figure}[h!]
-        \centering
-        \fbox{\includegraphics[width=95mm]{img/from.png}}
-    \end{figure}
+    \begin{verbatim}
+    From: "user08" <sip:user08@iss.cz>;tag=283687066
+    \end{verbatim}
 
     
     \item {\bf To} - Adresa příjemce zprávy. Může to být koncový uživatel nebo adresa SIP proxy (next hop), která zpracuje danou žádost.
     U registrace je v To uvedena adresa uživatele, která má být na serveru zaregistrována nebo modifikována.
-    \begin{figure}[h!]
-        \centering
-        \fbox{\includegraphics[width=43mm]{img/to.png}}
-    \end{figure}
+    \begin{verbatim}
+    To: <sip:1006@iss.cz>
+    \end{verbatim}
     
     \item {\bf Allow} - Seznam SIP metod, které daný uživatel podporuje a používá.
-    \begin{figure}[h!]
-        \centering
-        \fbox{\includegraphics[width=135mm]{img/allow.png}}
-    \end{figure}
+    \begin{verbatim}
+    Allow: INVITE, INFO, PRACK, ACK, BYE, CANCEL, OPTIONS, NOTIFY, REGISTER
+    \end{verbatim}
 \end{itemize}
 
 \subsection*{SDP}

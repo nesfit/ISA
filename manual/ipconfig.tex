@@ -1,6 +1,6 @@
-\setcounter{section}{0}
-\section*{Teorie}
-\section{Správa systémových služeb}\label{sluzby-teorie}
+\section{Správa systémových služeb}
+\label{sluzby}
+
 OS Linux poskytuje řadu různých aplikací plnících roli systémových služeb, tyto
 mohou poskytovat užitečné funkce jiným aplikacím, uživatelům nebo spravovat
 konfiguraci subsystémů. Systémové služby typicky běží autonomně, na pozadí
@@ -31,7 +31,7 @@ Pro zobrazení kompletních logů konkrétní systémové služby můžete použ
 Detailní popis včetně možných voleb a příkladů použití můžete nalézt
 v~manuálových stránkách.
 
-\section{Adresy v~IPv4 sítí}\label{ipv4-teorie}
+\section{Adresy v~IPv4 sítí}\label{adresy_ipv4}
 
 \subsection{Formát adresy}
 IPv4 adresa je délky 32 bitů a preferovaný zápis má formát {\tt X.X.X.X}, kde
@@ -56,7 +56,7 @@ adresování jednotlivých uzlů:
         např. 192.168.0.255/24
 \end{itemize}
 
-\section{Adresy v~IPv6 sítí}\label{ipv6-teorie}
+\section{Adresy v~IPv6 sítí}\label{adresy_ipv6}
 
 \subsection{Formát adresy}
 IPv6 adresa je délky 128 bitů a zapsaných ve formátu {\tt X:X:X:X:X:X:X:X}, kde
@@ -196,15 +196,16 @@ dhclient -v [rozhraní]
 Argument \texttt{-v} zajistí, že aplikace vypíše detailní informace.
 Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
 
-\subsection{Dynamická konfigurace IPv6}\label{dyn-ipv6}
+\subsection{Dynamická konfigurace IPv6}
+\label{dynipv6}
+
 Dynamická konfigurace IPv6 se dělí na {\bf bezstavovou} a {\bf stavovou}
 konfiguraci. Na cvičeních se budeme zabývat jen bezstavovou. Bezstavová
 konfigurace byla navržena tak, aby stačilo připojit zařízení do sítě a
 automaticky si klient vygeneroval nějakou adresu a ihned mohl komunikovat se
 světem. K~tomu klient potřebuje znát prefix sítě do které byl připojen.
 K~tomuto účelu se používají zprávy označované jako Routing Advertisement (RA).
-Tyto a ještě další zprávy jsou součásti procesu Neighbor Discovery (RFC
-4861\footnote{https://tools.ietf.org/html/rfc4861}).
+Tyto a ještě další zprávy jsou součásti procesu Neighbor Discovery~\cite{rfc4861}.
 
 Na počítačích v~laboratoři je nainstalovaná systémová služba {\tt radvd.service},
 která je schopna vysílat zprávy RA. Aplikaci je možno nakonfigurovat pomocí
