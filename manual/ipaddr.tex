@@ -1,0 +1,118 @@
+\section{Adresy v~IPv4 sítí}\label{adresy_ipv4}
+
+\subsection{Formát adresy}
+IPv4 adresa je délky 32 bitů a preferovaný zápis má formát {\tt X.X.X.X}, kde
+{\tt X} je decimální zápis 8 bitového čísla. Příklad:\\
+\begin{verbatim}
+8.8.8.8
+127.0.0.1
+\end{verbatim}
+
+Adresa dvě části:
+\begin{itemize}
+    \item adresa sítě ({\bf prefix}) a
+    \item adresa uzlu.
+\end{itemize}
+Délka prefixu se zapisuje v~desítkovém tvaru za lomítko. {\tt 192.168.0.1/24}
+
+V~síti s~daným prefixem existují 2 speciální adresy, které nelze použít pro
+adresování jednotlivých uzlů:
+\begin{itemize}
+    \item adresa sítě - adresa uzlu je nulová, např. 192.168.0.0/24
+    \item broadcastová adresa - nejvyšší možná adresa uzlu pro daný prefix,
+        např. 192.168.0.255/24
+\end{itemize}
+
+\section{Adresy v~IPv6 sítí}\label{adresy_ipv6}
+
+\subsection{Formát adresy}
+IPv6 adresa je délky 128 bitů a zapsaných ve formátu {\tt X:X:X:X:X:X:X:X}, kde
+{\tt X} je hexadecimální zápis 16 bitového čísla.
+Příklad:\\
+\begin{verbatim}
+FEDC:BA98:7654:3210:fedc:ba98:7654:3210
+1080:0000:0000:0000:0008:0800:200C:417a
+\end{verbatim}
+
+Preferovaný formát je dále upraven v~RFC 5952\footnote{https://tools.ietf.org/html/rfc5952}, které definuje následující
+pravidla:
+\begin{itemize}
+    \item Nuly na začátku každého 16 bitového čísla je potřeba vynechat (např.
+        80 namísto 0080 a 0 namísto 0000).
+    \item Více nulových bloků lze nejvýše jednou nahradit znakem {\tt ::}, a
+        MUSÍ být nahrazena nejdelší možná posloupnost takových nulových bloků.
+        V~případě více shodně dlouhých posloupností, nahrazuje se ta nejvíce
+        vlevo.
+    \item Znak {\tt ::} nesmí nahrazovat samostatný nulový blok.
+    \item Znaky "a", "b", "c", "d", "e", "f" hexadecimální soustavy se vždy
+        píšou malými písmeny.
+\end{itemize}
+Adresy z~předchozího příkladu tedy budou vypadat následovně:\\
+\begin{verbatim}
+fedc:ba98:7654:3210:fedc:ba98:7654:3210
+1080::8:800:200c:417a
+\end{verbatim}
+
+Stejně jako v~IPv4 má adresa dvě části: \emph{adresa sítě ({\bf prefix})} a
+\emph{adresa uzlu}. Délká prefixu se zapisuje v~desítkovém tvaru za lomítko
+(např. {\tt 1080::/60}).
+
+\subsection{Rozdělení adres}
+IPv6 adresy je možno rozdělit podle rozsahu. Typicky může jít o~tři
+možnosti -- adresy na lince (neprojdou za router), lokální adresy (ULA, nejsou
+routovatelné ve veřejné sítí) a veřejné adresy.
+
+\begin{table}[ht!]
+    \begin{center}
+        \begin{tabular}{l|l|l}
+            Význam & Prefix (bitově) & Prefix \\
+            \hline\hline
+            Veřejné  & {\tt 001} & {\tt 2000::/3} \\
+            \hline
+            Lokální  & {\tt 1111 110} & {\tt FC00::/7} \\
+            \hline
+            Linkové  & {\tt 1111 1110 10} & {\tt FE80::/10} \\
+            \hline
+            Multicast & {\tt 1111 1111} & {\tt FF00::/8} \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Lokální IPv6 (ULA) adresy}\label{ula}
+Síťová část ULA adresy se stává ze 4 části:
+\begin{description}
+    \item [Prefix] {\tt fc00::/7}
+    \item [L] bit 1 pokud byl prefix přiřazen lokálně, 0 zatím nebyla
+        definována, začátek adresy je proto typicky {\tt fd00::/8}
+    \item [Global ID] identifikátor sítě, měl by být unikátní, standard
+        popisuje pseudonáhodný algoritmus pro generování. Unikátnost je
+        požadována, aby při spojení více lokálních sítí nebylo třeba žádnou
+        přečíslovat.
+    \item [Inderface ID] Identifikátor rozhraní, existuje několik variant jak
+        jej získat. Původní standard (RFC
+        3513\footnote{https://tools.ietf.org/html/rfc3513} a RFC
+        4291\footnote{https://tools.ietf.org/html/rfc4291}) doporučoval použití
+        EUI-64. V~současnosti byla tato metoda nahrazena RFC
+        7217\footnote{https://tools.ietf.org/html/rfc7217}. Pro ochranu
+        soukromí jsou další specifika automatické generace identifikátorů
+        definovány v~RFC 4941\footnote{https://tools.ietf.org/html/rfc4941}.
+\end{description}
+
+\begin{table}[ht!]
+    \begin{center}
+        \begin{tabular}{c|c|c|c|c}
+            7 bits & 1 &  40 bits  &  16 bits  & 64 bits \\
+            \hline
+            1111 110 & L & Global ID & Subnet ID & Interface ID \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Lokální síť je tedy složená ze tří části:
+\begin{itemize}
+    \item unikátní prefix délky 48 bitů,
+    \item 16 bitový identifikátor podsítě,
+    \item adresa uzlu o~délce 64 bitů.
+\end{itemize}

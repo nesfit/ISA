@@ -1,8 +1,6 @@
 all: cv1.pdf
 
-cv1.dvi: cv1.tex theory.tex lab1-zadani.tex Makefile local.bib
-	latex $<
-#	bibtex cv1
+cv1.dvi: cv1.tex lab1-zadani.tex Makefile
 	latex $<
 	latex $<
 

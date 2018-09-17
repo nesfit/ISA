@@ -1,0 +1,89 @@
+\section{Konfigurace síťování koncových zařízení}
+\label{ipconfig}
+
+\subsection{Manuální konfigurace IP Adres}\label{ip_manual}
+Pro dočasnou konfiguraci IP adres na OS Linux slouží příkaz {\tt ip}. Pro
+dnešní cvičení budeme potřebovat následující příkazy:
+\begin{itemize}
+    \item \verb_ip link set [rozhraní] up/down_ pro zapnutí/vypnutí rozhraní
+    \item \verb_ip addr add/del [IP adresa]/[prefix] dev [rozhraní]_ pro
+        přidání/odstranění adresy z~rozhraní
+    \item \verb_ip addr flush dev [rozhraní]_ pro odstranění všech adres
+z~rozhraní
+    \item \verb_ip route add default via [IP adresa]_ pro nastavení výchozí
+        brány
+    \item \verb_ip link_, \verb_ip addr_, \verb_ip route_ zobrazí aktuální
+        konfiguraci
+\end{itemize}
+
+\subsection{Dynamická konfigurace IPv4 - DHCP}\label{dhcp}
+Pro dynamickou konfiguraci IP adres je potřeba aby byl na síti přístupný
+nakonfigurovaný DHCP server a klienti, kteří si o~IP adresu požádají. Kromě
+přiřazení IP adres má DHCP server na starosti i šíření jiných informací
+důležitých pro bezproblémovou funkčnost sítě. Jednou takovou informací je IP
+adresa doporučeného DNS serveru pro klienty na síti.
+
+Na Vašich počítačích máte nainstalovanou serverovou aplikaci ISC DHCP, která
+poskytuje služby DHCP serveru. Aplikace se konfiguruje pomocí souboru
+\verb_/etc/dhcp/dhcpd.conf_. Systémová služba se jmenuje
+\texttt{isc-dhcp-server.service}.
+
+Příklad obsahu konfiguračního souboru:
+\begin{verbatim}
+option domain-name-servers [IP adresy DNS serverů];
+subnet [IP adresa sítě] netmask [maska] {
+    range [první přiřaditelná IP adresa] [poslední přiřaditelná IP adresa];
+}
+\end{verbatim}
+Dodatečné informace o~konfiguračních možnostech najdete v~manuálových stránkách
+{\tt man dhcpd.conf} případně {\tt man dhcpd}.
+
+DHCP klient je implementován v~aplikaci \texttt{dhclient}. Může být spuštěn bez
+parametrů pro všechna aktivní síťová rozhraní nebo lépe s~jménem konkrétního
+síťového rozhraní, které má být konfigurováno:
+\begin{verbatim}
+dhclient -v [rozhraní]
+\end{verbatim}
+Argument \texttt{-v} zajistí, že aplikace vypíše detailní informace.
+Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
+
+\subsection{Dynamická konfigurace IPv6}
+\label{dynipv6}
+
+Dynamická konfigurace IPv6 se dělí na {\bf bezstavovou} a {\bf stavovou}
+konfiguraci. Na cvičeních se budeme zabývat jen bezstavovou. Bezstavová
+konfigurace byla navržena tak, aby stačilo připojit zařízení do sítě a
+automaticky si klient vygeneroval nějakou adresu a ihned mohl komunikovat se
+světem. K~tomu klient potřebuje znát prefix sítě do které byl připojen.
+K~tomuto účelu se používají zprávy označované jako Routing Advertisement (RA).
+Tyto a ještě další zprávy jsou součásti procesu Neighbor Discovery~\cite{rfc4861}.
+
+Na počítačích v~laboratoři je nainstalovaná systémová služba {\tt radvd.service},
+která je schopna vysílat zprávy RA. Aplikaci je možno nakonfigurovat pomocí
+souboru {\tt /etc/radvd.conf}.
+
+Příklad konfigurace:
+\begin{verbatim}
+interface [rozhraní]
+{
+    AdvSendAdvert on;
+    MaxRtrAdvInterval [Max pocet sekund mezi zpravami RA, min 4];
+    prefix [prefix]/[delka prefixu]
+    {
+        AdvOnLink on;
+        AdvAutonomous on;
+        AdvRouterAddr on;
+    };
+};
+\end{verbatim}
+Přehled všech možností konfigurace poskytnou manualové stránky {\tt man radvd}
+a {\tt man radvd.conf}.
+
+Pro správné šíření RA zpráv je potřebné povolit směrování IPv6 provozu:
+\begin{verbatim}
+sysctl net.ipv6.conf.all.forwarding=1
+\end{verbatim}
+
+Součásti balíčku radvd je i aplikace {\tt radvdump}, kterou možno použít pro
+analýzu -- naslouchá na síťových rozhraních a tiskne na obrazovku obsah
+zachycených RA zpráv.

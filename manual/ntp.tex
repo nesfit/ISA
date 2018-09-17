@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Network Time Protocol}
+\label{ntp}
+NTP \cite{rfc1305} umožňuje synchronizovat čas mezi uzly v~síti. Tento protokol se dokáže
+vypořádat s~proměnlivou dobou přenášení paketu po síti. NTP organizuje servery hierarchicky do úrovní.
+Tyto úrovně se nazývají {\em stratum}. Nejnižší hodnota 0 označuje samotný zdroj přesného času (např.
+GPS). Stratum 1 pak označuje servery, které jsou synchronizovány právě s~referenčním zdrojem. Stratum 2
+jsou servery synchronizovány se servery stratum 1, atd. \cite{rfc5905}.
+
+Implementaci protokolu NTP zajišťuje balík aplikací {\em ntp}. Tento balík se skládá z~několika
+aplikací. V~rámci laboratorního cvičení se použijí aplikace {\tt ntpd}, {\tt ntpq} a případně {\tt ntpdc}.
+Chrony\footnote{\url{https://chrony.tuxfamily.org/}} nabízí alternativní
+implementaci NTP a v~bezpečnostním auditu~\cite{securing_ntp} překonal balík
+{\em NTP}.
+
+\subsection{ntpd}
+NTPD je aplikace, která běží na pozadí a neustále provádí kontrolu času s~nastavenými servery a případně upravuje lokální čas. Úprava lokálního času se provádí úpravou rychlosti běhu lokálního času. Pokud je lokální čas pozadu, resp. se předbíhá, tak se {\em zrychlují}, resp. {\em zpomalují} systémové hodiny. Tento způsob úpravy času znamená, že pokud je čas odchýlen o~několik minut, bude nějakou dobu trvat, než dojde k~jeho srovnání. Na druhou stranu se tak zabrání skokové změně a navíc čas se nikdy neposune do minulosti. Pokud je lokální čas odchýlen o~více než 1000 sekund (necelých 17 minut) aplikace to vyhodnotí jako chybu a skončí. Pokud se tak stane, objeví se zpráva v~systémovém logu. Zda aplikace běží, lze zjistit například příkazem {\tt ntpq -p} (aplikace skončí s~hláškou {\em ntpq: read: Connection refused} pokud není ntpd spuštěn).
+
+Démona je možné spustit příkazem:
+\begin{verbatim}
+systemctl start ntp.service
+\end{verbatim}
+Aby se předešlo problému v~případě, kdy např. hardwarové hodiny jdou špatně a při vypnutí může dojít k~odchýlení lokálního času o~více než 17 minut, je možné vynutit okamžité nastavení času příkazem
+\begin{verbatim}
+ntpd -qg
+\end{verbatim}
+({\tt -q} pro vynucení okamžitého nastavení času a {\tt -g} pro vypnutí kontroly kdy je rozdíl větší než 1000 sekund).
+
+\subsubsection{Konfigurace}
+Základním konfiguračním souborem je {\tt /etc/ntp.conf}. Tento konfigurační soubor obsahuje mnoho
+konfiguračních voleb. Nastavení serverů NTP zajišťuje konfigurační volba {\em server}, která má jeden
+parametr (adresu nebo jméno NTP serveru). Tato volba se může vyskytovat opakovaně, klient pak využívá
+větší počet serverů a tím lze dosáhnout vyšší přesnosti. Volba server mimo jiné znamená, že lokální čas
+se může nastavit podle uvedeného serveru, ale nemůže tomu být naopak. V~jiných případech může být volba
+{\em server} nahrazena volbou {\em peer}, která umožňuje, aby se i server synchronizoval podle lokálních
+hodin. Tato volba je užitečná, pokud je více ekvivalentních serverů, k~zajištění, že se budou
+synchronizovat navzájem mezi sebou. Dalšími možnostmi jsou {\em broadcast} a {\em manycastclient}. Tyto
+možnosti využívají broadcastového nebo skupinového vysílání (pokud je nutné synchronizovat velký počet
+uzlů může tato možnost šetřit síťové zdroje). Server v~této konfiguraci vysílá na broadcastovou nebo
+multicastovou adresu informace o~správném čase v~pravidelných intervalech a klienti zpracovávají tyto
+informace.
+
+Jinou užitečnou volbou je {\em restrict}, která slouží pro řízení přístupu. Aplikací {\tt ntpd} mohou být zaslány různé požadavky přes síť (viz aplikace {\tt ntpq}/{\tt ntpdc}). Je vhodné dovolit některé dotazy jen z~určitého uzlu nebo podsítě. Využití této volby může být také užitečné v~případě, že se pro nastavování času využívá broadcastu nebo multicastu a není žádoucí, aby takto vyslanou informaci klienti akceptovali z~libovolného zdroje. Základní tvar tohoto příkazu je:
+\begin{verbatim}
+restrict <adresa> [mask <maska>] [<jeden či více příznaků>]
+\end{verbatim}
+
+Příznak definuje omezení pro danou adresu/síť:
+\begin{itemize}
+  \item ignore -- zahazovat všechny pakety
+  \item nomodify -- povolí pouze dotazy, požadavky měnící stav serveru jsou zahazovány
+  \item noquery -- zakáže dotazy pomocí {\tt ntpq} a {\tt ntpdc}, synchronizace času není ovlivněna
+  \item notrust -- zahazovat neautentizované pakety
+\end{itemize}
+Další příznaky a jejich popis lze nalézt v~manuálových stránkách {\tt man ntp.conf}.
+
+Pokud budou aplikace {\tt ntpq} a {\tt ntpdc} používané i pro změnu konfigurace, pak je nezbytné nastavit autentizaci. Protokol nabízí možnost využití symetrické i asymetrické kryptografie. Pro použití symetrické kryptografie jsou k~dispozici tyto volby:
+\begin{itemize}
+  \item keys -- tato volba má jeden parametr, který udává název souboru, který obsahuje používané klíče (obvykle {\tt /etc/ntp.keys},
+  \item trustedkey -- výčet klíčů, kterým se bude důvěřovat,
+  \item requestkey -- seznam klíčů, které mohou být použity aplikací {\tt ntpdc},
+  \item controlkey -- seznam klíčů, které mohou být použity aplikací {\tt ntpq}.
+\end{itemize}
+Formát souboru {\tt /etc/ntp.keys} má následující tvar:
+\begin{verbatim}
+<číslo klíče> <typ> <heslo>
+\end{verbatim}
+Typ může nabývat čtyř hodnot. Hodnoty {\tt S} a {\tt N} používají bitový formát a běžně se neužívají. Hodnoty {\tt A} a {\tt M} používají textový řetězce délky 1 až 8 znaků a určují způsob zašifrování při přenosu. Nejčastěji se užívá možnost {\tt M}, která značí použití DES nebo MD5. Příklad souboru pak může vypadat následovně:
+\begin{verbatim}
+1 M heslo1
+2 M secret
+3 M passwd
+\end{verbatim}
+Konfigurace v~{\tt /etc/ntp.conf} potom vypadá:
+\begin{verbatim}
+keys /etc/ntp.keys
+trustedkey 1 2 3
+requestkey 2
+controlkey 1 3
+\end{verbatim}
+Toto značí, že důvěryhodné jsou všechny tři klíče. Aplikace {\tt ntpdc} se může autentizovat pouze klíčem 3 a aplikace {\tt ntpq} klíči 1 a 3.
+
+
+\subsection{Aplikace ntpdc a ntpq}
+Oba dva programy nabízejí v~podstatě podobné možnosti konfigurace ntp serveru. Rozdílů je mezi těmito programy několik. První, který byl již uveden výše, je v~tom, že každá z~těchto aplikací může používat jinou množinu klíčů. Podstatnější rozdíl z~uživatelského hlediska je v~tom, že aplikace {\tt ntpdc} má přesně definovaný výčet příkazů, které lze aplikovat, a proto může měnit jen to, co je v~aplikaci definováno. Naproti tomu {\tt ntpq} disponuje příkazem {\tt :config}, kterému se jako parametry předávají konfigurační volby, které se používají v~souboru {\tt /etc/ntp.conf}. Další rozdíl je ve formátu zpráv, pomocí kterých komunikují se serverem.
+
+Obě aplikace používají pro komunikaci s~aplikaci {\tt ntpd} zasílání zpráv přes síťové rozhraní, bez ohledu na to, zda běží lokálně nebo vzdáleně. Hlavní výhoda však spočívá v~tom, že tyto aplikace dovolují měnit konfiguraci {\tt ntpd} za běhu. Možnost změny parametru přes síť může být nežádoucí a proto, je-li tato možnost povolena, je vhodné omezit pomocí volby {\em restrict} přístup pro změnu pouze přes loopback rozhraní.
+
+Příklad výstupu volání {\tt ntpq -p}:
+
+\begin{verbatim}
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
++rhino.cis.vutbr 248.205.243.78   3 u  425 1024  377   10.070   -4.280  10.575
++tik.cesnet.cz   195.113.144.238  2 u  622 1024  377    4.796   -3.464  16.528
+*tak.cesnet.cz   .GPS.            1 u  364 1024  377    5.008   -3.625   6.228
+\end{verbatim}
+
+Výpis obsahuje následující hodnoty:
+
+\begin{description}
+
+  \item[remote] Klient se synchronizuje vůči třem serverům: rhino.cis.vutbr.cz,
+    tik.cesnet.cz a tak.cesnet.cz. Hvězdičkou je označený primární zdroj času,
+    plusem sekundární zdroje času.
+
+  \item[refid] Primární zdroj času pro vzdálený server NTP.
+
+  \item[stratum] Počet skoků od vzdáleného serveru k přesnému zdroji času (1
+    znamená, že zdroj přesného času je přímo připojen, 16 znamená, že vzdálený
+    server je nedosažitelný).
+
+  \item[when] Počet sekund od posledního kontaktu se serverem.
+
+  \item[poll] Počet sekund mezi jednotlivými dotazy protokolem NTP.
+
+  \item[reachability] Úspěšnost posledním 8 pokusů o kontakt vzdáleného serveru
+    v osmičkové soustavě. (1 znamená pouze poslední pokus uspěl, 377 znamená
+    všech 8 posledních pokusů uspělo).
+
+  \item[delay, offset, jitter] Zpoždění, posun a jitter -- charakteristiky
+    vzdáleného zdroje času, podle kterého se volí primární a sekundární zdroje
+    času.
+
+\end{description}
+
+

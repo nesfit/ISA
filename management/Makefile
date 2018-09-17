@@ -4,9 +4,7 @@ PDF=cv5
 
 all: $(PDF).pdf
 
-$(PDF).dvi: $(PDF).tex theory.tex lab5-zadani.tex Makefile local.bib  ../rfc.bib
-	$(TEX) $<
-	$(BIB) $(PDF)
+$(PDF).dvi: $(PDF).tex lab5-zadani.tex Makefile
 	$(TEX) $<
 	$(TEX) $<
 
