@@ -269,6 +269,8 @@ V~tuto chvílí je již zóna podepsána a je možné ji začít používat. Ov�
 \begin{verbatim}
 dnssec-dsfromkey <název souboru s KSK klíčem>
 \end{verbatim}
+Předání DS záznamů ke správci nadřazené domény se běžně provádí "out-of-band". Samotné záznamy jsou tedy přidávány ručně. Tento proces je nutné provádět i v~případech výměny klíčů, což může vést k~chybám při přidání nového klíče. Proces lze však automatizovat 
+pomocí {\tt CDS} a {\tt CDNSKEY} záznamů \cite{rfc7344}, \cite{rfc8078}. Tyto záznamy obsahují stejná data jako příslušné {\tt DS}/{\tt DNSKEY} záznamy, avšak je možné tato data předat standardní důvěryhodnou cestou. Servery nadřazené domény tyto záznamy využijí k~synchronizaci uložených DS/DNSKEY dat. Poté je možné CDS a CDNSKEY záznamy odebrat.
 
 \subsubsection*{Výměna klíčů}
 Jak bylo uvedeno výše, používají se obvykle dva typy klíčů, kdy jeden je slabší a druhy silnější. Oba tyto klíče je třeba obměňovat, aby nedošlo ke kompromitování zóny. Slabší z~klíčů, ZSK, je třeba měnit častěji, ale vzhledem k~tomu, že se změnou tohoto klíče není svázaná nutnost změny v~nadřazené zóně, je tento krok relativně jednodušší (alespoň po administrativní stránce).
