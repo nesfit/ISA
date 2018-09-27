@@ -16,29 +16,41 @@
 Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
 
 \subsection{Zjišťování konfigurace}
-V případě, že se v OS Linux úplně neorientujete, přečtěte si sekci 1.1 Základní orientace v Linuxu. V~této části se budeme zabývat převážně zjišťováním síťové konfigurace systému. Veškeré potřebné informace, které budete potřebovat ke splnění této části cvičení, naleznete v~sekci 1.2 Síťová konfigurace. V~případě, že si nejste jistí některým příkazem, neváhejte nahlédnout do manuálové stránky.
+V případě, že se v OS Linux úplně neorientujete, přečtěte si kapitolu 3 v
+laboratorním manuálu --- Základní orientace v Linuxu. V~této části cvičení se
+budeme zabývat převážně zjišťováním síťové konfigurace systému. Veškeré potřebné
+informace, které budete potřebovat ke splnění této části cvičení, naleznete
+v~sekci 3.3 laboratorního manuálu --- Síťová konfigurace. V~případě, že si nejste jistí některým příkazem, neváhejte nahlédnout do manuálové stránky.
 
 \begin{enumerate}
 \item Vypište konfiguraci vašeho stroje (IP adresu, masku, síť, broadcastovou adresu).
 \item Zobrazte si záznamy v~routovací a ARP tabulce. Zapište pravidlo týkající se defaultní cesty. Následně k~IP ve vypsaném záznamu přiřaďte MAC adresu. Jaký je rozdíl mezi defaultní cestou a defaultní bránou?
-\item Otestujte konektivitu k~default gateway a následně konektivitu do internetu.
+\item Otestujte konektivitu k~výchozí bráně a následně konektivitu do internetu.
 \item Vypište implicitní servery DNS a soubor, ve kterém jste tuto informaci nalezli.
 \item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping google}, byl ping proveden vůči IP adrese 8.8.8.8. Zapište jak a který soubor jste upravili.
 \item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké vygenerujte, například pomocí webového prohlížeče.
 \item Zobrazte systémové události.
 \item Zobrazte pouze události týkající se NetworkManager.
-\item Pokuste se spustit Wireshark jako \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě neúspěšného přihlášení.
+\item Pokuste se spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě neúspěšného přihlášení.
 \end{enumerate}
 
 \subsection{Wireshark}
-V~této části cvičení se budeme zabývat analýzou a zachytáváním provozu v~programu Wireshark. Spuštění Wireshark provedete příkazem \texttt{wireshark} pod uživatelem \texttt{root}. Veškeré potřebné informace, které budete potřebovat k~této části cvičení, naleznete v~sekci 2 Analýza Wireshark.
+V~této části cvičení se budeme zabývat analýzou a zachytáváním provozu
+v~programu Wireshark. Spuštění Wireshark provedete příkazem \texttt{wireshark}
+pod uživatelem \texttt{root}. Veškeré potřebné informace, které budete
+potřebovat k~této části cvičení, naleznete v~kapitole 4 laboratorního manuálu
+--- Analýza Wireshark.
 
 \begin{enumerate}
-\item Pomocí programu Wireshark začněte zachytávat pouze HTTP komunikaci. Jakmile začnete zachytávat, spusťte si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do svého domovského adresáře. (přípona \texttt{.pcap})
-\item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP. V příkazové řádce odstraňte ARP záznamy (příkaz \texttt{arp ...} nebo \texttt{ip neightbour ...}). Ve wiresharku zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů, zapište obsah sender, target MAC a IP adresy pro dvojici ARP request a response. Zapište, co jste zadali do filtru.
-\item Ve Wireshark si otevřete soubor s~příponou \texttt{.pcap} z~adresáře \texttt{/root/isa1}. Zobrazte si graf síťových toků (flow graph) pouze pro SIP. Zapište datum a čas, kdy byl vyslán první SIP paket.
+\item Pomocí programu Wireshark začněte zachytávat pouze HTTP komunikaci. Jakmile začnete zachytávat, spusťte si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do adresáře \texttt{/tmp}. (přípona \texttt{.pcap})
+\item Analyzujte zdrojovou a cílovou IP adresu a MAC adresu odeslaného a
+  přijatého paketu a doplňte tabulku.
+\item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP. V příkazové řádce odstraňte ARP záznamy (příkaz \texttt{ip neighbor ...}). Ve wiresharku zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů. Zapište, co jste zadali do filtru.
 \item Zachyťte pouze HTTP a DNS provoz. Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů. Zkuste opakovaně načítat stejnou stránku. Proč v~některých případech není zachycena DNS komunikace?
-\item Zachyťte HTTP komunikaci (nešifrovanou), zobrazte si TCP stream této komunikace. Zaznamenejte URL, které jste použili pro vygenerování HTTP provozu, a co Vám TCP stream zobrazil.
+\item Znovu si otevřete dříve uložený soubor s nešifrovanou komunikaci pomocí
+  HTTP, zobrazte si TCP stream této komunikace (\emph{Follow TCP stream}).
+    Najděte URL, které jste použili pro vygenerování HTTP provozu, a do
+    odpovědního archu slovně popište, co vám Wireshark zobrazil.
 \end{enumerate}
 
 \subsection{Ukončení práce v~laboratoři}
