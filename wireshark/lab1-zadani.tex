@@ -29,7 +29,7 @@ v~sekci 3.3 laboratorního manuálu --- Síťová konfigurace. V~případě, že
 \item Vypište implicitní servery DNS a soubor, ve kterém jste tuto informaci nalezli.
 \item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping google}, byl ping proveden vůči IP adrese 8.8.8.8. Zapište jak a který soubor jste upravili.
 \item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké vygenerujte, například pomocí webového prohlížeče.
-\item Zobrazte systémové události.
+\item Zobrazte systémové události pomocí programu \texttt{journalctl}.
 \item Zobrazte pouze události týkající se NetworkManager.
 \item Pokuste se spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě neúspěšného přihlášení.
 \end{enumerate}
@@ -42,14 +42,16 @@ potřebovat k~této části cvičení, naleznete v~kapitole 4 laboratorního man
 --- Analýza Wireshark.
 
 \begin{enumerate}
-\item Pomocí programu Wireshark začněte zachytávat pouze HTTP komunikaci. Jakmile začnete zachytávat, spusťte si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do adresáře \texttt{/tmp}. (přípona \texttt{.pcap})
+  \item Pomocí programu Wireshark začněte \textbf{zachytávat} pouze HTTP komunikaci na výchozím portě
+    (výchozí porty je možné nalézt např. v \texttt{/etc/services}). Jakmile začnete zachytávat, spusťte si prohlížeč a načtěte stránku \texttt{http://www.fit.vutbr.cz}. Zachycený provoz uložte do adresáře \texttt{/tmp}. (přípona \texttt{.pcap})
 \item Analyzujte zdrojovou a cílovou IP adresu a MAC adresu odeslaného a
   přijatého paketu a doplňte tabulku.
 \item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP. V příkazové řádce odstraňte ARP záznamy (příkaz \texttt{ip neighbor ...}). Ve wiresharku zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů. Zapište, co jste zadali do filtru.
-\item Zachyťte pouze HTTP a DNS provoz. Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů. Zkuste opakovaně načítat stejnou stránku. Proč v~některých případech není zachycena DNS komunikace?
+\item Zachyťte pouze HTTP a DNS provoz (na výchozích portech). Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů. Zkuste opakovaně načítat stejnou stránku. Proč v~některých případech není zachycena DNS komunikace?
 \item Znovu si otevřete dříve uložený soubor s nešifrovanou komunikaci pomocí
   HTTP, zobrazte si TCP stream této komunikace (\emph{Follow TCP stream}).
-    Najděte URL, které jste použili pro vygenerování HTTP provozu, a do
+    Najděte dotaz, který odpovídá stránce zobrazené v prohlížeči.
+ Do
     odpovědního archu slovně popište, co vám Wireshark zobrazil.
 \end{enumerate}
 
