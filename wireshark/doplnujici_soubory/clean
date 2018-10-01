@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-cp /root/isa1/.hosts /etc/hosts &> /dev/null
+ip addr flush dev eth0
+ip addr flush dev eth1
 
-rm -rf /root/*.pcap &> /dev/null
-rm -rf /home/user/*.pcap &> /dev/null
-
+tar -C / --overwrite -xf /root/isa1/default.tar
 
 shutdown -h now
