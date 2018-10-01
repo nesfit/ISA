@@ -108,10 +108,12 @@ Jedním ze základních příkazů je \texttt{ip}. Pomocí tohoto příkazu mů�
 konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah routovací tabulky aj. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{ip-<volba>}.
 
 \begin{itemize}
-				\item \texttt{ip address} - zobrazí adresu na všech síťových zařízení.
+  \item \texttt{ip address} - zobrazí adresu na všech síťových zařízení (příkaz
+    \texttt{ifconfig} je dnes již zavržený\footnote{\url{https://www.root.cz/clanky/prikaz-ip-ovladnete-linuxova-sitova-rozhrani/}}).
 				\item \texttt{ip route} - zobrazí všechna pravidla v~routovací tabulce.
 				\item \texttt{ip link} - vylistuje všechna síťová zařízení.
-				\item \texttt{ip neighbor} - zobrazí obsah ARP záznamů.
+        \item \texttt{ip neighbor} - zobrazí obsah ARP záznamů (případně můžete
+          využít starší příkaz \texttt{arp}).
 \end{itemize}
 
 Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobrazení. \footnote{Obdobou tohoto nástroje je \texttt{ifconfig}.}
@@ -122,9 +124,6 @@ Alternativou k~zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
 \begin{itemize}
 \item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky (volba \texttt{-rn})
 \end{itemize}
-
-Příkaz \texttt{arp} zobrazí obsah ARP tabulky a také umožňuje provádět její
-správu (například odstranit záznamy).
 
 K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové
 adresy slouží příkaz \texttt{ss} (\texttt{sockstat}). Příkaz \texttt{lsof -ni}
