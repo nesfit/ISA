@@ -20,7 +20,7 @@ Před samotnou konfigurací je potřeba přepojit počítače kabelem přes patc
 pro kabely DXX (XX je číslo vašeho počítače) vepředu laboratoře. Na PC budete
 pracovat s rozhraníma {\bf eth1}.
 
-Jako první krok je potřeba vypnout službu \texttt{NetworkManager.service}. Ta
+Jako první krok je potřeba zakázat automatické spuštění služby \texttt{NetworkManager.service} po startu systému. Ta
 se stará o správu síťových konfiguračních profilů na vyšší úrovni a pokoušel by
 se měnit naši konfiguraci. Informace o správě systémových služeb najdete v
 sekci \ref{sluzby-teorie} Teorie.
@@ -40,23 +40,21 @@ Možnosti manuální konfigurace IP adres jsou v sekci \ref{ip-manual} Teorie.
 
 \subsection{Dynamická konfigurace IPv4}
 
-Vaší úlohou bude na jednom počítači nakonfigurovat DHCP server, na druhém
-počítači spustíte DHCP klienta, který si od nakonfigurovaného serveru požádá o
-přidělení vhodné IPv4 adresy. Teorie konfigurace ISC DHCP serveru a použití
+Vaší úlohou bude na jednom počítači nakonfigurovat DHCP server, jehož nastavení se nezmění ani po restartu systému. Na druhém počítači spustíte DHCP klienta, který si od nakonfigurovaného serveru požádá o přidělení vhodné IPv4 adresy. Teorie konfigurace ISC DHCP serveru a použití
 DHCP klienta je popsaná v sekci \ref{dhcp} Teorie.
 
 \begin{enumerate}
     \item Počítač, na kterém běží server musí být nakonfigurovaný manuálně tak,
-        že na síťovém rozhraní má IP adresu ze správné sítě. Zároveň tato
+        že na síťovém rozhraní má staticky nakonfigurovanou IP adresu ze správné sítě (proveďte změny v /etc/network/interfaces). Zároveň tato
         adresa nesmí být v rozsahu adres, které poskytuje služba DHCP.
-    \item Nakonfigurujte DHCP server tak aby poskytoval IPv4 adresy pro stejnou
+    \item Nakonfigurujte DHCP server tak, aby poskytoval IPv4 adresy pro stejnou
         síť jakou jste si zvolili pro manuální konfiguraci.
-    \item Nakonfigurujte DHCP server tak aby šířil informaci o DNS serveru na
+    \item Nakonfigurujte DHCP server tak, aby šířil informaci o DNS serveru na
         adrese {\bf 10.10.10.1}.
-    \item Spusťte službu ISC DHCP serveru.
+    \item Povolte automatické spuštění služby ISC DHCP serveru.
     \item Na druhém počítači smažte manuální IP konfiguraci a spusťte DHCP
         klientskou aplikaci.
-    \item Správnou konfiguraci si ověřte příkazem {\tt ping}.
+    \item Správnou konfiguraci si ověřte příkazem {\tt ping} a restartem systému.
     \item Správnou konfiguraci DNS serveru ověřte v konfiguračním souboru
         (\texttt{resolv.conf}).
 \end{enumerate}
@@ -89,7 +87,7 @@ Dynamická IPv6 konfigurace je popsaná v sekci \ref{dyn-ipv6} Teorie.
 
 \begin{enumerate}
     \item Na obou počítačích si ponechte IP adresy nakonfigurované během
-        předcházejících úkolů.
+        předcházejících úkolů. Pokud došlo ke smazání IPv6 adresy, použijte příkaz \texttt{ip a a fe80::X/64 dev eth1}, kde písmeno X značí číslo PC.
     \item Na jednom z počítačů nakonfigurujte službu \texttt{radvd.service} tak
         aby ve Vaší síti (rozhraní eth1) šířila informace o prefixu sítě, který
         jste si vygenerovali pro manuální konfiguraci.
@@ -97,7 +95,7 @@ Dynamická IPv6 konfigurace je popsaná v sekci \ref{dyn-ipv6} Teorie.
         \texttt{sysctl net.ipv6.conf.all.forwarding=1}\\
         Tím Váš počítač začne plnit roli směrovače pro IPv6 provoz a bude moci
         šířit RA zprávy.
-    \item Spusťte službu \texttt{radvd.service}
+    \item Povolte automatické spuštění služby \texttt{radvd.service} po startu systému.
     \item Potvrďte správnost nově nakonfigurovaných adres (příkaz \texttt{ip
         address}) a funkčnost sítě pomocí \texttt{ping6}.
     \item Pro zajímavost se můžete podívat na obsah RA zpráv pomocí aplikace
