@@ -7,11 +7,11 @@ $TTL	<TTL value> ; TTL of the record
 ; Replace '@' character in email with '.'
 ; '@' charatcer replaces domain name of zone
 @	IN	SOA	<FQDN of the domain> <Administrator email> (
-			      1		; Serial
-				  1w	; Refresh
-				  1d	; Retry
-				  4w	; Expire
-				  1w )	; Negative Cache TTL
+			1	; Serial
+			1w	; Refresh
+			1d	; Retry
+			4w	; Expire
+			1w )	; Negative Cache TTL
 
 
 ; Other DNS records should follow
