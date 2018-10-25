@@ -2,15 +2,30 @@
 // Do any local configuration here
 //
 
-zone "fit.vutbr.cz" {
-    type master;
-    file "/var/cache/bind/fit.vutbr.cz";
-};
 
-zone "seznam.cz" {
+// Example of zone record
+zone "example.com" {
     type master;
-    file "/var/cache/bind/seznam.cz";
-};
+    file "/var/cache/bind/example.com.zone";
+}
+
+
+// Example of record for reverse resolving
+zone "168.192.in-addr.arpa" {
+    type master;
+    file "/var/cache/bind/192.168.rev"
+}
+
+// Uncomment the following records in task 3.1
+// zone "fit.vutbr.cz" {
+//    type master;
+//    file "/var/cache/bind/fit.vutbr.cz";
+// };
+
+// zone "seznam.cz" {
+//    type master;
+//    file "/var/cache/bind/seznam.cz";
+// };
 
 // Consider adding the 1918 zones here, if they are not used in your
 // organization
