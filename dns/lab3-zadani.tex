@@ -78,22 +78,20 @@ iface eth1 inet static
       \item Záznam typu CNAME pro jméno {\tt pca} ukazující na {\tt server}.
     \end{itemize}
     Inzerujte platnost vámi zasílaných záznamů 1 hodina.
-    Jako základ zónového souboru pro vaší
-    doménu můžete použít soubor {\tt /etc/bind/db.local}, či {\tt
-    /root/isa3/fit.vutbr.cz}.
+    Jako základ zónového souboru pro vaší doménu můžete použít soubor {\tt /root/isa3/template.dns.zone}.
     Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/cache/bind},
-    nezapomeňte zaregistrovat zóny
-    v~souboru {\tt named.conf.local} (potřebné informace jsou k dispozici
-    v~teoretické části).
-  \item V případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
+    nezapomeňte zaregistrovat zóny v~souboru {\tt named.conf.local} 
+    (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). Jako vzor můžete použít soubor
+    {\tt /root/isa3/named.conf.local}.
+  \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
     (záznamy AAAA).
   \item Nakonfigurujte reverzní překlad. Jako základ
     zónového souboru s reverzní zónou můžete použít např. {\tt /etc/bind/db.127}.
     Zkopírujte soubor do {\tt /var/cache/bind}, upravte jej a přidejte do
     souboru {\tt named.conf.local}.
   \item Spusťte DNS server příkazem {\tt systemctl start bind9.service}.
-    Ujistěte se, že v souboru {\tt /var/log/syslog} nejsou žádné chyby. Případné
-    chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
+    Příkazem {\tt systemctl status bind9} ověřte, zda byla služba správně spuštěna.
+    Případné chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
   \item V souboru {\tt /etc/dhcp/dhclient.conf} nastavte na obou počítačích použití vlastního
     serveru DNS běžícího na PC A, na konec souboru přidejte řádek \\
     {\tt prepend domain-name-servers
@@ -114,14 +112,13 @@ iface eth1 inet static
 
 \begin{enumerate}
   \item Na PC B spusťte prohlížeč IceWeasel. Zobrazte si webové stánky v
-    doménách {\tt www.fit.vutbr.cz} a {www.seznam.cz}. Všimněte si klíče v pravé
-    části adresního řádku.
+    doménách {\tt www.fit.vutbr.cz} a {\tt www.seznam.cz}.
 
   \item Na PC A vytvořte zónové soubory pro domény {\tt fit.vutbr.cz} a {\tt
     seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
     PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
     soubory přidejte do souboru {\tt /etc/bind/named.conf.local} a restartujte
-    Bind.
+    bind.
 
   \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
     Spusťte zde jednoduchý webový server příkazem {\tt python -m
@@ -150,7 +147,8 @@ iface eth1 inet static
   \item Upravte konfiguraci {\tt named.conf.local} tak, aby se jako zónový
     soubor použil soubor obsahující podepsané záznamy.
 
-  \item Zkontrolujte nasazení DNSSEC. Je nasazení úplné?
+  \item Na PC B si pomocí příkazu {\tt dig +dnssec DNSKEY <doména>} vyžádejte obsah záznamů
+    DNSKEY. To stejné prověďte pro RRSIG.
 
 \end{enumerate}
 

@@ -163,21 +163,21 @@ Typ {\tt PTR} nerozlišuje, zda se jedná o~IPv6 nebo IPv4 adresu. Pro tento př
 1		IN	PTR	host.moje.domena.cz.
 \end{verbatim}
 
-Pro IPv6 můžete využít:
+Pro IPv6 můžete předefinovat proměnnou {\tt \$ORIGIN} např. následovně:
 \begin{verbatim}
 $ORIGIN 0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa.
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0   IN PTR host.moje.domena.cz.
 \end{verbatim}
-Oproti tomu záznamy
+Pozor však na to, aby expanzí nedocházelo k vytváření neplatných záznamů jako jsou
 \begin{verbatim}
 $ORIGIN 0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa.
 2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0   IN PTR host
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0   IN PTR host.moje.domena.cz
 \end{verbatim}
-jsou neplatné, protože na dotaz by vrátily:
+protože po expanzi se z nich stanou následující záznamy:
 {\small
 \begin{verbatim}
-1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa. IN PTR
+2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa. IN PTR
                                               host.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa.
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa. IN PTR
                                host.moje.domena.cz.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa.
@@ -197,7 +197,7 @@ systemctl restart bind9.service
 \section{DNS Security Extensions (DNSSec)}
 \label{dnssec}
 
-DNS je službou, která si z~inulosti nese různé problémy. Jedním z~nich je
+DNS je službou, která si z~minulosti nese různé problémy. Jedním z~nich je
 nezabezpečení této služby vůči útokům s~podvržením záznamu.
 DNSSEC rozšiřuje službu DNS o~bezpečnostní prvky, jejichž cílem je zabránit
 útokům využívající podvržené záznamy v DNS. Obrana spočívá v~zavedení
