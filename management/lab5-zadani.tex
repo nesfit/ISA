@@ -196,7 +196,7 @@ pro některý klíč zadáte špatné heslo?
 \end{verbatim}
 
             \item {\bf Na klientovi} zakažte programu rsyslogd naslouchat na síťovém soketu,
-tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslogd.conf} řádky:
+tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
 \begin{verbatim}
   module(load="imudp")
   input(type="imudp" port="514")
