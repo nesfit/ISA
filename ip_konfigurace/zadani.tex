@@ -23,12 +23,12 @@ pracovat s rozhraníma {\bf eth1}.
 Jako první krok je potřeba zakázat automatické spuštění služby \texttt{NetworkManager.service} po startu systému. Ta
 se stará o správu síťových konfiguračních profilů na vyšší úrovni a pokoušel by
 se měnit naši konfiguraci. Informace o správě systémových služeb najdete v
-sekci \ref{sluzby-teorie} Teorie.
+sekci \ref{sluzby} laboratorního manuálu.
 
 \subsection{Manuální konfigurace IPv4}
 
-Teorie \emph{IPv4 adresování} je popsaná v sekci \ref{ipv4-teorie} Teorie.
-Možnosti manuální konfigurace IP adres jsou v sekci \ref{ip-manual} Teorie.
+Teorie \emph{IPv4 adresování} je popsaná v sekci \ref{adresy_ipv4} .
+Možnosti manuální konfigurace IP adres jsou v sekci \ref{ipconfig} .
 
 \begin{enumerate}
     \item Zvolte nejdelší možnou masku sítě \texttt{192.168.0.0} tak, aby síť
@@ -41,11 +41,11 @@ Možnosti manuální konfigurace IP adres jsou v sekci \ref{ip-manual} Teorie.
 \subsection{Dynamická konfigurace IPv4}
 
 Vaší úlohou bude na jednom počítači nakonfigurovat DHCP server, jehož nastavení se nezmění ani po restartu systému. Na druhém počítači spustíte DHCP klienta, který si od nakonfigurovaného serveru požádá o přidělení vhodné IPv4 adresy. Teorie konfigurace ISC DHCP serveru a použití
-DHCP klienta je popsaná v sekci \ref{dhcp} Teorie.
+DHCP klienta je popsaná v sekci \ref{dhcp} .
 
 \begin{enumerate}
     \item Počítač, na kterém běží server musí být nakonfigurovaný manuálně tak,
-        že na síťovém rozhraní má staticky nakonfigurovanou IP adresu ze správné sítě (proveďte změny v /etc/network/interfaces). Zároveň tato
+        že na síťovém rozhraní má staticky nakonfigurovanou IP adresu ze správné sítě (proveďte změny v /etc/network/interfaces a restartujte službu {\tt networking.service} ). Zároveň tato
         adresa nesmí být v rozsahu adres, které poskytuje služba DHCP.
     \item Nakonfigurujte DHCP server tak, aby poskytoval IPv4 adresy pro stejnou
         síť jakou jste si zvolili pro manuální konfiguraci.
@@ -60,13 +60,13 @@ DHCP klienta je popsaná v sekci \ref{dhcp} Teorie.
 \end{enumerate}
 
 \subsection{Manuální konfigurace IPv6}
-Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{ipv6-teorie} Teorie.
+Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{adresy_ipv6} .
 Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 
 \begin{enumerate}
     \item Zvolte si adresu sítě vhodnou pro použití v privátních lokálních
         sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
-        sekci \ref{ula} Teorie, pro vygenerování unikátního Global ID můžete
+        sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
         použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
         ID) si můžete zvolit libovolně.
     \item Pro zajímavost si můžete unikátnost vygenerovaného Global ID
@@ -83,12 +83,12 @@ zprávy informující o konfiguraci sítě. Druhý počítač bude v roli klient
 zařízení, které si po připojení do sítě na základě RA zprávy nakonfiguruje
 správnou IPv6 adresu.
 
-Dynamická IPv6 konfigurace je popsaná v sekci \ref{dyn-ipv6} Teorie.
+Dynamická IPv6 konfigurace je popsaná v sekci \ref{dynipv6} .
 
 \begin{enumerate}
     \item Na obou počítačích si ponechte IP adresy nakonfigurované během
         předcházejících úkolů. Pokud došlo ke smazání IPv6 adresy, použijte příkaz \texttt{ip a a fe80::X/64 dev eth1}, kde písmeno X značí číslo PC.
-    \item Na jednom z počítačů nakonfigurujte službu \texttt{radvd.service} tak
+    \item Na jednom z počítačů nakonfigurujte službu \texttt{radvd.service} tak,
         aby ve Vaší síti (rozhraní eth1) šířila informace o prefixu sítě, který
         jste si vygenerovali pro manuální konfiguraci.
     \item Na stejném počítači povolte směrování IPv6 provozu pomocí příkazu\\
