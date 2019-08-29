@@ -1,0 +1,302 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\title{ISA - Laboratorní cvičení č.\,2\\
+{\bf\large Zabezpečený přenos dat}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/encrypted_transfers}}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+\section*{Cíle laboratorního cvičení:}
+\begin{itemize}
+  \item naučit se práci s nástrojem SSH a správu klíčů 
+  \item naučit se základy protokolu TLS,
+  \item seznámit se s Certificate Transparency Log.
+\end{itemize}
+
+\section*{Pokyny}
+\begin{itemize}
+  \item Přihlaste se do OS GNU/Linux (F3), user/password {\tt user}/{\tt user4lab}.
+  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
+  \item Otevřete si další příkazovou řádku pro uživatele {\tt root} příkazem {\tt su}
+  (switch user).
+  \item V případě potřeby si otevřete další terminál v novém okně.
+  \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
+  nano, mcedit, vim, gedit).
+\item Pracujte jednotlivě či ve dvojicích (váš počítač je dále v textu označen jako hXX a
+  počítač souseda hYY, kde XX a YY je číslo počítače 01--20). Zkontrolujte, že máte počítač propojen
+    přímým kabelem s přístupovým přepínačem (rozhraní eth0, zdířka E na patch
+    panelu).
+  
+\end{itemize}
+
+\newpage
+%\section{Laboratorní úlohy}
+\section{Vzdálený terminál -- SSH, Secure Shell}
+
+Zkontrolujte, že máte otevřený jednu příkazovou řádku jako uživatel
+{\tt user} a druhou jako uživatel {\tt root} příkazem {\tt whoami}, který vypisuje jméno aktivního
+uživatele.
+
+Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
+
+\begin{enumerate}
+
+  \item V otevřených terminálech dočasně vypněte podporu pro SSH agenta:
+  \begin{lstlisting}
+  [user@hXX]$ unset SSH_AUTH_SOCK
+  [root@hXX]# unset SSH_AUTH_SOCK
+  \end{lstlisting}
+
+  \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
+
+    \begin{enumerate}
+
+      \item Spusťte program wireshark a zachytávejte komunikaci na portu 22
+        (rozhraní eth0).
+
+      \item Přihlaste se příkazem {\tt ssh user@hYY.netlab.fit.vutbr.cz.} a zadejte heslo \textbf{user4lab}.
+
+      \item Na serveru zadejte libovolný příkaz, který znáte (např. zobrazte
+        obsah manuálové stránky ssh příkazem {\tt man ssh}, vypište
+        obsah adresáře příkazem {\tt ls}, obsah souborů příkazem {\tt ls},
+        aktuálního uživatele příkazem {\tt whoami} apod.).
+
+      \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl-D} spojení ukončete.
+
+      \item V programu Wireshark zobrazte obsah komunikace (follow TCP stream) a
+        zjistěte informace o spojení --- verze programu {\tt ssh} na serveru i
+        klientovi, podporované šifry, autentizační mechanismus HMAC, mechanismus
+        pro výměnu klíčů. Ověřte, že pomocí Wiresharku nevidíte příkazy zadané v
+        předchozích bodech a jejich výstup. Můžete na základě zachycené
+        komunikace říct něco o jejím obsahu? Svá zjištění sdělte cvičícímu.
+
+    \end{enumerate}
+
+  \item {\bf Vytvoření veřejného a privátního klíče.}
+
+    \begin{enumerate}
+
+      \item Jako uživatel {\tt user} vygenerujte příkazem \verb|$ ssh-keygen -C <login>@user|
+        implicitní klíč pro uživatele
+        {\tt user}. Neměňte jeho
+        název a zvolte heslo o délce alespoň osmi znaků, například
+        \textbf{fitvutisa}.
+
+      \item Jako uživatel {\tt root} vygenerujte příkazem \verb|# ssh-keygen -N "" -C <login>@root|
+        implicitní klíč pro uživatele {\tt root} bez hesla.
+
+      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (ls -l \textasciitilde/.ssh). Jak
+se liší práva mezi souborem s privátním a veřejným klíčem?
+
+    \end{enumerate}
+
+  \item {\bf Distribuce klíčů}
+
+    \begin{enumerate}
+
+      \item Oba veřejné klíče zkopírujte na vzdálený počítač hYY do
+        souboru \verb|.ssh/authorized_keys|
+        (např. {\verb&ssh-copy-id  user@hYY&} pro
+        klíč uživatele {\tt user}
+        a {\verb&ssh-copy-id  root@hYY&} pro
+        klíč uživatele {\tt root}).
+        
+      Jaká hesla bylo nutné zadat?
+
+      \item Zkuste se znovu přihlásit na stejný vzdálený počítač hYY. Jaké heslo bylo nyní nutné zadat? Zkuste
+        zadat (opakovaně) špatné heslo a pozorujte, co se stalo. Při experimentech můžete také
+využít tzv. verbose režim ssh ({\tt ssh -v}).
+
+    \end{enumerate}
+
+  \item {\bf Omezení použití klíčů}
+
+    Nyní bude naším cílem omezit použití klíče uživatele {\tt root}, který není chráněn heslem tak,
+    aby pomocí něj bylo možné na vzdáleném serveru vykonat pouze konkrétní příkaz.
+
+    \begin{enumerate}
+
+      \item Přihlaste se jako uživatel {\tt root} na počítač hYY, kam jste nakopírovali své veřejné klíče a
+        upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
+        řádku s klíčem uživatele {\tt root} (řádek poznáte tak, že končí řetězcem
+        {\tt <login>@root}) napíšete
+        \verb|command="df -h" | \\ (následovaný jednou mezerou a původním
+        obsahem řádku).
+
+      \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste z
+        účtu {\tt root} jako {\tt root}. Aplikovalo se
+        omezené využití klíče?
+
+    \end{enumerate}
+
+
+  \item {\bf Pohodlné opakované použití klíče zabezpečeného heslem.}
+
+    \begin{enumerate}
+
+      \item Ukončete terminál uživatele {\tt user} a vytvořte nový. Pomocí
+        příkazu \verb|env| ověřte, že je nastavená proměnná
+        \verb|SSH_AUTH_SOCK|.
+
+      \item Přihlaste se k serveru hYY. Museli jste zadávat znovu heslo?
+
+    \end{enumerate}
+  \item Reportujte cvičícímu odpovědi na výše uvedené otázky.
+
+\end{enumerate}
+
+\section{Zabezpečení transportní vrsvy -- TLS, Transport Layer Security}
+
+\begin{enumerate}
+
+  \item {\bf  Nezabezpečený přenos dat}
+
+    \begin{enumerate}
+
+      \item Spusťte program Wireshark, zachytávejte komunikaci na portu 80.
+
+      \item Pomocí programu {\tt telnet} se připojte k fakultnímu webovému
+        serveru: \\ \verb|telnet www.fit.vutbr.cz 80|.
+
+      \item V programu Wireshark pozorujte navázání spojení TCP pomocí
+        trojcestného handshaku.
+
+      \item Zašlete serveru požadavek protokolem HTTP, např.:
+        \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
+        odpověď.
+
+      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP. Je možné
+        přečíst obsah komunikace?
+
+    \end{enumerate}
+
+  \item {\bf Přenos dat zabezpečený TLS}
+
+    \begin{enumerate}
+
+      \item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
+
+      \item Pomocí programu {\tt openssl} se připojte k fakultnímu webovému
+        serveru: \\ \verb|openssl s_client -quiet -connect www.fit.vutbr.cz:443|.
+        Všimněte si řádku \emph{Verify return code}, co
+        říká o certifikátu?
+
+      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
+        informace lze vyčíst z handshaku TLS? Je možné zjistit jméno serveru?
+
+      \item Zašlete serveru požadavek protokolem HTTP, např.:
+        \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
+        odpověď.
+
+      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP s využitím
+        TLS. Je možné přečíst obsah komunikace?
+
+    \end{enumerate}
+
+  \item {\bf Zabezpečený přenos dat TLS v prohlížeči}
+
+    \begin{enumerate}
+
+      \item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
+
+      \item Spusťte prohlížeč Firefox a otevřete v něm stránku
+        \verb|wis.fit.vutbr.cz|.
+
+      \item Kliknutím na informace o certifikátu (vlevo od URL) zobrazte
+        informace o použitém certifikátu.
+
+      \item V menu \emph{Edit » Preferences » Privacy \& Security} v sekci
+        \emph{Certificates} zobrazte důvěryhodné certifikáty. Prohlédněte si
+        seznam a odhadněte jejich počet. Najděte certifikát autority Brno
+        University of Technology a podívejte se na jeho detaily.
+
+      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
+        informace lze vyčíst z handshaku TLS? Je možné zjistit jméno serveru?
+        Nalezené jméno serveru ukažte cvičícímu.
+
+    \end{enumerate}
+
+  \item {\bf Ověření použitého certifikátu}
+
+    \begin{enumerate}
+
+      \item Pomocí programu {\tt openssl} se připojte k WISu \\
+        \verb|openssl s_client -showcerts -connect wis.fit.vutbr.cz:443|. \\
+        Všimněte si řádku \emph{Verify return code}, co
+        říká o certifikátu?
+
+      \item V terminálu se přesuňte do adresáře s dočasnými soubory:
+        \verb|cd /tmp| a dále pracujte v tomto adresáři. Vytvořte pracovní
+        adresář a přepněte se do něj: \verb|mkdir <login> && cd <login>|.
+
+      \item V adresáři vytvořte soubor s názvem \verb|wis.fit.vutbr.cz.pem|
+        obsahující certifikát WISu. Ve výstupu příkazu
+        \verb|openssl s_client -showcerts -connect wis.fit.vutbr.cz:443|
+        se nachází mezi řádky
+        \verb|-----BEGIN CERTIFICATE-----| a \verb|-----END CERTIFICATE-----|
+        včetně těchto řádků. Použijte certifikát s kanonickým jménem (CN)
+        \verb|wis.fit.vutbr.cz|.
+
+      \item V prohlížeči se připojte na stránku \verb|http://ca.vutbr.cz/| a
+        stáhněte certifikát CA ve formátu PEM, soubor stáhněte do pracovního
+        adresáře. Alternaticně použijte příkaz \\
+        \verb|wget http://ca.vutbr.cz/pki/pub/cacert/cacert.pem -O vut.pem|. \\
+        V praxi byste tento krok měli provádět důvěryhodným kanálem.
+
+      \item Programem {\tt c\_rehash} vytvořte symbolické odkazy, které používá
+        knihovna openssl: \\ \verb|c_rehash /tmp/<login>|
+
+      \item Znovu se připojte k WISu a sledujte řádek \emph{Verify return code},
+        tentokrát příkazem: \\
+        \verb|openssl s_client -showcerts -CApath /tmp/<login> -connect wis.fit.vutbr.cz:443|
+
+      \item O svůj úspěch se podělte se svým cvičícím.
+
+    \end{enumerate}
+
+  \item {\bf Certificate Transparency}
+
+    \begin{enumerate}
+
+      \item Příkazem \verb|host -t CAA fit.vutbr.cz| si zobrazte certifikační
+        autority oprávněné vydávat certifikáty pro doménu \url{fit.vutbr.cz}.
+
+      \item V prohlížeči se připojte na stránku
+        \url{https://certstream.calidog.io/}, klikněte na tačítko \emph{Open
+        Fire Hose} a pozorujte nově vydávané certifikáty. K čemu si myslíte, že
+        můžou být tato data dobrá? Myslíte si, že je možné data zneužít?
+
+      \item V prohlížeči se připojte na stránku \url{https://crt.sh}.
+
+      \item Nalezněte certifikáty vydané pro servery v rámci domény
+        \emph{fit.vutbr.cz}, použijte znak \verb|%| jako zástupný znak.
+
+      \item Najděte na stránce ikonu směřují k souboru Atom odkazující na soubor
+        obsahující vystavené certifikáty. Zamyslete se k čemu byste tento soubor
+        využili a ukažte tento soubor cvičícímu.
+
+    \end{enumerate}
+
+\end{enumerate}
+
+
+\section{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item Počítač vypněte dávkou {\tt /root/isa2/clean}.
+\end{itemize}
+
+\end{document}
+%% END OF FILE 
