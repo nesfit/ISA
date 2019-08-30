@@ -30,9 +30,8 @@
 \section*{Pokyny}
 \begin{itemize}
   \item Přihlaste se do OS GNU/Linux (F3), user/password {\tt user}/{\tt user4lab}.
-  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
-  \item Otevřete si další příkazovou řádku pro uživatele {\tt root} příkazem {\tt su}
-  (switch user).
+  \item V případě potřeby se přepněte na uživatele {\tt root} příkazem {\tt su}
+  (switch user), heslo {\tt root4lab}.
   \item V případě potřeby si otevřete další terminál v novém okně.
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
   nano, mcedit, vim, gedit).
@@ -66,15 +65,17 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
 
 \section{Vzdálený terminál -- SSH, Secure Shell}
 
-Zkontrolujte, že máte otevřený jednu příkazovou řádku jako uživatel
-{\tt user} a druhou jako uživatel {\tt root} příkazem {\tt whoami}, který vypisuje jméno aktivního
-uživatele.
-
 Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
 
 \begin{enumerate}
 
-  \item V otevřených terminálech dočasně vypněte podporu pro SSH agenta:
+  \item Otevřete si dvě okna: příkazovou řádku pro uživatele {\tt user} a další
+    příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user).
+Zkontrolujte, že máte otevřený jednu příkazovou řádku jako uživatel
+{\tt user} a druhou jako uživatel {\tt root} příkazem {\tt whoami}, který vypisuje jméno aktivního
+uživatele.
+
+    V~obou otevřených terminálech dočasně vypněte podporu pro SSH agenta:
   \begin{lstlisting}
   [user@hXX]$ unset SSH_AUTH_SOCK
   [root@hXX]# unset SSH_AUTH_SOCK
