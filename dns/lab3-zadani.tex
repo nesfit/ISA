@@ -1,7 +1,6 @@
 
 \section*{Cíle laboratoře}
 \begin{itemize}
-  \item Základní seznámení se synchronizací času a protokolem NTP.
   \item Systém DNS.
   \item Zabezpečení DNSSEC.
 \end{itemize}
@@ -25,24 +24,6 @@
 \end{itemize}
 
 \section*{Úkoly}
-\section{NTP}
-
-Vašim úkolem je zajistit synchronizaci hodin počítače. V rámci bezpečnosti je
-důležité provozovat počítač se správným časem kvůli časovým razítkům
-označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
-
-\begin{enumerate}
-
-  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. Ujistěte
-    se, že je nastavena synchronizace proti serveru {\tt ntp.fit.vutbr.cz}.
-
-  \item Zapněte démona pro NTP ({\tt systemctl start ntp.service}).
-    Sledujte postup synchronizace příkazem {\tt
-    watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
-    spuštěné a pokračujte dalšími úkoly.
-
-\end{enumerate}
-
 \section{Konfigurace DNS serveru}
 \begin{enumerate}
 

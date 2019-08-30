@@ -19,11 +19,12 @@
 
 {\let\newpage\relax\maketitle}
 
-\section*{Cíle laboratorního cvičení:}
+\section*{Cíl laboratorního cvičení:}
 \begin{itemize}
-  \item naučit se práci s nástrojem SSH a správu klíčů 
-  \item naučit se základy protokolu TLS,
-  \item seznámit se s Certificate Transparency Log.
+  \item Základní seznámení se synchronizací času a protokolem NTP.
+  \item Naučit se práci s nástrojem SSH a správu klíčů.
+  \item Naučit se základy protokolu TLS.
+  \item Seznámit se s Certificate Transparency Log.
 \end{itemize}
 
 \section*{Pokyny}
@@ -44,6 +45,24 @@
 
 \newpage
 %\section{Laboratorní úlohy}
+\section{NTP}
+
+Vašim úkolem je zajistit synchronizaci hodin počítače. V rámci bezpečnosti je
+důležité provozovat počítač se správným časem kvůli časovým razítkům
+označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
+
+\begin{enumerate}
+
+  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. Ujistěte
+    se, že je nastavena synchronizace proti serveru {\tt ntp.fit.vutbr.cz}.
+
+  \item Zapněte démona pro NTP ({\tt systemctl start ntp.service}).
+    Sledujte postup synchronizace příkazem {\tt
+    watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
+    spuštěné a pokračujte dalšími úkoly.
+
+\end{enumerate}
+
 \section{Vzdálený terminál -- SSH, Secure Shell}
 
 Zkontrolujte, že máte otevřený jednu příkazovou řádku jako uživatel
@@ -133,7 +152,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
         řádku s klíčem uživatele {\tt root} (řádek poznáte tak, že končí řetězcem
         {\tt <login>@root}) napíšete
-        \verb|command="df -h" | \\ (následovaný jednou mezerou a původním
+        \verb|command="ntpq -p" | \\ (následovaný jednou mezerou a původním
         obsahem řádku).
 
       \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste z
