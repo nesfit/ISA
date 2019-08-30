@@ -53,10 +53,11 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
 
 \begin{enumerate}
 
-  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. Ujistěte
-    se, že je nastavena synchronizace proti serveru {\tt ntp.fit.vutbr.cz}.
+  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. V souboru
+    nahraďte využívání poolu serveru Cent OS ({\tt *.centos.pool.ntp.org}) za
+    servery na FIT: {\tt ntp.fit.vutbr.cz} a {\tt ntpm.fit.vutbr.cz}.
 
-  \item Zapněte démona pro NTP ({\tt systemctl start ntp.service}).
+  \item Zapněte démona pro NTP ({\tt systemctl start ntpd.service}).
     Sledujte postup synchronizace příkazem {\tt
     watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
     spuštěné a pokračujte dalšími úkoly.
