@@ -1,6 +1,9 @@
 all: cv1.pdf
 
-cv1.dvi: cv1.tex lab1-zadani.tex Makefile
+manual:
+	$(MAKE) -C ../manual
+
+cv1.dvi: cv1.tex lab1-zadani.tex Makefile manual
 	latex $<
 	latex $<
 
