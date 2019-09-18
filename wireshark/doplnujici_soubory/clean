@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-ip addr flush dev eth0
-ip addr flush dev eth1
-
-tar -C / --overwrite -xf /root/isa1/default.tar
-
-shutdown -h now
