@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
-
-rm /etc/hosts &> /dev/null
-rm /etc/resolv.conf &> /dev/null
-
-tar -C / --overwrite -xf /root/isa1/default.tar
+cp /root/isa1/hosts /etc/hosts
 
 nmcli c modify "Wired connection 1" ipv4.method auto
 nmcli c modify "Wired connection 1" ipv6.method auto

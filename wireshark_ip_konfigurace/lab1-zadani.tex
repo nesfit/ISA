@@ -3,7 +3,7 @@
 	\item Seznámení se se základní prací v~OS Linux.
 	\item Seznámení se se základními nástroji pro zjišťování konfigurace zařízení.
 	\item Analýza síťového provozu pomocí Wireshark.
-	\item Seznámit se s manuální a dynamickou konfigurací IPv4 a IPv6 na OS Linux
+	\item Seznámit se s manuální konfigurací IPv4 a IPv6 na OS Linux
 \end{itemize}
 
 \section*{Pokyny}
@@ -19,7 +19,7 @@
 \subsection*{Příprava laboratoře}
 Před samotnou konfigurací je potřeba přepojit počítače kabelem přes patch panel
 pro kabely DXX (XX je číslo vašeho počítače) vepředu laboratoře. Na PC budete
-pracovat s rozhraníma {\bf eth1}.
+pracovat s rozhraníma {\bf enp2s0}.
 
 \section{Zjišťování konfigurace}
 V případě, že se v OS Linux úplně neorientujete, přečtěte si kapitolu \ref{basics} v
@@ -30,12 +30,10 @@ v~sekci \ref{basic_ipconfig} laboratorního manuálu --- Konfigurace síťových
 
 \begin{enumerate}
 \item Vypište konfiguraci vašeho stroje (MAC adresu, IPv4 adresu, masku, síť, broadcastovou adresu).
-\item Zobrazte si záznamy v~routovací a ARP tabulce. Zapište pravidlo týkající se defaultní cesty. Následně k~IPv4 ve vypsaném záznamu přiřaďte MAC adresu.
+\item Zobrazte si záznamy v~routovací a ARP tabulce. Zapište IP4v4 adresu výchozí brány a přiřaďte k ní MAC adresu.
 \item Otestujte konektivitu k~výchozí bráně a následně konektivitu do internetu.
-\item Vypište implicitní servery DNS a soubor, ve kterém jste tuto informaci nalezli.
-\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping google},
-  byl ping proveden vůči IPv4 adrese 8.8.8.8. Zapište jak a který soubor jste
-    upravili a jaký záznam jste přidali.
+\item Vypište implicitní servery DNS a název souboru, ve kterém jste tuto informaci nalezli.
+\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping gateway}, byl ping proveden vůči IPv4 adrese 10.10.10.1. Zapište jak a který soubor jste upravili a jaký záznam jste přidali.
 \item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké vygenerujte, například pomocí webového prohlížeče.
 \item Zobrazte systémové události pomocí programu \texttt{journalctl}.
 \item Zobrazte pouze události týkající se NetworkManager.
@@ -53,7 +51,7 @@ potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} labo
   \item Pomocí programu Wireshark začněte \textbf{zachytávat} pouze HTTP komunikaci na výchozím portě
     (výchozí porty je možné nalézt např. v \texttt{/etc/services}). Zapište
     použitý \emph{capture filter} do odpovědního archu. Spusťte si prohlížeč a
-    načtěte stránku \texttt{http://www.fit.vutbr.cz} (po zapnutí zachytávání
+    načtěte stránku \texttt{http://cphoto.fit.vutbr.cz} (po zapnutí zachytávání
     provozu). Zachycený provoz uložte do adresáře \texttt{/tmp}. (přípona \texttt{.pcap})
 \item Vypište zdrojovou a cílovou IPv4 adresu a MAC adresu odeslaného a
   přijatého paketu. Zamyslete se nad tím, co vypsané MAC adresy a IPv4 adresy
