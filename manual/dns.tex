@@ -3,7 +3,7 @@
 \label{dns}
 Cílem DNS je zajistit překlad mezi doménovým jménem a IP adresou. Dříve se jednalo především o~překlad hostname na IP adresu a naopak, tedy záznamy typu {\tt A}, {\tt AAAA}, {\tt PTR} \cite{rfc1035,rfc3596}. Dalším známým typem je {\tt MX}, který deleguje zodpovědnost za příjem e-mailové pošty dané domény. Tento typ se od předchozích tří odlišuje, protože se nejedná o~adresaci hosta, ale služby. Podobný význam mají i záznamy typu {\tt SRV}, které lze v~současnosti využít pro služby SIP a XMPP \cite{rfc2782}.
 
-Mimo tyto typy záznamů existují i další. Některé jsou definovány již v~původním návrhu, jiné přidané později nebo význam původních typů vyžit pro další služby (např. {\tt TXT} využito pro distribuci veřejného klíče podepisování emailu DKIM \cite{rfc4871}).
+Mimo tyto typy záznamů existují i další. Některé jsou definovány již v~původním návrhu, jiné přidané později nebo význam původních typů je využit pro další služby (např. {\tt TXT} se používá pro distribuci veřejného klíče podepisování emailu DKIM \cite{rfc4871}).
 
 \subsection{Klient}
 Aby klient věděl, na který server se obrátit s~požadavkem na přeložení doménového jména na IP adresu či opačně, je součástí systému tzv. resolver. Tento resolver má několik konfiguračních souborů, z~nichž jmenujme {\tt /etc/hosts}, {\tt /etc/resolv.conf} a {\tt /etc/host.conf}.
@@ -25,7 +25,7 @@ Pokud se síť na klientovi konfiguruje dynamicky, pak je soubor {\tt /etc/resol
 Konfigurace DNS se stává ze dvou částí -- konfigurace vlastností samotné aplikace a konfigurace obsluhovaných zón. Existuje mnoho různých variant implementací. V~laboratoři se bude pracovat s~implementací od ISC -- BIND.
 
 Konfigurační soubor {\tt\bf named.conf} se na počítačích v~laboratořích nachází ve složce {\tt
-/etc/bind/}. V Linuxové distribuci Kali tento soubor obsahuje vložené 3 soubory (pro konfiguraci voleb,
+/etc/}. V Linuxové distribuci CentOS tento soubor obsahuje vložené 3 soubory (pro konfiguraci voleb,
 konfiguraci lokálních zón a konfiguraci výchozích zón).
 
 %\begin{verbatim}
@@ -92,7 +92,7 @@ Asociuje se s~nejvyšší doménou v~rámci celé hierarchie. Pokud přijde na s
 
 Soubor, který je vyžadován pro konfiguraci této domény lze získat například programem dig:
 \begin{verbatim}
- dig +norec NS . @a.root-servers.net > /etc/bind/db.root
+ dig +norec NS . @a.root-servers.net > /var/named/db.root
 \end{verbatim}
 
 \subsubsection{Lokálně obsluhovane zóny}
@@ -105,17 +105,17 @@ obsloužit sám a tím redukovat dotazy přeposílané na další servery. Ve v�
 %/etc/namedb/named.conf} souborem {\tt /root/isa1/named.conf}, který je zkrácen a obsahuje pouze nezbytné definice.
 
 \subsubsection{Vlastní zóna}
-Aby server začal překládat vlastní zónu, je třeba přidat definici zóny do souboru {\tt named.conf.local} a vytvořit zónový soubor. Pokud se přidává zónový soubor pro doménu, je vhodné přidat i zónu pro reverzní záznamy.
+Aby server začal překládat vlastní zónu, je třeba přidat definici zóny do souboru {\tt /etc/named/named.conf.local} a vytvořit zónový soubor. Pokud se přidává zónový soubor pro doménu, je vhodné přidat i zónu pro reverzní záznamy. Soubor {\tt named.conf.local} je pak potřeba zmínit v souboru {\tt named.conf}, aby byl použit i on v rámci konfigurace služby.
 
 \begin{verbatim}
 zone "moje.domena.cz" {
   type master;
-  file "/var/cache/bind/moje.domena.cz.zone";
+  file "/var/named/moje.domena.cz.zone";
 };
 
 zone "0.168.192.in-addr.arpa" {
   type master;
-  file "/etc/bind/master/192.168.0.rev";
+  file "/var/named/192.168.0.rev";
 };
 \end{verbatim}
 
@@ -243,11 +243,11 @@ buďto zkopírovat do zónového souboru a nebo je připojit pomocí direktivy {
 \$INCLUDE}, např:
 
 \begin{verbatim}
-cat Kexample.com.+005+06487.key >> /var/cache/bind/example.com
-cat Kexample.com.+005+32883.key >> /var/cache/bind/example.com
+cat Kexample.com.+005+06487.key >> /var/named/example.com
+cat Kexample.com.+005+32883.key >> /var/named/example.com
 \end{verbatim}
 
-Alternativně přidejte do souboru {\tt /var/cache/bind/example.com} řádek:
+Alternativně přidejte do souboru {\tt /var/named/example.com} řádek:
 
 \begin{verbatim}
 $INCLUDE Kexample.com.+005+06487.key;
