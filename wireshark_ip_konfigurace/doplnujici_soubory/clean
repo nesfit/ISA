@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 cp /root/isa1/hosts /etc/hosts
 
-nmcli c modify "Wired connection 1" ipv4.method auto
-nmcli c modify "Wired connection 1" ipv6.method auto
-
+nmcli c modify "Wired connection 1" ipv4.method auto ipv4.addresses "" ipv4.gateway ""
+nmcli c modify "Wired connection 1" ipv6.method auto ipv6.addresses "" ipv6.gateway ""
 shutdown -h now
