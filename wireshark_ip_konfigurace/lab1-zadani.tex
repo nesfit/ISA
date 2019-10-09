@@ -75,27 +75,35 @@ potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} labo
 
 Teorie \emph{IPv4 adresování} je popsaná v sekci \ref{adresy_ipv4} laboratorního manuálu --- Adresy v IPv4 síti.
 Možnosti manuální konfigurace IP adres jsou v sekci \ref{ipconfig} --- Konfigurace síťování koncových zařízení.
+Pracujte samostatně, nebo spolupracujte se svým spolužákem v okolí, který se také
+chystá plnit tento bod zadání, můžete spolupracovat i ve větších skupinách.
 
 \begin{enumerate}
     \item Zvolte nejdelší možnou masku sítě \texttt{192.168.0.0} tak, aby síť obsahovala prostor pro 100 koncových stanic.
-    \item Z takto vytvořené sítě si vyberte 2 vhodné adresy, které nakonfigurujte na 2 počítače ve Vaší síti.
-    \item Správnou konfiguraci si ověřte příkazem {\tt ping}.
+    \item Jako adresu sítě použijte \texttt{192.168.0.0}. Na svém počítači
+      nakonfigurujte adresu spadající do této sítě, kde poslední oktet bude
+      odpovídat číslu vašeho počítače.
+    \item Správnou konfiguraci si ověřte příkazem {\tt ping}. Pokud
+      spolupracujete ve skupině, ověřte konektivitu ke všem spolupracujícím
+      členům skupiny.
 \end{enumerate}
 
 \subsection{Manuální konfigurace IPv6}
 Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{adresy_ipv6} --- Adresy v IPv6 síti.
-Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
+Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4. Pracujte
+samostatně nebo ve skupine.
 
 \begin{enumerate}
     \item Zvolte si adresu sítě vhodnou pro použití v privátních lokálních
         sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
         sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
         použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
-        ID) si můžete zvolit libovolně.
+        ID) si můžete zvolit libovolně. Pokud pracujete ve skupině, použijte
+        všichni shodné Global ID i Subnet ID.
     \item Pro zajímavost si můžete unikátnost vygenerovaného Global ID
         zkontrolovat na \url{https://www.sixxs.net/tools/grh/ula/list}.
-    \item Z takto vytvořené sítě si vyberte 2 vhodné adresy, které
-        nakonfigurujte na 2 počítače ve Vaší síti.
+    \item Na svůj počítač nakonfigurujte adresu s Host ID rovným číslu vašeho
+      počítače.
     \item Správnou konfiguraci si ověřte příkazem {\tt ping6}.
 \end{enumerate}
 
