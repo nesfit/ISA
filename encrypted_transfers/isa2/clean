@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+rm /home/user/.ssh/* &> /dev/null
+rm -rf /home/user/.mozilla/firefox &> /dev/null
+rm /root/.ssh/* &> /dev/null
+
+tar -C / --overwrite -xf /root/isa2/default.tar
+
+systemctl stop ntpd.service &> /dev/null
+
+shutdown -h now
