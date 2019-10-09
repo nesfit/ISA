@@ -37,7 +37,7 @@
   nano, mcedit, vim, gedit).
 \item Pracujte jednotlivě či ve dvojicích (váš počítač je dále v textu označen jako hXX a
   počítač souseda hYY, kde XX a YY je číslo počítače 01--20). Zkontrolujte, že máte počítač propojen
-    přímým kabelem s přístupovým přepínačem (rozhraní eth0, zdířka E na patch
+    přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch
     panelu).
   
 \end{itemize}
@@ -86,7 +86,7 @@ uživatele.
     \begin{enumerate}
 
       \item Spusťte program wireshark a zachytávejte komunikaci na portu 22
-        (rozhraní eth0).
+        (rozhraní enp2s0).
 
       \item Přihlaste se příkazem {\tt ssh user@hYY.netlab.fit.vutbr.cz.} a zadejte heslo \textbf{user4lab}.
 
@@ -102,7 +102,7 @@ uživatele.
         klientovi, podporované šifry, autentizační mechanismus HMAC, mechanismus
         pro výměnu klíčů. Ověřte, že pomocí Wiresharku nevidíte příkazy zadané v
         předchozích bodech a jejich výstup. Můžete na základě zachycené
-        komunikace říct něco o jejím obsahu? Svá zjištění sdělte cvičícímu.
+        komunikace říct něco o jejím obsahu? {\bf Svá zjištění sdělte cvičícímu}.
 
     \end{enumerate}
 
@@ -175,7 +175,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
       \item Přihlaste se k serveru hYY. Museli jste zadávat znovu heslo?
 
     \end{enumerate}
-  \item Reportujte cvičícímu odpovědi na výše uvedené otázky.
+  \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (3c, 4a, 4b,
+    5b, 6b)}.
 
 \end{enumerate}
 
@@ -216,7 +217,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         říká o certifikátu?
 
       \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
-        informace lze vyčíst z handshaku TLS? Je možné zjistit jméno serveru?
+        informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
 
       \item Zašlete serveru požadavek protokolem HTTP, např.:
         \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
@@ -245,8 +246,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         University of Technology a podívejte se na jeho detaily.
 
       \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
-        informace lze vyčíst z handshaku TLS? Je možné zjistit jméno serveru?
-        Nalezené jméno serveru ukažte cvičícímu.
+        informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
+        {\bf Nalezené jméno serveru ukažte cvičícímu}.
 
     \end{enumerate}
 
@@ -284,7 +285,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         tentokrát příkazem: \\
         \verb|openssl s_client -showcerts -CApath /tmp/<login> -connect wis.fit.vutbr.cz:443|
 
-      \item O svůj úspěch se podělte se svým cvičícím.
+      \item {\bf O svůj úspěch se podělte se svým cvičícím}.
 
     \end{enumerate}
 
@@ -306,8 +307,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         \emph{fit.vutbr.cz}, použijte znak \verb|%| jako zástupný znak.
 
       \item Najděte na stránce ikonu směřují k souboru Atom odkazující na soubor
-        obsahující vystavené certifikáty. Zamyslete se k čemu byste tento soubor
-        využili a ukažte tento soubor cvičícímu.
+        obsahující vystavené certifikáty. {\bf Zamyslete se k čemu byste tento soubor
+        využili a ukažte tento soubor cvičícímu}.
 
     \end{enumerate}
 
