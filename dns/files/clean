@@ -6,8 +6,12 @@ rm /etc/*reso* &> /dev/null
 rm /etc/name/* &> /dev/null
 rm /var/named/* &> /dev/null
 rm /home/user/.ssh/* &> /dev/null
+rm /home/root/.ssh/* &> /dev/null
 
+chmod -R 0755 /root/isa3/
 tar -C / --overwrite -xf /root/isa3/default.tar
+chmod -R 0444 /root/isa3/
+chmod +x /root/isa3/clean
 
 #service networking restart &> /dev/null
 #service isc-dhcp-server restart &> /dev/null

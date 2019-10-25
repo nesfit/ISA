@@ -15,7 +15,7 @@
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
     nano, vim, gedit).
   \item Pracujte ve dvojicích, zkontrolujte, že máte počítač propojen
-    přímým kabelem s přístupovým přepínačem (rozhraní eth0, zdířka E na patch panelu).
+    přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch panelu).
 \end{itemize}
 
 \section*{Úkoly}
@@ -23,14 +23,14 @@
 \begin{enumerate}
 
   \item Pracujte ve dvojicích. Jeden z dvojice bude konfigurovat server (PC A)
-    a druhý počítač bude mít roli klienta (PC B). Propojte rozhraní eth1 (zdířka
+    a druhý počítač bude mít roli klienta (PC B). Propojte rozhraní enp4s1 (zdířka
     D na patch panelu) mezi počítači ve dvojici křížovým kabelem.
-  \item Nastavte statické IP adresy na rozhraní eth1 vašich počítačů pomocí {\tt 
+  \item Nastavte statické IP adresy na rozhraní enp4s1 vašich počítačů pomocí {\tt 
     ip addr}. Otestujte konektivitu příkazem {\tt ping}. Pokud konektivita nefunguje,
     ověřte nastavení IP adres {\tt ip a} a zamyslete se, co je špatně.
   \item Upravte konfigurační soubor {\tt /etc/named.conf} (parametr
     {\tt listen-on} v~sekci {\tt options}) tak, aby
-    PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní eth1.
+    PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní enp4s1.
     Inspirovat se můžete již uvedeným paramterem {\tt listen-on-v6}, případně v
     manuálových stránkách.
   \item Na PC A rozšiřte konfiguraci DNS serveru tak, aby obsluhoval požadavky pro Vámi
@@ -45,7 +45,7 @@
     Inzerujte platnost vámi zasílaných záznamů 1 hodina.
     Jako základ zónového souboru pro vaší doménu můžete použít soubor 
     {\tt /root/isa3/template.dns.zone}.
-    Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/named/bind}, 
+    Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/named}, 
     nezapomeňte zaregistrovat zóny v~souboru \linebreak{\tt named.conf.local} 
     (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). Jako vzor můžete 
     použít soubor {\tt /root/isa3/named.conf.local}.
@@ -58,7 +58,7 @@
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
     Případné chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
-  \item V konfiguračním souboru {\tt hcpd} nastavte na obou počítačích použití vlastního
+  \item V konfiguračním souboru {\tt dhcpd} nastavte na obou počítačích použití vlastního
     serveru DNS běžícího na PC A, na konec souboru přidejte řádek \\
     {\tt prepend domain-name-servers
     192.168.X.X;} \\ Na obou počítačích restartujte síťování: {\tt systemctl restart network.service}.
@@ -67,6 +67,7 @@
     localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
     poslední části odpovědi.
   \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
+  \item {\bf Pochlubte se se svými výsledky cvičícímu}.
   \item Ověřte zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
   \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
     {\tt wireshark}. Analyzujte si jednotlivé položky a porovnejte je s výpisem
@@ -84,7 +85,7 @@
     seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
     PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
     soubory přidejte do souboru {\tt /var/named/named.conf.local} a restartujte
-    name.
+    {\tt named}.
 
   \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
     Spusťte zde jednoduchý webový server příkazem {\tt python -m
@@ -93,8 +94,8 @@
   \item Na PC B ověřte, že se doménová jména {\tt www.seznam.cz} a {\tt
     www.fit.vutbr.cz} překládají na IP adresu PC A.
 
-  \item Na PC B si zobrazte webové prezentace v doménách {\tt www.fit.vutbr.cz}
-    a {\tt www.seznam.cz}. Všimněte si klíče v pravé části adresního řádku.
+  \item Na PC B si zobrazte webové prezentace v doménách {\tt http://www.fit.vutbr.cz}
+    a \linebreak{\tt http://www.seznam.cz}. Všimněte si zámku v levé části adresního řádku.
 
 \end{enumerate}
 
