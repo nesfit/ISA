@@ -11,7 +11,7 @@ rm /home/root/.ssh/* &> /dev/null
 chmod -R 0755 /root/isa3/
 tar -C / --overwrite -xf /root/isa3/default.tar
 chmod -R 0444 /root/isa3/
-chmod +x /root/isa3/clean
+chmod 0544 /root/isa3/clean
 
 #service networking restart &> /dev/null
 #service isc-dhcp-server restart &> /dev/null
@@ -20,6 +20,6 @@ chmod +x /root/isa3/clean
 systemctl restart network.service
 systemctl stop named.service
 
-dhclient enp2s0 &> /dev/null
+dhclient enp4s1 &> /dev/null
 
 shutdown -h now
