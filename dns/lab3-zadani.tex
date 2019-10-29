@@ -32,11 +32,11 @@
     {\tt listen-on} v~sekci {\tt options}) tak, aby
     PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní enp4s1.
     Inspirovat se můžete již uvedeným paramterem {\tt listen-on-v6}, případně v
-    manuálových stránkách.
+    manuálových stránkách. Dále nastavte {\tt allow-query} na {\tt any}.
   \item Na PC A rozšiřte konfiguraci DNS serveru tak, aby obsluhoval požadavky pro Vámi
     zvolenou doménu, např. {\tt isa.cz}. Doména bude obsahovat:
     \begin{itemize}
-      \item Nameserver pojmenovaný {\tt server}.
+      \item Nameserver pojmenovaný {\tt server} (záznam typu NS).
       \item Záznam typu A pro {\tt server}.
       \item Záznam typu A pro jméno {\tt pcb}, který odkazuje na IP adresu
         počítače PC B.
@@ -46,9 +46,8 @@
     Jako základ zónového souboru pro vaší doménu můžete použít soubor 
     {\tt /root/isa3/template.dns.zone}.
     Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/named}, 
-    nezapomeňte zaregistrovat zóny v~souboru \linebreak{\tt named.conf.local} 
-    (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). Jako vzor můžete 
-    použít soubor {\tt /root/isa3/named.conf.local}.
+    nezapomeňte zaregistrovat zóny v~souboru \linebreak{\tt /etc/named.conf} 
+    (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). 
   \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
     (záznamy AAAA).
   \item Nakonfigurujte reverzní překlad. Jako základ
@@ -58,17 +57,18 @@
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
     Případné chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
-  \item V konfiguračním souboru {\tt dhcpd} nastavte na obou počítačích použití vlastního
-    serveru DNS běžícího na PC A, na konec souboru přidejte řádek \\
-    {\tt prepend domain-name-servers
-    192.168.X.X;} \\ Na obou počítačích restartujte síťování: {\tt systemctl restart network.service}.
+  \item Přidejte konfigurační soubor {\tt /etc/dhcp/dhclient-enp2s0.conf} a nastavte na obou počítačích
+    použití vlastního serveru DNS běžícího na PC A, do souboru přidejte řádek \\
+    {\tt prepend domain-name-servers 192.168.X.X;} \\ 
+    Na obou počítačích restartujte síťování: {\tt systemctl restart network.service}.
     Ověřte nastavení IP adres a obsah souboru {\tt /etc/resolv.conf}.
+  \item Proveďte {\tt iptables -F INPUT}, {\tt iptables -F OUTPUT} a {\tt iptables -F FORWARD}
   \item Ověřte, že PC A používá pro překlad lokální DNS server ({\tt dig
     localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
     poslední části odpovědi.
   \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
+  \item Ověřte, zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
   \item {\bf Pochlubte se se svými výsledky cvičícímu}.
-  \item Ověřte zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
   \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
     {\tt wireshark}. Analyzujte si jednotlivé položky a porovnejte je s výpisem
     programu {\tt dig}.
@@ -84,7 +84,7 @@
   \item Na PC A vytvořte zónové soubory pro domény {\tt fit.vutbr.cz} a {\tt
     seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
     PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
-    soubory přidejte do souboru {\tt /var/named/named.conf.local} a restartujte
+    soubory přidejte do souboru {\tt /etc/named.conf} a restartujte
     {\tt named}.
 
   \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
@@ -109,12 +109,14 @@
   \item Přidejte záznamy typu DNSKEY do zónového souboru (podle uvážení přímo,
     či pomocí direktivy \verb|$INCLUDE|).
 
-  \item Podepište zónový soubor příkazem {\tt dnssec-signzone}.
+  \item Podepište zónový soubor příkazem {\tt dnssec-signzone -o isa.cz isa.cz.zone}.
 
-  \item Upravte konfiguraci {\tt named.conf.local} tak, aby se jako zónový
+  \item Restartujte {\tt named}.
+  
+  \item Upravte konfiguraci {\tt /etc/named.conf} tak, aby se jako zónový
     soubor použil soubor obsahující podepsané záznamy.
 
-  \item Na PC B si pomocí příkazu {\tt dig +dnssec DNSKEY <doména>} vyžádejte obsah záznamů
+  \item Na PC B si pomocí příkazu {\tt dig +dnssec DNSKEY <doména> @<adresa PC A>} vyžádejte obsah záznamů
     DNSKEY. To stejné prověďte pro RRSIG.
 
 \end{enumerate}

@@ -4,6 +4,7 @@ rm /etc/dhcp/* &> /dev/null
 rm /etc/radvd.conf &> /dev/null
 rm /etc/*reso* &> /dev/null
 rm /etc/name/* &> /dev/null
+rm /etc/dhcp/dhclient-enp2s0.conf &> /dev/null
 rm /var/named/* &> /dev/null
 rm /home/user/.ssh/* &> /dev/null
 rm /home/root/.ssh/* &> /dev/null
@@ -19,7 +20,5 @@ chmod 0544 /root/isa3/clean
 
 systemctl restart network.service
 systemctl stop named.service
-
-dhclient enp4s1 &> /dev/null
 
 shutdown -h now
