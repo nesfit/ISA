@@ -2,9 +2,9 @@
 \section*{Cíl laboratorního cvičení}
 \begin{itemize}
   \item seznámit se s nástroji pro správu sítě
-  \item seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení \textbf{nfdump}
-  \item naučit se pracovat s protokolem Syslog a nástrojem rsyslog
-  \item konfiguraci nástrojů pro monitoring Icinga2
+  \item seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení {\bf nfdump}
+  \item naučit se pracovat s protokolem Syslog a nástrojem {\bf rsyslog}
+  \item konfiguraci nástrojů pro monitoring {\bf Icinga2}
 \end{itemize}
 
 \section*{Pokyny}
@@ -15,15 +15,21 @@
   \item Na konci laboratorního cvičení nezapomeňte na poslední bod,
   tj. na {\bf Ukončení práce v laboratoři}!
   
-  \item Zapněte si počítače pod Linux přihlaste se jako uživatel \textbf{root} s heslem \textbf{root4lab}
-  \item Zapněte si VirtualBox, kde se nacházejí 2 virtuální počítače, \textbf{isa-icinga-master} a \textbf{isa-icinga-provider}. Zkontrolujte zda jsou počítače v předdefinovaném stavu \textbf{Clean}. Pokud ne, proveďte obnovení tlačítkem Restore do tohoto stavu. Volbu Create snapshot of the current machine state vypněte.
+  \item Zapněte si počítače pod Linux přihlaste se jako uživatel {\bf user} s heslem {\bf user4lab}
+  \item Zapněte si VirtualBox, kde se nacházejí 2 virtuální počítače, {\bf isa-icinga-master} a {\bf isa-icinga-provider}. Přepněte se do panelu se snapshoty pomocí Machine $\rightarrow$ Tools $\rightarrow$ Snapshots a~zkontrolujte zda jsou počítače v předdefinovaném stavu {\bf Clean} (obr. \ref{fig:revert}). Pokud ne, proveďte obnovení tlačítkem {\bf Restore} do tohoto stavu. Volbu {\bf Create snapshot of the current machine state} vypněte.
   
-%  \includegraphics[width=\linewidth]{files/init.PNG}
+  \begin{figure}[!ht]
+  	\caption{Uvedení virt. počítače do snapshotu Clean}
+  	\centering
+  	\includegraphics[width=0.67\linewidth]{files/vbox-revert.PNG}
+ 	\label{fig:revert}
+  \end{figure}
+
   \item Všechny virtuální počítače mají root účet s údaji shodnými s laboratorním účtem
             \begin{itemize}
-                \item \textbf{root/root4lab}
+                \item {\bf root/root4lab}
             \end{itemize}
-  \item Smažte pravidla ve firewallu příkazem \texttt{iptables --flush}
+  \item Smažte pravidla ve firewallu příkazem {\tt iptables --flush}
 \end{itemize}
 
 \newpage
@@ -50,7 +56,8 @@
 		\begin{enumerate}
 			\item Na Vašem počítači se v adresáři {\tt /root/isa5/netflow} nachází
 			anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu
-			{\ttnfdump}, který využijte ke kladení dotazů nad NetFlow daty.
+			{\tt
+nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
 			\item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
 			\item Dotažte se na následující statistiky. TOP 20 IP adres podle počtu přenesených bajtů. 
 			\begin{itemize}
@@ -156,6 +163,7 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
        \end{enumerate}
    \end{itemize}
 
+%ICINGA2
 \section{Icinga2}
   \begin{itemize}
     \item Úkol: 
@@ -165,17 +173,24 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
     \end{itemize}
     \item Poznámka:
         \begin{itemize}
-            \item Na počítačích isa-icinga-master a isa-icinga-provider pracujeme pod uživatelem \textbf{root}
+            \item Na virtuálních počítačích isa-icinga-master a isa-icinga-provider pracujte pod uživatelem {\bf root}
         \end{itemize}
+		\begin{figure}[!ht]
+			\caption{Ilustrace zapojení virt. prostředí}
+			\centering
+	    	\includegraphics*[width=0.5\linewidth]{files/vbox-network.pdf}
+		\end{figure}
     \item Postup:
-       \begin{enumerate}   
+       \begin{enumerate}
+       		\item Spusťte virt. počítače isa-icinga-master a isa-icinga-provider. Příkazem ping ověřte, že
+       		jsou tyto počítače dostupné.
             \item Otevřete si webový prohlížeč a zadejte adresu 
-            \textit{https://192.168.56.10/icingaweb2}. Dostanete se na webové rozhraní Icingy2,
-            která běží na počítači \textbf{isa-icinga-master}.
+            {\it https://192.168.56.10/icingaweb2}. Dostanete se na webové rozhraní Icingy2,
+            která běží na počítači {\bf isa-icinga-master}.
                \begin{enumerate}
-                   \item Přihlaste se pod uživatelem \textbf{isa} a heslem \textbf{user4lab}
+                   \item Přihlaste se pod uživatelem {\bf isa} a heslem {\bf user4lab}
                \end{enumerate}
-            \item Na zařízení isa-icinga-master ve složce \textit{/etc/icinga2/conf.d} vytvořte soubor \textbf{hosts.conf} a do něj doplňte následující konfiguraci:
+            \item Na zařízení isa-icinga-master ve složce {\it /etc/icinga2/conf.d} vytvořte soubor {\bf hosts.conf} a do něj doplňte následující konfiguraci:
 \begin{verbatim}
 object Host "Provider" {
     address = "<IP ADDRESS>"
@@ -191,9 +206,9 @@ object Service "http" {
 }
 
 \end{verbatim} 
-            \item Restartujte službu. V~případě chyby nahlédněte do souboru \texttt{/var/log/messages} na virt. počítači isa-icinga-master.
+            \item Restartujte službu. V~případě chyby nahlédněte do souboru {\tt /var/log/messages} na virt. počítači isa-icinga-master.
 \begin{verbatim}
-  rc-service icinga2.service restart
+  rc-service icinga2 restart
 \end{verbatim} 
           \item Podívejte se na webové rozhraní Icingy2. Co se tam změnilo ? 
           Když je nějaká služba down proč tomu tak je ?
@@ -202,7 +217,7 @@ object Service "http" {
 \begin{verbatim}
   python -m SimpleHTTPServer 80
 \end{verbatim}
-          \item Ve Webovém rozhraní Icingy2 v menu Overview|Services si vyhledejte předešlý check na http službu. Pokud je služba down stisknete na odkaz \textit{Check Now}. Změnilo se něco oproti předešlému stavu z bodu 4?
+          \item Ve Webovém rozhraní Icingy2 v menu Overview $\rightarrow$ Services si vyhledejte předešlý check na http službu. Pokud je služba down stisknete na odkaz {\bf Check Now}. Změnilo se něco oproti předešlému stavu z bodu 4?
 
           \item Jaký je interval mezi jednotlivými kontrolami pro Host Provider? Porovnejte tento interval s přednastaveními kontrolami. Jsou tyto intervaly rozdílné ? Pokud ano proč.
 
@@ -211,8 +226,13 @@ object Service "http" {
 
 \section*{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Vypněte všechny virtuální instance. Pro vypnutí můžete použít příkaz File $\rightarrow$ Close ... a volbu Power off the machine. Volbu Restore current snapshot 'Clean' ponechte zatrhnutou.
-  \item Počítač vypněte skriptem /root/isa5/clean
-
+  \item Vypněte všechny virtuální instance. Pro vypnutí můžete použít příkaz File $\rightarrow$ Close ... a volbu Power off the machine. Volbu {\bf Restore current snapshot 'Clean'} ponechte zatrhnutou (obr. \ref{fig:shutdown}).
+  \item Počítač vypněte skriptem {\tt /root/isa5/clean}
 \end{itemize}
-%          \includegraphics[width=\linewidth]{files/end.PNG}
+
+\begin{figure}
+	\caption{Vypnutí virt. počítače}
+	\centering
+	\includegraphics[width=0.67\linewidth]{files/vbox-shutdown.png}
+	\label{fig:shutdown}
+\end{figure}
