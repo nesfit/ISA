@@ -1,0 +1,4 @@
+#!/bin/bash
+
+tar -C "/" --overwrite -xf default.tar
+shutdown -h now
