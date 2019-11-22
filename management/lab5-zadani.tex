@@ -2,7 +2,7 @@
 \section*{Cíl laboratorního cvičení}
 \begin{itemize}
   \item seznámit se s nástroji pro správu sítě
-  \item seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení {\bf nfdump}
+  \item seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení NetFlow {\bf nfdump}
   \item naučit se pracovat s protokolem Syslog a nástrojem {\bf rsyslog}
   \item konfiguraci nástrojů pro monitoring {\bf Icinga2}
 \end{itemize}
@@ -16,19 +16,7 @@
   tj. na {\bf Ukončení práce v laboratoři}!
   
   \item Zapněte si počítače pod Linux a přihlaste se jako uživatel {\bf user} s heslem {\bf user4lab}
-  \item Zapněte si VirtualBox, kde se nacházejí 2 virtuální počítače, {\bf isa-icinga-master} a {\bf isa-icinga-provider}. Přepněte se do panelu se snapshoty pomocí Machine $\rightarrow$ Tools $\rightarrow$ Snapshots a~zkontrolujte zda jsou počítače v předdefinovaném stavu {\bf Clean} (obr. \ref{fig:revert}). Pokud ne, proveďte obnovení tlačítkem {\bf Restore} do tohoto stavu. Volbu {\bf Create snapshot of the current machine state} vypněte.
   
-  \begin{figure}[!ht]
-  	\caption{Uvedení virt. počítače do snapshotu Clean}
-  	\centering
-  	\includegraphics[width=0.67\linewidth]{files/vbox-revert.png}
- 	\label{fig:revert}
-  \end{figure}
-
-  \item Všechny virtuální počítače mají root účet s údaji shodnými s laboratorním účtem
-            \begin{itemize}
-                \item {\bf root/root4lab}
-            \end{itemize}
   \item Smažte pravidla ve firewallu příkazem {\tt iptables --flush}
   
   \item Volitelně můžete použít k přístupu na virt. počítače SSH (adresy 192.168.56.10, 192.168.56.20)
@@ -45,7 +33,7 @@
 		\item Seznámit se možnostmi měření provozu pomocí NetFlow. NetFlow slouží pro
 		přenos statistik o jednotlivých tocích dat vznikajících při komunikaci po síti.
 		Záznamy NetFlow, s~nimiž budete během cvičení pracovat, jsou
-		pořízeny z~napojení sítě VUT a~anonymizovány. V~druhé části úkolu
+		pořízeny ze sítě VUT a~anonymizovány. V~druhé části úkolu
 		budete pracovat s~daty pořízenými sondou FlowMon.
 	\end{itemize}
 	\item Příkazy:
@@ -54,21 +42,20 @@
 	\end{itemize}
 	\item Postup:
 	\begin{enumerate}
-		\item Na Vašem počítači se v adresáři {\tt /root/isa5/netflow} nachází
+		\item Na Vašem počítači se v adresáři {\tt /home/user/isa5/netflow} nachází
 		anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu
 		{\tt
 nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
 		\item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
-		\item Dotažte se na následující statistiky. TOP 20 IP adres podle počtu přenesených bajtů. 
+		\item Dotažte se na TOP 20 IP adres podle počtu přenesených bajtů. 
 		\begin{itemize}
-			\item V manuálové stránce si najděte, co dělají přepínače {\tt -R, -s, -n}.
+			\item V manuálové stránce si najděte, co dělají přepínače {\tt -R, -s, -n, -O}.
 			\item Nezapomeňte, že zpracovávaná data jsou relativně objemná. Dosažení výsledku tedy chvíli potrvá.
 		\end{itemize}
 		\item Zjistěte, jak velké datové přenosy připadají na jednotlivé protokoly. (Statistika protokolů)
 		\begin{itemize}
 			\item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
 		\end{itemize}
-		\item Na základě získaných statistik se zamyslete nad velikostí sítě.
 		\item Vyfiltrujte si toky se zdrojovou IP 162.35.0.190. Zaměřte se na čísla portů.
 		Je aktivita zdroje něčím podezřelá?
 		
@@ -84,7 +71,7 @@ nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
       \item Seznámit se s protokolem Syslog, který slouží pro přenos
       logovacích zpráv ze spravovaných zařízení. Pojmem Syslog je často označováno také
       programové vybavení implementující samotný přenos, třídění a ukládání zpráv na disk.
-      \item Pracujte ve dvojicích, kde jeden bude v~roli serveru a~druhý v~roli klienta
+      \item Pracujte ve dvojicích, kde jeden bude v~roli serveru a~druhý v~roli klienta.
       \item Pro práci využijte nástroj {\tt rsyslogd}, který bude sloužit jako server i klient.
       K otestování využijte nástroj {\tt logger}.
       \item Na klientovi následně omezte přeposílání pouze na zprávy konkrétního typu.
@@ -103,16 +90,6 @@ nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
   $ModLoad imudp
   $UDPServerRun 514
 \end{verbatim}
-
-            \item {\bf Na klientovi} zakažte programu rsyslogd naslouchat na síťovém socketu,
-tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
-\begin{verbatim}
-  $ModLoad imudp
-  $UDPServerRun 514
-
-  $ModLoad imtcp
-  $InputTCPServerRun 514
-\end{verbatim} 
 
             \item {\bf Na klientovi} nakonfigurujte rsyslog démona tak, aby odesílal veškeré zprávy
          z klienta na serveru pomocí UDP. Jako oddělovač použijte výhradně tabulátor nikoliv mezery.
@@ -141,24 +118,22 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
 
             \item  Na klientovi pokračujte v generování Syslog zpráv a 
          na serveru sledujte příchozí Syslog zprávy pomocí {\tt wireshark}. Na jakém
-         portu a jakým protokolem jsou Syslog zprávy zasílány.
-         
-         
+         portu a jakým protokolem jsou Syslog zprávy zasílány.      
 
-            \item Otevřete si manuálovou stránku rsyslog.conf a zjistěte, jaké zařízení a priority
-         zpráv Syslog poskytuje. 
+            \item Otevřete si manuálovou stránku {\tt rsyslog.conf} a zjistěte, jaké zařízení a priority
+         zpráv Syslog poskytuje (kapitola {\bf SELECTORS}). 
 \begin{verbatim} 
   man rsyslog.conf
 \end{verbatim} 
         
          \item Ze znalosti zařízení a priorit nakonfigurujte klienta, aby posílal na server 
-         pouze zprávy při selhání autentizace, tj. upravte již existující pravidlo pro přeposílání
+         zprávy související s autentizací na úrovni info, tj. upravte již existující pravidlo pro přeposílání
          veškerých zpráv na server v souboru {\tt /etc/rsyslog.conf}. Nezapomeňte restartovat Syslog démona. 
          
 \begin{verbatim} 
   Syntax pravidel: <facility>.<priority><TAB><action>
 \end{verbatim} 
-         \item Pokuste se o neúspěšné ssh připojení na server a podívejte se do souboru pro autentizační záznamy, jakou zprávu zaslal klient serveru. {\bf Záznam ukažte cvičícímu}.
+         \item Pokuste se o neúspěšné ssh připojení na klienta a podívejte se ve wiresharku, jakou zprávu zaslal klient serveru. Následně odešlete z klienta zprávu příkazem {\tt logger}. Při správné konfiguraci by se tato zpráva neměla odeslat. {\bf Ukažte cvičícímu pakety s odeslanou autentizační zprávou}.
 
        \end{enumerate}
    \end{itemize}
@@ -168,12 +143,24 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
   \begin{itemize}
     \item Úkol: 
     \begin{itemize}
-      \item Seznámit se s nástrojem Icinga2 pro monitorováni zařízení a služeb 
+      \item Seznámit se s nástrojem Icinga2 pro monitorováni zařízení a služeb.
       \item Na klientské stanici nakonfigurovat nakonfigurovat kontroly služeb a hostů.  
     \end{itemize}
     \item Poznámka:
         \begin{itemize}
-            \item Na virtuálních počítačích isa-icinga-master a isa-icinga-provider pracujte pod uživatelem {\bf root}
+	        \item Zapněte si VirtualBox (Applications $\rightarrow$ System Tools), kde se nacházejí 2 virtuální počítače, {\bf isa-icinga-master} a {\bf isa-icinga-provider}. Přepněte se do panelu se snapshoty pomocí Machine $\rightarrow$ Tools $\rightarrow$ Snapshots a~zkontrolujte zda jsou počítače v předdefinovaném stavu {\bf Clean} (obr. \ref{fig:revert}). Pokud ne, proveďte obnovení tlačítkem {\bf Restore} do tohoto stavu. Volbu {\bf Create snapshot of the current machine state} vypněte.
+            
+            \begin{figure}[!ht]
+            	\caption{Uvedení virt. počítače do snapshotu Clean}
+            	\centering
+            	\includegraphics[width=0.67\linewidth]{files/vbox-revert.png}
+            	\label{fig:revert}
+            \end{figure}
+            
+            \item Všechny virtuální počítače mají root účet s údaji shodnými s laboratorním účtem
+            \begin{itemize}
+            	\item {\bf root/root4lab}
+            \end{itemize}
         \end{itemize}
 		\begin{figure}[!ht]
 			\caption{Ilustrace zapojení virt. prostředí}
@@ -185,10 +172,11 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
        		\item Spusťte virt. počítače isa-icinga-master a isa-icinga-provider. Příkazem ping ověřte, že
        		jsou tyto počítače dostupné.
             \item Otevřete si webový prohlížeč a zadejte adresu 
-            {\it https://192.168.56.10/icingaweb2}. Dostanete se na webové rozhraní Icingy2,
+            {\it http://192.168.56.10/icingaweb2}. Dostanete se na webové rozhraní Icingy2,
             která běží na počítači {\bf isa-icinga-master}. Přihlaste se pod uživatelem {\bf isa} a heslem {\bf user4lab}.
             \item Na virt. počítači isa-icinga-master ve složce {\it /etc/icinga2/conf.d} najdete soubor {\bf hosts.conf}. Odkomentujte a doplňte potřebnou konfiguraci, aby systém Icinga2 
-            monitoroval virt. počítač {\bf isa-icinga-provider} a~služby {\bf http} a~{\bf snmp-free-memory}.
+            monitoroval virt. počítač {\bf isa-icinga-provider} a~služby {\bf http} a~{\bf snmp-free-memory}. Pole {\tt host\_name}
+            se musí shodovat s názvem Host objektu.
             
 \begin{verbatim}
 object Host "Provider" {
@@ -217,15 +205,18 @@ object Service "snmp-free-memory" {
   rc-service icinga2 restart
 \end{verbatim} 
           \item Podívejte se na webové rozhraní Icingy2. Co se tam změnilo? 
-          Když je nějaká služba down, proč tomu tak je?
+          Když je nějaká služba {\bf DOWN}, proč tomu tak je?
 
-          \item Na klientském počítači {\bf isa-icinga-provider} zapněte webový server
+          \item Na klientském počítači {\bf isa-icinga-provider} zapněte webový server.
 \begin{verbatim}
-  python -m SimpleHTTPServer 80
+  python -m SimpleHTTPServer 80 > /dev/null 2> /dev/null &
 \end{verbatim}
           \item Ve Webovém rozhraní Icingy2 v menu Overview $\rightarrow$ Services si vyhledejte předešlý check na http službu. Pokud je služba down stisknete na odkaz {\bf Check Now}. Změnilo se něco oproti předešlému stavu z bodu 4? {\bf Fungující službu předveďte cvičícímu}.
 
-          \item Jaký je interval mezi jednotlivými kontrolami pro Host Provider? Porovnejte tento interval s přednastaveními kontrolami. Jsou tyto intervaly rozdílné? Pokud ano proč.
+          \item Jaký je interval mezi jednotlivými kontrolami pro Host Provider? Porovnejte tento interval s přednastavenými kontrolami. Jsou tyto intervaly rozdílné? Pokud ano, proč?
+          
+          \item Na virt. počítači {\bf isa-icinga-provider} doplňte do objektu {\bf Host Provider} proměnnou {\tt vars.snmp\_community}. Jejím 
+          obsahem bude řetězec s názvem SNMP komunity. Řetezec můžete zvolit libovolně.
 
           \item Na virt. počítači {\bf isa-icinga-provider} upravte soubor {\tt /etc/snmp/snmpd.conf} tak, aby naslouchal na adrese rozhraní 192.168.56.20 a doplňte SNMP komunitu, aby se shodovala s isa-icinga-master. Komunita bude read-only
           a přístup bude povolen pro subnet 192.168.56.0/24.
@@ -234,7 +225,7 @@ object Service "snmp-free-memory" {
 \begin{verbatim}
   rc-service snmpd restart
 \end{verbatim}
-          \item Ve Webovém rozhraní Icingy2 v menu Overview $\rightarrow$ Services si vyhledejte předešlý check na službu snmp-memory a stiskněte odkaz {\bf Check Now}. Pokud jste službu nakonfigurovali správně, měli byste dostat informaci o dostupné paměti. {\bf Informaci předveďte cvičícímu}.
+          \item Ve Webovém rozhraní Icingy2 v menu Overview $\rightarrow$ Services si vyhledejte předešlý check na službu snmp-free-memory a stiskněte odkaz {\bf Check Now}. Pokud jste službu nakonfigurovali správně, měli byste dostat informaci o dostupné paměti. {\bf Informaci předveďte cvičícímu}.
           
 \end{enumerate}
 \end{itemize}
@@ -245,7 +236,7 @@ object Service "snmp-free-memory" {
   \item Počítač vypněte skriptem {\tt /root/isa5/clean}
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[!ht]
 	\caption{Vypnutí virt. počítače}
 	\centering
 	\includegraphics[width=0.67\linewidth]{files/vbox-shutdown.png}
