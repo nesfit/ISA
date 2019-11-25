@@ -56,7 +56,7 @@ nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
 		\begin{itemize}
 			\item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
 		\end{itemize}
-		\item Vyfiltrujte si toky se zdrojovou IP 162.35.0.190. Zaměřte se na čísla portů.
+		\item Vyfiltrujte si toky se zdrojovou IP {\em 162.35.0.190}. Zaměřte se na čísla portů.
 		Je aktivita zdroje něčím podezřelá?
 		
 		\item {\bf Výstupy NFdump předveďte cvičícímu}.
@@ -126,14 +126,14 @@ nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
   man rsyslog.conf
 \end{verbatim} 
         
-         \item Ze znalosti zařízení a priorit nakonfigurujte klienta, aby posílal na server 
-         zprávy související s autentizací na úrovni info, tj. upravte již existující pravidlo pro přeposílání
-         veškerých zpráv na server v souboru {\tt /etc/rsyslog.conf}. Nezapomeňte restartovat Syslog démona. 
+         \item Nakonfigurujte klienta, aby posílal na server zprávy související s autentizací na úrovni info (je potřeba použít facility
+         {\tt authpriv} místo {\tt auth}), tj. upravte již existující pravidlo pro přeposílání veškerých zpráv na server v souboru 
+         {\tt /etc/rsyslog.conf}. Nezapomeňte restartovat Syslog démona.
          
 \begin{verbatim} 
   Syntax pravidel: <facility>.<priority><TAB><action>
 \end{verbatim} 
-         \item Pokuste se o neúspěšné ssh připojení na klienta a podívejte se ve wiresharku, jakou zprávu zaslal klient serveru. Následně odešlete z klienta zprávu příkazem {\tt logger}. Při správné konfiguraci by se tato zpráva neměla odeslat. {\bf Ukažte cvičícímu pakety s odeslanou autentizační zprávou}.
+         \item Pokuste se o neúspěšné ssh připojení na klienta a podívejte se ve wiresharku, jakou zprávu zaslal klient serveru. Následně odešlete z klienta zprávu příkazem {\tt logger}. Při správné konfiguraci by se tato zpráva neměla odeslat. {\bf Ukažte cvičícímu pakety s odeslanou autentizační zprávou a záznam v souboru {\tt /var/log/secure}}.
 
        \end{enumerate}
    \end{itemize}
