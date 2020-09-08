@@ -1,0 +1,4 @@
+#!/bin/bash
+
+tar -C "/" --overwrite -xf /root/isa5/default.tar
+shutdown -h now
