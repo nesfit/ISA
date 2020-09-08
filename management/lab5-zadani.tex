@@ -214,7 +214,7 @@ object Service "snmp-free-memory" {
   python -m SimpleHTTPServer 80 > /dev/null 2> /dev/null &
 \end{verbatim}
 
-          \item Na virt. počítači {\bf isa-icinga-provider} upravte soubor {\tt /etc/snmp/snmpd.conf} tak, aby naslouchal na adrese rozhraní 192.168.56.20 a doplňte SNMP komunitu, aby se shodovala s isa-icinga-master. Komunita bude read-only
+          \item Na virt. počítači {\bf isa-icinga-master} upravte soubor {\tt /etc/snmp/snmpd.conf} tak, aby naslouchal na adrese rozhraní 192.168.56.20 a doplňte SNMP komunitu, aby se shodovala s isa-icinga-master. Komunita bude read-only
           a přístup bude povolen pro subnet 192.168.56.0/24.
           
           \item Restartujte SNMPD na {\bf isa-icinga-provider}.
