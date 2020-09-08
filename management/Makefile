@@ -9,4 +9,4 @@ $(PDF).pdf: $(PDF).tex lab5-zadani.tex Makefile
 	$(TEX) $<
 
 clean:
-	rm *.aux *.dvi *.log *.blg *.bbl
+	rm *.aux *.dvi *.log *.blg *.bbl *.pdf
