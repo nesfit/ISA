@@ -28,7 +28,8 @@ Se svým sousedem nastavte komunikaci VoIP mezi Vašimi dvěma počítači bez p
     \item Zapněte program Jitsi a vyčkejte až se spustí okno programu.
     \item V menu {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\bf SIP} a následně {\bf SIP id} na hodnotu 10XX, kde {\bf XX je číslo Vašeho počítače}, potvrďte tlačítkem {\it Add} a zkontrolujte, že se vytvořil {\it RegistrarLess SIP} účet.
     \item Spusťte síťový analyzátor Wireshark a začněte zachytávat pakety na rozhraní, kterým jste připojeni k síti.
-    \item Po spuštění nastavte filtr tak, aby zobrazoval pouze protokol SIP (Filter: sip).
+    \item Po spuštění nastavte display filtr tak, aby zobrazoval pouze protokol
+      SIP (Display Filter: sip).
     \item V hlavním okně programu zadejte do pole {\it Enter name or number} SIP adresu Vašeho souseda: \linebreak{\bf 10.10.10.1YY}, kde {\bf YY} je číslo počítače Vašeho souseda.
     \item Zavolejte Vašemu sousedovi stisknutím zeleného telefonu. Na druhém počítači přijměte hovor, vyzkoušejte, zda se se sousedem navzájem slyšíte a po chvíli hovor ukončete.
 (V případě problémů se zvukem zkontrolujte, zda není v systému ztlumen mikrofon, či audio výstup, případně v aplikaci Jitsi v menu Options $\rightarrow$ Audio zkontrolujte nastavení zvukových zařízení.) 
@@ -82,7 +83,9 @@ Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači pomoc
     \item Obnovte zachytávání paketů v aplikaci Wireshark tlačítkem \includegraphics[width=3mm]{img/ws_start.png}.
     \item V hlavním okně programu zadejte do pole pro telefonní číslo/adresu SIP adresu Vašeho souseda: \linebreak{\bf 10YY@10.10.10.222}, kde {\bf YY} je opět číslo počítače Vašeho souseda.
     \item Zavolejte Vašemu sousedovi a proveďte analýzu hovoru podobně jako u Peer-to-peer hovoru.
-    \item Zakreslete průběh spojení do grafu v protokolu. Uveďte, mezi kterými IP adresami a porty probíhá signalizace a mezi kterými přenos dat. Vyplňte, které protokoly se používají pro signalizaci a které pro přenos. Dále zjistěte, jaký kodek pro přenos hlasu byl použit.
+    \item Zakreslete průběh spojení do grafu v protokolu. Zkombinujte informace
+      z obou pracovních stanic a do protokolu zaneste úplnou komunikaci všech
+      tří stanic. Uveďte, mezi kterými IP adresami a porty probíhá signalizace a mezi kterými přenos dat. Vyplňte, které protokoly se používají pro signalizaci a které pro přenos. Dále zjistěte, jaký kodek pro přenos hlasu byl použit.
 \end{enumerate}
 
 \section{Ukončení práce v laboratoři}
