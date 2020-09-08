@@ -17,6 +17,8 @@
   
   \item Zapnete si počítače pod Windows prihlaste se jako užívatel \textbf{root} s heslem \textbf{root4lab}
   \item Zapnete si VirtualBox kde se nacházejí 3 virtuální počítače. Zkontrolujte zda jsou všechny počítače v předdefinovaném stavu init.
+  \item Pro skrolování v konzoli (nejen) ve vituálních počítačích používejte
+    \texttt{Shift} + \texttt{PgUp}/\texttt{PgDn}.
   
   \includegraphics[width=\linewidth]{files/init.PNG}
   \item Všechny virtuální počítače mají 2 účty zapsané ve formě \textit{login/password}:
@@ -155,9 +157,10 @@ pro některý klíč zadáte špatné heslo?
     \end{enumerate}
   \item Ověření konfigurace
     \begin{enumerate}
-        \item Přihlaste se na počítač icinga (malo by to jet bez hesla)
-        \item Použijte příkaz \textbf{ssh-add -d} a následně se opět přihlaste na 
-        počítač icinga a stisknete 3 krát enter (měl by se vypsat obsah souboru /etc/passwd)
+        \item Přihlaste se na počítač icinga (mělo by být možné bez hesla).
+          Odhlašte se z počítače icinga.
+        \item Na počítači pikachu použijte příkaz \textbf{ssh-add -d} a následně se opět přihlaste na 
+        počítač icinga a stisknete 3-krát enter (měl by se vypsat obsah souboru /etc/passwd)
         \item Přihlaste se na počítač choockity a zadaje heslo 12345678
         \item Přihlaste se opět na počítač chockity, stisknete 2 krát enter.
     \end{enumerate}
@@ -263,7 +266,8 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
     \item Úkol: 
     \begin{itemize}
       \item Seznámit se s nástrojem Icinga2 pro monitorováni zařízení a servisů 
-      \item Na klientské stanici nakonfigurovat nakonfigurovat kontroly servisů a hostů.  
+      \item Na klientské stanici nakonfigurovat nakonfigurovat kontroly služeb a
+        živosti stanic.  
     \end{itemize}
     \item Poznámka:
         \begin{itemize}
@@ -276,12 +280,13 @@ tj. odeberte/zakomentujte v souboru {\tt /etc/rsyslog.conf} řádky:
             která běží na počítači \textbf{icinga}.
                \begin{enumerate}
                    \item Přihlaste se pod uživatelem \textbf{user} a heslem \textbf{user4lab}
-                    \item Přesměruje Vás to na rozhraní kde si můžete všimnout monitoring odledně localhost zařízení.
+                    \item Přesměruje Vás to na rozhraní kde si můžete všimnout
+                      monitoringu lokálních zařízení.
                \end{enumerate}
             \item Na zařízení icinga ve složce \textit{/etc/icinga2/conf.d} otevřete soubor \textbf{hosts.conf}, kde se nachází zakomentovaný příklad a do něj doplňte následující konfiguraci:
 \begin{verbatim}
 object Host "Pikachu" {
-    address = "<IP ADDRESS>"
+    address = "<PIKACHU IP ADDRESS>"
     check_command = "hostalive"
 }
 
@@ -298,23 +303,28 @@ object Service "http" {
 \begin{verbatim}
   systemctl restart icinga2.service
 \end{verbatim} 
-          \item Podívejte se na webové rozhraní Icingy2. Co se tam změnilo ? 
+          \item Podívejte se na webové rozhraní Icingy2. Co se tam změnilo? 
           Když je nějaká služba down proč tomu tak je ?
 
           \item Na klientském počítací jménem pikachu zapnete webový server
 \begin{verbatim}
   python -m SimpleHTTPServer <port>
 \end{verbatim}
-          \item Ve Webovém rozhraní Icingy2 v menu Overview|Services si vyhledejte předešlí check na http službu. Pokud je služba down stisknete na odkaz \textit{Check Now}. Změnilo se něco oproti předešlému stavu z bodu 4?
+          \item Ve Webovém rozhraní Icingy2 v menu Overview|Services si
+            vyhledejte předešlou kontrolu běžícího HTTP serveru. Pokud je služba
+            ve stavu \emph{down}, klikněte na odkaz \textit{Check Now}. Změnilo se něco oproti předešlému stavu z bodu 4?
 
-          \item Jaký je interval mezi jednotlivými kontrolami pro Host Pikachu? Porovnejte tento interval s přednastaveními kontrolami. Jsou tyto intervaly rozdílné ? Pokud ano proč.
+          \item Jaký je interval mezi jednotlivými kontrolami pro stanici
+            Pikachu? Porovnejte tento interval s přednastaveními kontrolami.
+            Jsou tyto intervaly rozdílné ? Pokud ano proč?
 
 \end{enumerate}
 \end{itemize}
 
 \section*{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Vypnout všechny virtuální instance s odkliknu-tou možnosti obnovit na původní snímku init.
+  \item Vypněte všechny virtuální instance s aktivní možností obnovit na původní
+    snímek \emph{init}.
           \includegraphics[width=\linewidth]{files/end.PNG}
 
 \end{itemize}
