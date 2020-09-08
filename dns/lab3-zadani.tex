@@ -50,10 +50,7 @@
     (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). 
   \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
     (záznamy AAAA).
-  \item Nakonfigurujte reverzní překlad. Jako základ
-    zónového souboru s reverzní zónou můžete použít např. {\tt /root/isa3/db.127}.
-    Zkopírujte soubor do {\tt /var/named/}, upravte jej a přidejte do
-    souboru {\tt named.conf.local}.
+
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
     Případné chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
@@ -67,6 +64,12 @@
     localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
     poslední části odpovědi.
   \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
+
+  \item Nakonfigurujte reverzní překlad. Jako základ
+    zónového souboru s reverzní zónou můžete použít např. {\tt /root/isa3/db.127}.
+    Zkopírujte soubor do {\tt /var/named/}, upravte jej a přidejte do
+    souboru {\tt named.conf.local}. Restartujte DNS server {\tt systemctl restart named.service}.
+
   \item Ověřte, zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
   \item {\bf Pochlubte se se svými výsledky cvičícímu}.
   \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
