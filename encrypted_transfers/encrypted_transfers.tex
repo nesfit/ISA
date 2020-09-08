@@ -57,7 +57,11 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
     servery na FIT: {\tt ntp.fit.vutbr.cz} a {\tt ntpm.fit.vutbr.cz}.
 
   \item Zapněte démona pro NTP ({\tt systemctl start ntpd.service}).
-    Sledujte postup synchronizace příkazem {\tt
+    Ověřte pomocí {\tt systemctl status ntpd.service}, že služba běží; pokud
+    neběží, zobrazte chyby pomocí příkazu {\tt journalctl -u ntpd}, nalezené
+    chyby opravte a službu {\tt ntpd} restartujte.
+
+  \item Sledujte postup synchronizace příkazem {\tt
     watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
     spuštěné a pokračujte dalšími úkoly.
 
@@ -71,15 +75,17 @@ Namísto řetězce {\tt <login>} používejte své studentské přihlašovací j
 
   \item Otevřete si dvě okna: příkazovou řádku pro uživatele {\tt user} a další
     příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user).
-Zkontrolujte, že máte otevřený jednu příkazovou řádku jako uživatel
-{\tt user} a druhou jako uživatel {\tt root} příkazem {\tt whoami}, který vypisuje jméno aktivního
-uživatele.
+Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, že je
+    očekávané.
 
     V~obou otevřených terminálech dočasně vypněte podporu pro SSH agenta:
   \begin{lstlisting}
   [user@hXX]$ unset SSH_AUTH_SOCK
   [root@hXX]# unset SSH_AUTH_SOCK
   \end{lstlisting}
+
+  Pokud budete otevírat v průběhu řešení úkolu nové terminály, nezapomeňte
+    v nich také vypnout podporu agenta SSH.
 
   \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
 
