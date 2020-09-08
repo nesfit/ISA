@@ -25,8 +25,7 @@ Pokud se síť na klientovi konfiguruje dynamicky, pak je soubor {\tt /etc/resol
 Konfigurace DNS se stává ze dvou částí -- konfigurace vlastností samotné aplikace a konfigurace obsluhovaných zón. Existuje mnoho různých variant implementací. V~laboratoři se bude pracovat s~implementací od ISC -- BIND.
 
 Konfigurační soubor {\tt\bf named.conf} se na počítačích v~laboratořích nachází ve složce {\tt
-/etc/}. V Linuxové distribuci CentOS tento soubor obsahuje vložené 3 soubory (pro konfiguraci voleb,
-konfiguraci lokálních zón a konfiguraci výchozích zón).
+/etc/}.
 
 %\begin{verbatim}
 %
@@ -105,7 +104,7 @@ obsloužit sám a tím redukovat dotazy přeposílané na další servery. Ve v�
 %/etc/namedb/named.conf} souborem {\tt /root/isa1/named.conf}, který je zkrácen a obsahuje pouze nezbytné definice.
 
 \subsubsection{Vlastní zóna}
-Aby server začal překládat vlastní zónu, je třeba přidat definici zóny do souboru {\tt /etc/named/named.conf.local} a vytvořit zónový soubor. Pokud se přidává zónový soubor pro doménu, je vhodné přidat i zónu pro reverzní záznamy. Soubor {\tt named.conf.local} je pak potřeba zmínit v souboru {\tt named.conf}, aby byl použit i on v rámci konfigurace služby.
+Aby server začal překládat vlastní zónu, je třeba přidat definici zóny do souboru {\tt /etc/named.conf} a vytvořit zónový soubor. Pokud se přidává zónový soubor pro doménu, je vhodné přidat i zónu pro reverzní záznamy.
 
 \begin{verbatim}
 zone "moje.domena.cz" {
@@ -190,7 +189,7 @@ Příklad PTR záznamu pro IPv4 je:
 
 Po každé změně zónového souboru by se vždy mělo upravit i sériové číslo zóny a to tak, aby bylo vždy větší než předchozí hodnota. Také je nutné aplikaci načíst změněnou konfiguraci.
 \begin{verbatim}
-systemctl restart bind9.service
+systemctl restart named.service
 \end{verbatim}
 
 
