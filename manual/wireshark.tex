@@ -13,7 +13,10 @@ Zachytávat provoz můžeme z~libovolného síťového zařízení, dokonce z~v�
 Odchytíme pomocí dialogu dostupného pomocí \texttt{Capture -> Interfaces...},
 kde vybereme zařízení, která chceme snímat.
 V dialogu je možné nastavit filtrace provozu již při zachytávání. Tato vlastnost může být užitečná při dlouhodobějším zachytávání, především z~hlediska redukce množství ukládaných paketů.
-Tzv. {\emph Capture filter} (zachytávací filtr) můžeme aplikovat před spuštěním zachytávání. Použijeme \texttt{Options} a v~poli \texttt{Capture Filter:} můžeme zvolit jeden z~předdefinovaných filtrů, případně specifikovat vlastní.
+Tzv. {\emph Capture filter} (zachytávací filtr) můžeme aplikovat před spuštěním
+zachytávání. Použijeme \texttt{Options} a v~poli \texttt{Capture Filter:} můžeme
+zvolit jeden z~předdefinovaných filtrů, případně specifikovat vlastní (vizte
+také \texttt{man 7 pcap-filter}).
 Záchyt spustíme pomocí tlačítka
 \texttt{Start} -- v tomto nastavení odchytíme veškerý provoz na vybraných zařízeních.
 
