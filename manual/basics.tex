@@ -160,7 +160,12 @@ Příklad použití \texttt{journalctl}:
 \begin{itemize}
 				\item \texttt{journalctl -n <x>} - zobrazí posledních x záznamů.
 				\item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s~danou syslog prioritou.
-				\item \texttt{journalctl -u <unit|patern>} - umožní vyfiltrovat pouze záznamy s~daným paternem/službou.
+				\item \texttt{journalctl -u <unit|pattern>} - umožní vyfiltrovat pouze
+          záznamy s~předanou službou (spravovanou systemd), nebo záznamy
+          odpovídající předanému vzoru.
+        \item \texttt{journalctl -t <syslog\_id|pattern>} vyhledává v syslogovém záznamu
+          podle názvu služby (tzn. i služby, které nejsou spravovány systemd,
+          např. \emph{sudo}).
 				\item \texttt{journalctl -f} - zobrazí kontinuálně posledních 10 událostí.
 				\item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v~daném rozmezí.
 \end{itemize}
