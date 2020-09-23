@@ -1,0 +1,133 @@
+\section*{Cíl laboratorního cvičení}
+\begin{itemize}
+  \item Seznámit se s systémem DNS.
+  \item Prozkoumat data přenášená v protokolu DNS, DNS over HTTPS pomocí programu Wireshark.
+  \item Rozšifrovat zachycenou komunikaci z prohlížeče (Firefox).
+  \item Nastavit šifrovanou komunikaci DNS over TLS.
+  \item Nastavit šifrovanou komunikaci DNS přes DNS over TLS a zároveň filtrace DNS reklamních a malware domén.
+\end{itemize}
+
+\section*{Pokyny}
+\begin{itemize}
+  \item Přihlaste se do OS CentOS (F3), user/password \texttt{user}/\texttt{user4lab}.
+  \item Otevřete si příkazovou řádku pro uživatele \texttt{user}.
+  \item Otevřete si příkazovou řádku pro uživatele \texttt{root}/\texttt{root4lab} příkazem \texttt{su}
+    (switch user).
+  \item V případě potřeby si otevřete další terminál v novém okně.
+  \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
+    nano, vim, gedit).
+  \item Pracujte samostatně.
+\end{itemize}
+
+
+\section{Resolving DNS dotazů}
+\begin{enumerate}
+    \item Spusťte program Wireshark (vždy jako root z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu.
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz}.
+    \item Zastavte zachytávanou komunikaci v programu Wireshark.
+    \item Nalezněte pakety, obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz}.
+    \item Jak vypadá struktura přenášených dat protokolu DNS? Jaká data a položky jsou v části \texttt{Answers} u DNS odpovědi? Jaká je cílová adresa dns paketů?
+\end{enumerate}
+
+\newpage
+\section{Zabezpečení a resolving pomocí DNS over HTTPS}
+\begin{enumerate}
+    \item Spusťe prohlížeč Firefox.
+    \item V prohlížeči přistupte do \texttt{Preferences} pak sescrollujte dolů na položku \texttt{Network Settings} a klikněte na tlačítko \texttt{Settings}. V dialogovém okně najděte položku \texttt{Enable DNS over HTTPS} a zaškrtněte. Provider nastavte na \texttt{Custom} a vyplňte nově vzniklé pole tímto url\\ \texttt{https://odvr.nic.cz/doh}.
+    \item Po aplikovaných změnách prohlížeč zavřete.
+    \item Spusťte program Wireshark a začněte zachytávat provoz ze všech rozhraní.
+    \item Pro rozšifrování HTTPS komunikace z prohlížeče je nutné nastavit proměnnou prostředí\\ \texttt{SSLKEYLOGFILE=<cesta\_k\_souboru>}, na kterou prohlížeče Firefox a Chrome případně další reagují.
+    \item Otevřete terminál, a zadejte \texttt{export SSLKEYLOGFILE=/home/user/Desktop/keylogfile.log}.
+    \item Následně ve stejném okně terminálu, ve kterém jste nastavili proměnnou prostředí \texttt{SSLKEYLOGFILE} spusťte prohlížeč Firefox příkazem \texttt{firefox \&}.
+    \item Přistupte na pár webových stránek, které Vás napadnou. Následně prohlížeč zavřete a tuto akci ještě jednou či vícekrát zopakujte, pokaždé ideálně s jinými webovými stránkami. Nakonec prohlížeč zavřete.
+    \item Následně pozastavte zachytávání v programu Wireshark.
+    \item Zachycenou komunikaci uložte do adresáře \texttt{/home/user/Desktop/<vas\_xlogin>.pcapng}.
+    \item V programu Wireshark otevřete \texttt{Edit > Preferences} a zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. V této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na váš keylogfile (\texttt{/home/user/Desktop/keylogfile.log}). Aplikujte změnu. Nyní by mělo proběhnout rozšifrování provozu.
+    %\item Následně zavřete Wireshark a otevřete Wireshark znovu.
+    %\item Ve Wiresharku otevřete Vámi uložený \texttt{.pcapng} soubor.
+    \item Pomocí display filteru vyfiltrujte pouze TLS provoz. A pokuste se nalézt pakety protokolu DoH.
+    \item Pokud se Vám to podařilo, podívejte se jak vypadá obsah paketu.
+    \begin{enumerate}
+        \item Pokud se vám nepodařilo nalézt pakety s DoH, ve složce \texttt{/home/user/doh-pcaps/} naleznete \texttt{.zip} soubor po jehož rozbalení objevíte soubor \texttt{doh-decrypted.pcapng}.
+        \item Když ve Wiresharku otevřete tento soubor, měli byste narazit na již dešifrovaný TLS provoz, ve kterém DoH pakety již určitě naleznete.
+    \end{enumerate}
+    \item Před postupem k další části cvičení nezapomeňte otevřít prohlížeč a na stejném místě v \texttt{Preferences} položku \texttt{Enable DNS over HTTPS} opět vypnout a prohlížeč zavřít.
+\end{enumerate}
+
+\newpage
+\section{Zabezpečení a resolving pomocí DNS over TLS}
+\label{sec:dot}
+\begin{enumerate}
+    \item Zkontrolujte zdali je vypnutý selinux příkazem \texttt{getenforce} (měl by být ve stavu Disabled).
+    \begin{itemize}
+        \item Pokud ne, deaktivujte selinux pomocí příkazu \texttt{setenforce 0}.
+        \item V souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}.
+    \end{itemize}
+    \item Zkontrolujte zdali je již nainstalovaný Unbound DNS caching resolver pomocí příkazu \texttt{yum list installed unbound}. Pokud je program již nainstalovaný naleznete jej ve výstupu pod řádkem \texttt{Installed Packages}.
+    \item Pokud program nainstalovaný není, nainstalujete jej pomocí příkazu \texttt{yum install unbound -y}.
+    \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{"\# Forward zones} a přidejte následující:
+    
+\begin{verbatim}
+forward-zone:
+    name: "."
+    forward-ssl-upstream: yes
+    # Cloudflare DNS
+    forward-addr: 1.1.1.1@853
+    forward-addr: 1.0.0.1@853
+\end{verbatim}
+
+    \item Jakmile je soubor upraven, uložte jej a restartujte službu pomocí příkazu \texttt{systemctl restart unbound}.
+    \item Ověřte zdali služba běží bez problémů pomocí \texttt{systemctl status unbound}.
+    \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver na IP adresu \texttt{127.0.0.1}.
+    \item Nyní spusťte program Wireshark a spusťte zachytávání na rozhraní, pomocí kterého jste připojeni k Internetu.
+    \item Pokuste se vygenerovat nějaký DNS provoz, pomocí webového prohlížeče, tedy konkrétně přistupte na adresu \texttt{idnes.cz}.
+    \item Vyčkejte než se stránka celá načte a důkladně si ji prohlédněte.
+    \item Následně zavřete tab s načtenou stránkou i prohlížeč samotný.
+    \item Pozastavte zachytávání provozu.
+    \item V programu Wireshark pomocí display filtru vyfiltrujte pouze pakety, které využívají port 853. Jaký filtr přesně jste použili?
+    \item Následně vyfiltrujte pakety, které obsahují port 53 zároveň pro protokol TCP i UDP. Jaký filtr přesně jste použili zde?
+    \item Zachycený provoz uložte jako \texttt{/home/user/Desktop/<vas\_xlogin>-3.pcapng}.
+\end{enumerate}
+
+
+\newpage
+\section{Blokování reklam a další}
+\begin{enumerate}
+    \item Na začátku souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
+\begin{verbatim}
+    interface: 127.0.0.1
+    port: 5335
+    do-ip4: yes
+    do-udp: yes
+    do-tcp: yes
+    do-ip6: yes
+\end{verbatim}
+    \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
+    \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
+    \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver dočasně na IP adresu \texttt{8.8.8.8}.
+    \item Nainstalujte pi-hole pomocí příkazu \texttt{curl -sSL https://install.pi-hole.net | bash}.
+    \item Instalací pi-hole vás bude provázet dialogové okno, ve kterém bude nutné vybrat následující možnosti:
+    \begin{enumerate}
+        \item V dialogovém okně budete dotázáni na přidání Remi repozitáře, v tomto případě vyberte možnost \texttt{no}.
+        \item Při výběru síťového rozhraní necháme zaškrtnuté ethernetové (začínající písmenem e).
+        \item U výběru "Upstream DNS Provider" sescrollujeme dolů kde zvolíme možnost \texttt{Custom} a následně pro adresu serveru zadáme IP \texttt{127.0.0.1\#5335}.
+        \item Dále při výběrů blocking listů ponecháme zaškrtnuté oba dva listy.
+        \item Zbytek nastavení ponecháme s defaultním nastavením a odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
+    \end{enumerate}
+    \item Jakmile je instalace pi-hole dokončena, restartujte systém pomocí příkazu \texttt{reboot}.
+    \item Přihlašte se do systému a zkontrolujte zdali pi-hole běží v pořádku:
+    \begin{enumerate}
+        \item Spusťte příkaz \texttt{pihole status}.
+        \item Zkontrolujte obsah souboru \texttt{/etc/resolv.conf}, měl by obsahovat záznam pro nameserver ukazující na \texttt{127.0.0.1\#5335}.
+    \end{enumerate}
+    \item Spusťte prohlížeč Firefox a přistupte znovu na stránku \texttt{idnes.cz}. Jaký rozdíl jste vypozorovali?
+\end{enumerate}
+
+\section{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item TBD.
+\end{itemize}
+
+\subsection{Poznámka ke cvičení}
+Použití nasazení nástroje pi-hole lokálně na zařízení není úplně standardní a je v této konfiguraci pouze z demonstračních důvodů. Standardně je tato aplikace určena pro nasazení na samostatném serveru (například Raspberry Pi), běžící v lokální síti, a použití tohoto serveru všemi zařízeními v síti jednotně. Je možné jej pak zkombinovat i s tunelováním DNS přes TLS jako v tomto cvičení (viz úloha \ref{sec:dot}). Pro případné nasazení na serveru v lokální síti bude potřeba pár drobných změn v tomto cvičení.
+

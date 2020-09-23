@@ -284,3 +284,43 @@ Do verze 9.6 se používala direktiva {\em trusted-keys} v~konfiguračním soubo
 %\subsubsection*{Poznámka}
 %Pro práci v~laboratoří bude server {\em isa} nastaven jako nejvyšší důvěryhodný server (jeho klíč bude nainstalován na pracovních stanicích) a bude mít k~dispozici DS záznamy pro KSK před připravené na stanicích. Bude-li použit tento klíč pro podpis zóny, bude validující resolver schopen sestavit důvěryhodný řetězec a ověřit DNS záznamy.
 %
+
+\section{DNS Over TLS}
+DNS Over TLS (DOT) přináší šifrování a autentiyaci do DNS komunikace. Tento protokol je definován v RFC 7858\cite{RFC7858}. Protokol má přidělen standardizovaný port 853 jako defaultní. TLS protokol zde zaobaluje DNS požadavky a odpovědi jako přenášený payload viz obrázek \ref{fig:dot-encapsulation}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1]{fig/dot.pdf}
+    \caption{DNS Over TLS zapouzdření.}
+    \label{fig:dot-encapsulation}
+\end{figure}
+
+Komunikace probíhá pomocí klasického klient-server schématu a transportním protokolem je TCP. Nejprve proběhne TCP handshake, následuje TLS handshake tak jak je definován v RFC 5246\cite{RFC5246}. Jakmile je spojení ustaveno dojde k přenosu dat.
+
+Pro minimalizaci latence klienti nemusí čekat na odpovědi serveru, ale můžou použít pipelining pro odesílání více dotazů v rámci jednoho TLS spojení. Přenášená data uvnitř TLS jsou stejného formátu jako v případě standardního DNS přenášeného přes TCP transportní protokol.\cite{RFC7858}
+
+Resolvíng pomocí DNS over TLS lze na Linuxových systémech nastavit například v podobě spuštění Unbound DNS Caching serveru. Kde je nutné upravit konfigurační soubor \texttt{/etc/unbound/unbound.conf} tak, aby obsahoval následující:
+
+\begin{verbatim}
+forward-zone:
+    name: "."
+    forward-ssl-upstream: yes
+    # Cloudflare DNS
+    forward-addr: 1.1.1.1@853
+    forward-addr: 1.0.0.1@853
+\end{verbatim}
+
+Následně službu zapnout a nastavit systémový resolver na adresu \texttt{127.0.0.1}.
+
+\section{DNS Over HTTPS}
+DNS Over HTTPS (DOH) je nový standard pro bezpečný a šifrovanz přenos DNS provozu tunelovaný v protokolu HTTPS. Tento protokol nemá vlastní definovaný port a je přenášen jako ostatní HTTPS provoz pod portem 443. DOH je definován standardem vydaným roku 2018 skrývajícím se pod dokumentem označeným jako RFC 8484 \cite{RFC8484}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.75]{fig/doh-encapsulation.pdf}
+    \caption{DNS over HTTPS zapouzdření.}
+    \label{fig:doh-encapsulation}
+\end{figure}
+
+DNS zprávy jsou zde přenášeny standardními metodami HTTP GET a POST. V případě GET je DNS request zakódován ve formátu URL64Base jako parametr URI. Výsledná odpověď je obdržena v těle HTTP odpovědi ve standardním DNS wire formátu. V případě metody POST je již sám dotaz zakódován v DNS wire formátu a přenášen v těle POST dotazu.
+
