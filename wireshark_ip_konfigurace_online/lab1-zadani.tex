@@ -1,0 +1,126 @@
+\section*{Cíle cvičení}
+\begin{itemize}
+	\item Seznámení se se základní prací v~OS Linux.
+	\item Seznámení se se základními nástroji pro zjišťování konfigurace zařízení.
+	\item Analýza síťového provozu pomocí Wireshark.
+	\item Seznámit se s manuální konfigurací IPv4 a IPv6 na OS Linux
+\end{itemize}
+
+\section*{Pokyny}
+\begin{itemize}
+\item Pro práci v cvičení budeme používat virtuální stroje v programu VirtualBox.
+\item Odpovědi pište do odpověďového archu \texttt{protokol.md} který odevzdáte do WIS-u.
+\item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
+\item Uživatelé a hesla pro přihlášení: \texttt{user - user4lab}, \texttt{root - root4lab}.
+\item Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
+\end{itemize}
+
+\subsection*{Příprava laboratoře}
+Importujte stroj \texttt{lab-centos-latest.ova} do programu VirtualBox.
+Při importu nastavte generaci nových MAC adres pro síťová rozhraní (MAC Address Policy: \textbf{Generate new MAC addresses for all network adapters}).
+Ve virtuálce budete pracovat s rozhraním {\bf enp0s3}.
+
+\subsubsection*{Instalace Guest Additions}
+\textit{Tento krok je volitelný}.
+
+Pro pohodlnější práci s virtálním strojem je možno doinstalovat VirtualBox Guest Additions.
+Nejprve nainstalujte hlavičkové soubory jádra (\texttt{sudo yum install kernel-devel}).
+Pak v menu VirtualBox zvolte \textit{Devices $\rightarrow$ Insert Guest Additions CD image...} a spusťte instalaci tlačítkem \textit{Run}.
+Po zadání \texttt{root} hesla by měla proběhnout instalace; po jejím ukončení restartujte virtuální stroj.
+
+\subsubsection*{Vytvoření snapshotu}
+Před zahájením cvičení si vytvořte snapshot za pomoci menu \textit{Machine $\rightarrow$ Take snapshot} pro snadný návrat k výchozímu stavu.
+
+\section{Zjišťování konfigurace}
+V případě, že se v OS Linux úplně neorientujete, přečtěte si kapitolu \ref{basics} v
+laboratorním manuálu --- Základní konfigurace linuxového serveru. V~této části cvičení se
+budeme zabývat převážně zjišťováním síťové konfigurace systému. Veškeré potřebné
+informace, které budete potřebovat ke splnění této části cvičení, naleznete
+v~sekci \ref{basic_ipconfig} laboratorního manuálu --- Konfigurace síťových zařízení. V~případě, že si nejste jistí některým příkazem, neváhejte nahlédnout do manuálové stránky.
+
+\begin{enumerate}
+\item Vypište konfiguraci vašeho stroje (MAC adresu, IPv4 adresu, masku, síť, broadcastovou adresu).
+\item Zobrazte si záznamy v~routovací a ARP tabulce. Zapište IPv4 adresu výchozí brány a přiřaďte k ní MAC adresu.
+\item Otestujte konektivitu k~výchozí bráně a následně konektivitu do Internetu.
+\item Vypište implicitní servery DNS a název souboru, ve kterém jste tuto informaci nalezli.
+\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping gw}, byl ping proveden vůči IPv4 adrese výchozí brány. Zapište jak a který soubor jste upravili a jaký záznam jste přidali.
+\item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké vygenerujte, například pomocí webového prohlížeče.
+\item Zobrazte systémové události pomocí programu \texttt{journalctl}.
+\item Zobrazte pouze události týkající se NetworkManager.
+\item Pokuste se jako uživatel user spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě správně zadaného hesla, ale odepřeného přístupu.
+\end{enumerate}
+
+\section{Wireshark}
+V~této části cvičení se budeme zabývat analýzou a zachytáváním provozu
+v~programu Wireshark. Spuštění Wireshark provedete příkazem \texttt{wireshark}
+pod uživatelem \texttt{root}. Veškeré potřebné informace, které budete
+potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} laboratorního manuálu
+--- Analýza síťového provozu programem Wireshark.
+
+\begin{enumerate}
+  \item Pomocí programu Wireshark začněte \textbf{zachytávat} pouze HTTP komunikaci na výchozím portě (výchozí porty je možné nalézt např. v \texttt{/etc/services}).
+    Zapište použitý \emph{capture filter} do odpovědního archu.
+    Spusťte si prohlížeč a načtěte stránku \texttt{http://cphoto.fit.vutbr.cz} (po zapnutí zachytávání provozu).
+    Zachycený provoz uložte do souboru \texttt{cv1-http.pcap} který budete odevzdávat.
+\item Vypište zdrojovou a cílovou IPv4 adresu a MAC adresu odeslaného a přijatého paketu.
+  Zamyslete se nad tím, co vypsané MAC adresy a IPv4 adresy identifikují --- nalezené identifikátory porovnejte s identifikátory vypsanými v předchozích bodech zadání.
+\item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP.
+  V příkazové řádce odstraňte ARP záznamy (příkaz \texttt{ip neighbor ...}).
+  Ve wiresharku zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety.
+  Vygenerujte ICMP komunikaci.
+  Analyzujte obsah ARP paketů.
+  Zapište, co jste zadali do filtru.
+  Zachycený provoz uložte do souboru \texttt{cv1-arp.pcap} který budete odevzdávat.
+\item Zachyťte pouze HTTP a DNS provoz (na výchozích portech).
+  Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách.
+  Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů.
+  Zachycený provoz uložte do souboru \texttt{cv1-dns.pcap} který budete odevzdávat.
+\item Znovu si otevřete dříve uložený soubor s nešifrovanou komunikaci pomocí HTTP (\texttt{cv1-http.pcap}), zobrazte si TCP stream této komunikace (\emph{Follow TCP stream}).
+  Najděte dotaz, který odpovídá stránce zobrazené v prohlížeči.
+  Pokuste se zachytit šifrovanou komunikaci HTTPS na libovolnou stránku, analyzujte zachycenou komunikaci, zaměřte se také na provoz DNS; využijte funkci \emph{Follow TCP stream}.
+\item Do odpovědního archu slovně popište význam funkce \emph{Follow TCP stream}, zamyslete se nad formátem zobrazených dat funkcí \emph{Follow TCP stream} a rozdílem oproti výchozímu pohledu na data ve formě paketů.
+\end{enumerate}
+
+\section{Konfigurace IPv4 a IPv6}
+
+\subsection*{Příprava virtuálních strojů}
+Vypňete virtuální stroj.
+V nastavení stroje zapňete druhé síťové rozhraní (\textit{Network $\rightarrow$ Adapter 2}) a nastavte jej do módu \textit{Internal Network} s názvem \texttt{isa}.
+Naklonujte stroj a opět nastavte generaci nových MAC adres. Použijte \textit{Linked clone}.
+Nastartujte oba stroje a na jedném z nich spusťe záchyt na rozhraní \texttt{enp0s8}.
+
+\subsection{Manuální konfigurace IPv4}
+
+Teorie \emph{IPv4 adresování} je popsaná v sekci \ref{adresy_ipv4} laboratorního manuálu --- Adresy v IPv4 síti.
+Možnosti manuální konfigurace IP adres jsou v sekci \ref{ipconfig} --- Konfigurace síťování koncových zařízení.
+
+\begin{enumerate}
+    \item Zvolte nejdelší možnou masku sítě \texttt{192.168.0.0} tak, aby síť obsahovala prostor pro 100 koncových stanic.
+    \item Jako adresu sítě použijte \texttt{192.168.0.0}.
+      Na obou strojích nastavte libovolné adresy z dané síťe na novém rozhraní \texttt{enp0s8}.
+    \item Správnou konfiguraci si ověřte příkazem {\tt ping}.
+\end{enumerate}
+
+\subsection{Manuální konfigurace IPv6}
+Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{adresy_ipv6} --- Adresy v IPv6 síti.
+Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
+
+\begin{enumerate}
+    \item Zvolte si adresu sítě vhodnou pro použití v privátních lokálních
+        sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
+        sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
+        použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
+        ID) si můžete zvolit libovolně. Pokud pracujete ve skupině, použijte
+        všichni shodné Global ID i Subnet ID.
+    \item Pro zajímavost si můžete unikátnost vygenerovaného Global ID
+        zkontrolovat na \url{https://www.sixxs.net/tools/grh/ula/list}.
+    \item Na obou strojích nastavte libovolné adresy z dané síťe na novém rozhraní \texttt{enp0s8}.
+    \item Správnou konfiguraci si ověřte příkazem {\tt ping6}.
+\end{enumerate}
+
+\subsection*{Uložení zachycené komunikace}
+Uložte zachycenou komunikaci \texttt{ping} a \texttt{ping6} do souboru \texttt{cv1-ping.pcap}.
+
+\section{Ukončení cvičení}
+Vypňete virtuální stroje a obnovte snapshot ze začátku.
+Do WIS-u odovzdejte vyplňený \texttt{protokol.md} a všechny zachycené \texttt{pcap} soubory.
