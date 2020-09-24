@@ -9,7 +9,7 @@
 \section*{Pokyny}
 \begin{itemize}
 \item Pro práci v cvičení budeme používat virtuální stroje v programu VirtualBox.
-\item Odpovědi pište do odpovědního archu \texttt{protokol.md} který odevzdáte do WIS-u.
+\item Odpovědi pište do odpovědního archu \texttt{protokol.md} který odevzdáte do WIS-u. Dostupný je na adrese \url{https://github.com/nesfit/ISA/blob/master/wireshark_ip_konfigurace_online/protokol.md}.
 \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
 \item Uživatelé a hesla pro přihlášení: \texttt{user - user4lab}, \texttt{root - root4lab}.
 \item Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
@@ -113,8 +113,7 @@ Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
         sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
         sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
         použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
-        ID) si můžete zvolit libovolně. Pokud pracujete ve skupině, použijte
-        všichni shodné Global ID i Subnet ID.
+        ID) si můžete zvolit libovolně.
     \item Pro zajímavost si můžete unikátnost vygenerovaného Global ID
         zkontrolovat na \url{https://www.sixxs.net/tools/grh/ula/list}.
     \item Na obou strojích nastavte libovolné adresy z dané síťe na novém rozhraní \texttt{enp0s8}.
@@ -124,6 +123,16 @@ Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 \subsection*{Uložení zachycené komunikace}
 Uložte zachycenou komunikaci \texttt{ping} a \texttt{ping6} do souboru \texttt{cv1-ping.pcap}.
 
+\section*{Odevzdávané soubory}
+Zkontrolujte, zda máte všechny soubory které se budou odevzdávat:
+\begin{itemize}
+  \item \texttt{protokol.md}
+  \item \texttt{cv1-http.pcap}
+  \item \texttt{cv1-arp.pcap}
+  \item \texttt{cv1-dns.pcap}
+  \item \texttt{cv1-ping.pcap}
+\end{itemize}
+
 \section{Ukončení cvičení}
-Vypňete virtuální stroje a obnovte snapshot ze začátku.
 Do WIS-u odevzdejte vyplněný \texttt{protokol.md} a všechny zachycené \texttt{pcap} soubory.
+Vypňete virtuální stroje a obnovte snapshot ze začátku.
