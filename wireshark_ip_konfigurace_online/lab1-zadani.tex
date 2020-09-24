@@ -17,16 +17,17 @@
 \end{itemize}
 
 \subsection*{Příprava laboratoře}
-Importujte stroj \texttt{lab-centos-latest.ova} do programu VirtualBox.
+Importujte stroj \texttt{ISA2020.ova} do programu VirtualBox.
 Při importu nastavte generaci nových MAC adres pro síťová rozhraní (MAC Address Policy: \textbf{Generate new MAC addresses for all network adapters}).
 Ve virtuálním stroji budete pracovat s rozhraním {\bf enp0s3}.
 
 \subsubsection*{Instalace Guest Additions}
 \textit{Tento krok je volitelný}.
 
-Pro pohodlnější práci s virtálním strojem je možno doinstalovat VirtualBox Guest Additions.
-Nejprve nainstalujte hlavičkové soubory jádra (\texttt{sudo yum install kernel-devel}).
-Pak v menu VirtualBox zvolte \textit{Devices $\rightarrow$ Insert Guest Additions CD image...} a spusťte instalaci tlačítkem \textit{Run}.
+Pro pohodlnější práci s virtuálním strojem je možno nainstalovat vlastní verzi VirtualBox
+Guest Additions (doporučený virtuální stroj může obsahovat verzi nekompatibilní
+s vaší verzí VirtualBoxu).
+V menu VirtualBox zvolte \textit{Devices $\rightarrow$ Insert Guest Additions CD image...} a spusťte instalaci tlačítkem \textit{Run}.
 Po zadání hesla uživatele \texttt{root} by měla proběhnout instalace; po jejím ukončení restartujte virtuální stroj.
 
 \subsubsection*{Vytvoření snapshotu}
