@@ -34,27 +34,28 @@
 \begin{enumerate}
     \item Spusťe prohlížeč Firefox.
     \item V prohlížeči přistupte do \texttt{Preferences} pak sescrollujte dolů na položku \texttt{Network Settings} a klikněte na tlačítko \texttt{Settings}. V dialogovém okně najděte položku \texttt{Enable DNS over HTTPS} a zaškrtněte. Provider nastavte na \texttt{Custom} a vyplňte nově vzniklé pole tímto url\\ \texttt{https://odvr.nic.cz/doh}.
-    \item Po aplikovaných změnách prohlížeč zavřete.
-    \item Spusťte program Wireshark a začněte zachytávat provoz ze všech rozhraní.
-    \item Pro rozšifrování HTTPS komunikace z prohlížeče je nutné nastavit proměnnou prostředí\\ \texttt{SSLKEYLOGFILE=<cesta\_k\_souboru>}, na kterou prohlížeče Firefox a Chrome případně další reagují.
-    \item Otevřete terminál, a zadejte \texttt{export SSLKEYLOGFILE=/home/user/Desktop/keylogfile.log}.
-    \item Následně ve stejném okně terminálu, ve kterém jste nastavili proměnnou prostředí \texttt{SSLKEYLOGFILE} spusťte prohlížeč Firefox příkazem \texttt{firefox \&}.
+    \item Potvrďte změny kliknutím na tlačítko \texttt{OK} a prohlížeč zavřete.
+    \item Spusťte program Wireshark jako uživatel \texttt{root} z terminálu příkazem \texttt{wireshark \&} a začněte zachytávat provoz na všech rozhraních.
+    \item Pro pozdější rozšifrování HTTPS komunikace z prohlížeče je nutné nastavit proměnnou prostředí\\ \texttt{SSLKEYLOGFILE=<cesta\_k\_souboru>}, na kterou prohlížeče Firefox, Chrome a případně další reagují.
+    \item Otevřete terminál a jako uživatel \texttt{user} zadejte\\ \texttt{export SSLKEYLOGFILE=/home/user/Desktop/keylogfile.log}.
+    \item Následně ve stejném okně terminálu, ve kterém jste nastavili proměnnou prostředí \texttt{SSLKEYLOGFILE}, spusťte jako uživatel \texttt{user} prohlížeč Firefox příkazem \texttt{firefox \&}.
     \item Přistupte na pár webových stránek, které Vás napadnou. Následně prohlížeč zavřete a tuto akci ještě jednou či vícekrát zopakujte, pokaždé ideálně s jinými webovými stránkami. Nakonec prohlížeč zavřete.
-    \item Následně pozastavte zachytávání v programu Wireshark.
-    \item Zachycenou komunikaci uložte do adresáře \texttt{/home/user/Desktop/<vas\_xlogin>.pcapng}.
-    \item V programu Wireshark otevřete \texttt{Edit > Preferences} a zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. V této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na váš keylogfile (\texttt{/home/user/Desktop/keylogfile.log}). Aplikujte změnu. Nyní by mělo proběhnout rozšifrování provozu.
-    %\item Následně zavřete Wireshark a otevřete Wireshark znovu.
-    %\item Ve Wiresharku otevřete Vámi uložený \texttt{.pcapng} soubor.
-    \item Pomocí display filteru vyfiltrujte pouze TLS provoz. A pokuste se nalézt pakety protokolu DoH.
+    \item Následně zastavte zachytávání v programu Wireshark.
+    \item Zachycenou komunikaci uložte do souboru \texttt{cv3-DoH.pcap}, který budete odevzdávat.
+	\item Představ si sebe jako útočníka, který zachytil neznámou komunikaci do souboru \texttt{cv3-DoH.pcap} a nemá k ní žádné další informace. Dokázali byste v tuto chvíli zjistit ze zachyceného DNS provozu, jaké domény byly přes prohlížeč Firefox navštíveny? Proč? Odvěď uveďte do odpovědního archu.
+    \item V programu Wireshark otevřete \texttt{Edit > Preferences} a zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. Na této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na váš keylogfile (\texttt{/home/user/Desktop/keylogfile.log}). Aplikujte změnu kliknutím na \texttt{OK}. Nyní by mělo proběhnout rozšifrování provozu.
+    \item Pomocí \emph{display filteru} vyfiltrujte pouze TLS provoz. Do odpovědního archu zapište, jaký \emph{display filter} jste zadali. Pokuste se nalézt pakety protokolu DoH (DNS over HTTPS).
     \item Pokud se Vám to podařilo, podívejte se jak vypadá obsah paketu.
     \begin{enumerate}
         \item Pokud se vám nepodařilo nalézt pakety s DoH, ve složce \texttt{/home/user/doh-pcaps/} naleznete \texttt{.zip} soubor po jehož rozbalení objevíte soubor \texttt{doh-decrypted.pcapng}.
         \item Když ve Wiresharku otevřete tento soubor, měli byste narazit na již dešifrovaný TLS provoz, ve kterém DoH pakety již určitě naleznete.
     \end{enumerate}
+	\item Vyberte si libovolnou zachycenou DoH odpověď a do odpovědního archu opište jeden řádek z položky \texttt{Answers}.
+	\item Jaká je cílová IP adresa pro pakety s DoH dotazy? Jaké doménové jméno patří k této IP adrese? Zapište do odpovědního archu.
     \item Před postupem k další části cvičení nezapomeňte otevřít prohlížeč a na stejném místě v \texttt{Preferences} položku \texttt{Enable DNS over HTTPS} opět vypnout a prohlížeč zavřít.
 \end{enumerate}
 
-\newpage
+
 \section{Zabezpečení a resolving pomocí DNS over TLS}
 \label{sec:dot}
 \begin{enumerate}
@@ -90,7 +91,6 @@ forward-zone:
 \end{enumerate}
 
 
-\newpage
 \section{Blokování reklam a další}
 \begin{enumerate}
     \item Na začátku souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
