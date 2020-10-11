@@ -10,7 +10,7 @@
 \section*{Pokyny}
 \begin{itemize}
   \item Pro práci v cvičení budeme používat virtuální stroj v programu
-  VirtualBox\footnote{\url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}}.
+  VirtualBox\footnote{\url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}}. Pokud z předchozích cvičení máte provedeny nějaké změny ve virtuálním stroji, obnovte ho do výchozího stavu.
   \item Před zahájením cvičení si vytvořte snapshot virtuálního stroje za pomoci menu \textit{Machine $\rightarrow$ Take snapshot} pro snadný návrat k výchozímu stavu.
   \item Odpovědi pište do odpovědního archu \texttt{protokol.md} který odevzdáte do WIS-u. Dostupný je na adrese \url{https://github.com/nesfit/ISA/blob/master/dns-security/protokol.md}.
   \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
@@ -59,14 +59,10 @@
 \section{Zabezpečení a resolving pomocí DNS over TLS}
 \label{sec:dot}
 \begin{enumerate}
-    \item Zkontrolujte zdali je vypnutý selinux příkazem \texttt{getenforce} (měl by být ve stavu Disabled).
-    \begin{itemize}
-        \item Pokud ne, deaktivujte selinux pomocí příkazu \texttt{setenforce 0}.
-        \item V souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}.
-    \end{itemize}
-    \item Zkontrolujte zdali je již nainstalovaný Unbound DNS caching resolver pomocí příkazu \texttt{yum list installed unbound}. Pokud je program již nainstalovaný naleznete jej ve výstupu pod řádkem \texttt{Installed Packages}.
-    \item Pokud program nainstalovaný není, nainstalujete jej pomocí příkazu \texttt{yum install unbound -y}.
-    \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{"\# Forward zones} a přidejte následující:
+    \item Deaktivujte selinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce 0}.
+	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}. NErestartujte počítač.
+    \item Nainstalujete Unbound DNS caching resolver pomocí příkazu \texttt{yum install unbound -y}.
+    \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{\# Forward zones} a přidejte následující:
     
 \begin{verbatim}
 forward-zone:
@@ -81,13 +77,13 @@ forward-zone:
     \item Ověřte zdali služba běží bez problémů pomocí \texttt{systemctl status unbound}.
     \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver na IP adresu \texttt{127.0.0.1}.
     \item Nyní spusťte program Wireshark a spusťte zachytávání na rozhraní, pomocí kterého jste připojeni k Internetu.
-    \item Pokuste se vygenerovat nějaký DNS provoz, pomocí webového prohlížeče, tedy konkrétně přistupte na adresu \texttt{idnes.cz}.
+    \item Pokuste se vygenerovat nějaký DNS provoz pomocí webového prohlížeče, a to konkrétně přístupem na web \texttt{idnes.cz}.
     \item Vyčkejte než se stránka celá načte a důkladně si ji prohlédněte.
     \item Následně zavřete tab s načtenou stránkou i prohlížeč samotný.
-    \item Pozastavte zachytávání provozu.
-    \item V programu Wireshark pomocí display filtru vyfiltrujte pouze pakety, které využívají port 853. Jaký filtr přesně jste použili?
-    \item Následně vyfiltrujte pakety, které obsahují port 53 zároveň pro protokol TCP i UDP. Jaký filtr přesně jste použili zde?
-    \item Zachycený provoz uložte jako \texttt{/home/user/Desktop/<vas\_xlogin>-3.pcapng}.
+    \item Zastavte zachytávání provozu. Zachycený provoz uložte jako soubor \texttt{cv3-DoT.pcap}, který budete odevzdávat.
+    \item V programu Wireshark pomocí \emph{display filteru} vyfiltrujte pouze pakety, které využívají port 853 nad protokolem TCP. Jaký filtr přesně jste použili? Zapište do odpovědního archu.
+    \item Následně vyfiltrujte pakety, které obsahují port 53 nad protokolem TCP nebo UDP. Jaký filtr přesně jste použili zde? Opět zapište do odpovědního archu.
+	\item Jaká služba běží nad portem 53? Kolik paketů se zdrojovým nebo cílovým portem 53 bylo zachyceno? Odpovězte do odpovědního archu a zamyslete se, proč právě takové číslo.
 \end{enumerate}
 
 
@@ -104,15 +100,18 @@ forward-zone:
 \end{verbatim}
     \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
     \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
-    \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver dočasně na IP adresu \texttt{8.8.8.8}.
+    \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver dočasně na IP adresu \texttt{8.8.8.8}. Dohledejte, jaké doménové jméno náleží k IP adrese 8.8.8.8 a jakou hlavní službu servery s touto IP adresou poskytují? Zapište do odpovědního archu.
     \item Nainstalujte pi-hole pomocí příkazu \texttt{curl -sSL https://install.pi-hole.net | bash}.
     \item Instalací pi-hole vás bude provázet dialogové okno, ve kterém bude nutné vybrat následující možnosti:
     \begin{enumerate}
-        \item V dialogovém okně budete dotázáni na přidání Remi repozitáře, v tomto případě vyberte možnost \texttt{no}.
-        \item Při výběru síťového rozhraní necháme zaškrtnuté ethernetové (začínající písmenem e).
-        \item U výběru "Upstream DNS Provider" sescrollujeme dolů kde zvolíme možnost \texttt{Custom} a následně pro adresu serveru zadáme IP \texttt{127.0.0.1\#5335}.
-        \item Dále při výběrů blocking listů ponecháme zaškrtnuté oba dva listy.
-        \item Zbytek nastavení ponecháme s defaultním nastavením a odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
+        \item V dialogovém okně budete dotázáni na instalaci PHP. V tomto případě vyberte možnost \texttt{no}.
+		\item Potvrďte, že souhlasíte, aby se Vaše zařízení stalo blokátorem reklam.
+		\item Potvrďte informaci, že se jedná o software zdarma.
+		\item Potvrďte, že rozumíte nutnosti přidělení statické IP adresy v lokální síti.
+        \item Při výběru síťového rozhraní nechte zaškrtnuté ethernetové (\texttt{enp0s3}).
+        \item U výběru "Upstream DNS Provider" sescrollujte dolů, kde zvolte možnost \texttt{Custom} a následně pro adresu serveru zadejte \texttt{127.0.0.1\#5335}. A v dalším okně potvrďte.
+        \item Dále při výběrů blocking listů ponechte zaškrtnuté oba dva listy.
+        \item Zbytek nastavení ponecháme ve výchozím stavu a jenom vždy odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
     \end{enumerate}
     \item Jakmile je instalace pi-hole dokončena, restartujte systém pomocí příkazu \texttt{reboot}.
     \item Přihlašte se do systému a zkontrolujte zdali pi-hole běží v pořádku:
@@ -120,14 +119,23 @@ forward-zone:
         \item Spusťte příkaz \texttt{pihole status}.
         \item Zkontrolujte obsah souboru \texttt{/etc/resolv.conf}, měl by obsahovat záznam pro nameserver ukazující na \texttt{127.0.0.1\#5335}.
     \end{enumerate}
-    \item Spusťte prohlížeč Firefox a přistupte znovu na stránku \texttt{idnes.cz}. Jaký rozdíl jste vypozorovali?
+    \item Spusťte prohlížeč Firefox a přistupte znovu na stránku \texttt{idnes.cz}. Jaký rozdíl jste vypozorovali? Zapište do odpovědního archu.
 \end{enumerate}
 
-\section{Ukončení práce v laboratoři}
+\section*{Poznámka ke cvičení}
+Použití nasazení nástroje pi-hole lokálně na zařízení není úplně standardní a je v této konfiguraci pouze z demonstračních důvodů. Standardně je tato aplikace určena pro nasazení na samostatném serveru (například Raspberry Pi) běžícím v lokální síti a použití tohoto serveru všemi zařízeními v síti jednotně. Je možné jej pak zkombinovat i s tunelováním DNS přes TLS jako v tomto cvičení (viz úloha \ref{sec:dot}). Pro případné nasazení na serveru v lokální síti bude potřeba pár drobných změn v tomto cvičení.
+
+\section*{Odevzdávané soubory}
+Zkontrolujte, zda máte všechny soubory které se budou odevzdávat:
 \begin{itemize}
-  \item TBD.
+  \item \texttt{protokol.md}
+  \item \texttt{cv3-dns.pcap}
+  \item \texttt{cv3-DoH.pcap}
+  \item \texttt{cv3-DoT.pcap}
 \end{itemize}
 
-\subsection{Poznámka ke cvičení}
-Použití nasazení nástroje pi-hole lokálně na zařízení není úplně standardní a je v této konfiguraci pouze z demonstračních důvodů. Standardně je tato aplikace určena pro nasazení na samostatném serveru (například Raspberry Pi), běžící v lokální síti, a použití tohoto serveru všemi zařízeními v síti jednotně. Je možné jej pak zkombinovat i s tunelováním DNS přes TLS jako v tomto cvičení (viz úloha \ref{sec:dot}). Pro případné nasazení na serveru v lokální síti bude potřeba pár drobných změn v tomto cvičení.
-
+\section*{Ukončení práce v laboratoři}
+\begin{itemize}
+	\item Do WIS-u odevzdejte vyplněný \texttt{protokol.md} a všechny zachycené \texttt{pcap} soubory.
+	\item Vypňete virtuální stroj a obnovte jeho snapshot vytvořený na začátku této laboratoře.
+\end{itemize}
