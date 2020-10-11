@@ -21,14 +21,15 @@
 
 \section{Resolving DNS dotazů}
 \begin{enumerate}
-    \item Spusťte program Wireshark (vždy jako root z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu.
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz}.
-    \item Zastavte zachytávanou komunikaci v programu Wireshark.
-    \item Nalezněte pakety, obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz}.
-    \item Jak vypadá struktura přenášených dat protokolu DNS? Jaká data a položky jsou v části \texttt{Answers} u DNS odpovědi? Jaká je cílová adresa dns paketů?
+    \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp0s3}).
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu.
+    \item Zastavte zachytávání komunikace v programu Wireshark. Zachycený provoz uložte do souboru \texttt{cv3-dns.pcap}, který budete odevzdávat.
+    \item V zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
+	\item Do odpovědního archu zapište \emph{display filter}, kterým vyfiltrujete pouze pakety související s DNS provozem.
+	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do odpovědního archu.
+	\item Byl proveden rekurzivní nebo iterativní DNS dotaz? Jak jste to zjistili ze zachyceného provozu? Zapište do odpovědního archu.
 \end{enumerate}
 
-\newpage
 \section{Zabezpečení a resolving pomocí DNS over HTTPS}
 \begin{enumerate}
     \item Spusťe prohlížeč Firefox.
