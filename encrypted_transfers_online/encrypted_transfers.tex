@@ -59,7 +59,7 @@ V rámci bezpečnosti je důležité provozovat počítač se správným časem 
 \begin{enumerate}
 
   \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}.
-    V souboru by měli být použity pooly serveru Cent OS ({\tt *.centos.pool.ntp.org}).
+    V souboru by měli být použity pooly serveru CentOS ({\tt *.centos.pool.ntp.org}).
 
   \item Zapněte démona pro NTP ({\tt systemctl start ntpd.service}).
     Ověřte pomocí {\tt systemctl status ntpd.service}, že služba běží;
@@ -126,9 +126,14 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
     \begin{enumerate}
 
       \item Oba veřejné klíče zkopírujte na druhý počítač do souboru \verb|.ssh/authorized_keys| pro klíč uživatele {\tt user} např.: \\
-        {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys"&} \\
+        {\verb&cat ~user/.ssh/*.pub | ssh user@<IP> "cat >> .ssh/authorized_keys"&} \\
         pro klíč uživatele {\tt root} např.: \\
-        {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}. \\
+        {\verb&cat /root/.ssh/*.pub | ssh root@<IP> "cat >> .ssh/authorized_keys"&}. \\
+
+        Pokud složka {\tt .ssh} na vzdáleném stroji neexistuje, příkaz selže.
+        V takovém případě se přihlaste pomocí hesla nebo přepněte do druhého stroje a složku vytvořte.
+        Můžete také rovnou vytvořit soubor {\tt .ssh/authorized\_keys} (např. příkazem {\tt touch}).
+        {\bf Je důležité aby složka měla přístupová práva {\tt 700} a soubor {\tt 600}, jinak nebude možné zkopírované klíče použít.}\\
 
       Jaká hesla bylo nutné zadat?
 
