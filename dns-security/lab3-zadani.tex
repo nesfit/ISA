@@ -19,7 +19,7 @@
 \end{itemize}
 
 
-\section{Resolving DNS dotazů}
+\section{Překlad DNS dotazů}
 \begin{enumerate}
     \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp0s3}).
     \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu.
@@ -28,9 +28,10 @@
 	\item Do odpovědního archu zapište \emph{display filter}, kterým vyfiltrujete pouze pakety související s DNS provozem.
 	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do odpovědního archu.
 	\item Byl proveden rekurzivní nebo iterativní DNS dotaz? Jak jste to zjistili ze zachyceného provozu? Zapište do odpovědního archu.
+	\item Na jakou IP adresu směřoval paket s DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat na virtuálním systému do souboru \texttt{/etc/resolv.conf} a/nebo v příkazové řádce hostujícího operačního systému zadejte příkaz \texttt{ipconfig /all} (v případě OS Windows) a prohlédněte si výpis.
 \end{enumerate}
 
-\section{Zabezpečení a resolving pomocí DNS over HTTPS}
+\section{Zabezpečení a překlad pomocí DNS over HTTPS}
 \begin{enumerate}
     \item Spusťe prohlížeč Firefox.
     \item V prohlížeči přistupte do \texttt{Preferences} pak sescrollujte dolů na položku \texttt{Network Settings} a klikněte na tlačítko \texttt{Settings}. V dialogovém okně najděte položku \texttt{Enable DNS over HTTPS} a zaškrtněte. Provider nastavte na \texttt{Custom} a vyplňte nově vzniklé pole tímto url\\ \texttt{https://odvr.nic.cz/doh}.
@@ -46,21 +47,21 @@
     \item V programu Wireshark otevřete \texttt{Edit > Preferences} a zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. Na této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na váš keylogfile (\texttt{/home/user/Desktop/keylogfile.log}). Aplikujte změnu kliknutím na \texttt{OK}. Nyní by mělo proběhnout rozšifrování provozu.
     \item Pomocí \emph{display filteru} vyfiltrujte pouze TLS provoz. Do odpovědního archu zapište, jaký \emph{display filter} jste zadali. Pokuste se nalézt pakety protokolu DoH (DNS over HTTPS).
     \item Pokud se Vám to podařilo, podívejte se jak vypadá obsah paketu.
-    \begin{enumerate}
+    \begin{itemize}
         \item Pokud se vám nepodařilo nalézt pakety s DoH, ve složce \texttt{/home/user/doh-pcaps/} naleznete \texttt{.zip} soubor po jehož rozbalení objevíte soubor \texttt{doh-decrypted.pcapng}.
-        \item Když ve Wiresharku otevřete tento soubor, měli byste narazit na již dešifrovaný TLS provoz, ve kterém DoH pakety již určitě naleznete.
-    \end{enumerate}
+		Když ve Wiresharku otevřete tento soubor, měli byste narazit na již dešifrovaný TLS provoz, ve kterém DoH pakety již určitě naleznete.
+    \end{itemize}
 	\item Vyberte si libovolnou zachycenou DoH odpověď a do odpovědního archu opište jeden řádek z položky \texttt{Answers}.
 	\item Jaká je cílová IP adresa pro pakety s DoH dotazy? Jaké doménové jméno patří k této IP adrese? Zapište do odpovědního archu.
     \item Před postupem k další části cvičení nezapomeňte otevřít prohlížeč a na stejném místě v \texttt{Preferences} položku \texttt{Enable DNS over HTTPS} opět vypnout a prohlížeč zavřít.
 \end{enumerate}
 
 
-\section{Zabezpečení a resolving pomocí DNS over TLS}
+\section{Zabezpečení a překlad pomocí DNS over TLS}
 \label{sec:dot}
 \begin{enumerate}
-    \item Deaktivujte selinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce 0}.
-	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}. NErestartujte počítač.
+    \item Deaktivujte SELinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce 0}.
+	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}. NErestartujte v tuto chvíli počítač.
     \item Nainstalujete Unbound DNS caching resolver pomocí příkazu \texttt{yum install unbound -y}.
     \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{\# Forward zones} a přidejte následující:
     
@@ -89,7 +90,7 @@ forward-zone:
 
 \section{Blokování reklam a další}
 \begin{enumerate}
-    \item Na začátku souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
+    \item Na začátek souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
 \begin{verbatim}
     interface: 127.0.0.1
     port: 5335
@@ -100,8 +101,11 @@ forward-zone:
 \end{verbatim}
     \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
     \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
-    \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver dočasně na IP adresu \texttt{8.8.8.8}. Dohledejte, jaké doménové jméno náleží k IP adrese 8.8.8.8 a jakou hlavní službu servery s touto IP adresou poskytují? Zapište do odpovědního archu.
-    \item Nainstalujte pi-hole pomocí příkazu \texttt{curl -sSL https://install.pi-hole.net | bash}.
+	
+	\item Stáhněte pi-hole instalační skript pomocí příkazu\\ \texttt{wget -O basic-install.sh https://install.pi-hole.net}.\footnote{Pihole je populární open-source DNS sink-hole, jehož zdrojové kódy můžete nalézt na adrese\\
+	\texttt{https://github.com/pi-hole/pi-hole/}, ostatně taktéž tento instalační skript se stahuje z tohoto oficiálního GitHub repozitáře}
+	\item Instalační skript si prohlédněte, zdali neobsahuje žádný škodlivý kus zdrojového kódu.\footnote{Tento krok jsme již provedli a proto ho můžete v tomto případě přeskočit.}
+	\item Spusťte instalační skript pi-hole pomocí příkazu \texttt{sudo bash basic-install.sh}.
     \item Instalací pi-hole vás bude provázet dialogové okno, ve kterém bude nutné vybrat následující možnosti:
     \begin{enumerate}
         \item V dialogovém okně budete dotázáni na instalaci PHP. V tomto případě vyberte možnost \texttt{no}.
@@ -109,7 +113,7 @@ forward-zone:
 		\item Potvrďte informaci, že se jedná o software zdarma.
 		\item Potvrďte, že rozumíte nutnosti přidělení statické IP adresy v lokální síti.
         \item Při výběru síťového rozhraní nechte zaškrtnuté ethernetové (\texttt{enp0s3}).
-        \item U výběru "Upstream DNS Provider" sescrollujte dolů, kde zvolte možnost \texttt{Custom} a následně pro adresu serveru zadejte \texttt{127.0.0.1\#5335}. A v dalším okně potvrďte.
+        \item U výběru "Upstream DNS Provider" sescrollujte dolů, kde zvolte možnost \texttt{Custom} a následně pro adresu serveru zadejte \texttt{127.0.0.1\#5335} a potvrďte klávesou \texttt{Enter}. Také v dalším okně potvrďte adresu serveru.
         \item Dále při výběrů blocking listů ponechte zaškrtnuté oba dva listy.
         \item Zbytek nastavení ponecháme ve výchozím stavu a jenom vždy odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
     \end{enumerate}
@@ -120,7 +124,7 @@ forward-zone:
         \item Zkontrolujte obsah souboru \texttt{/etc/resolv.conf}, měl by obsahovat záznam pro nameserver ukazující na \texttt{127.0.0.1\#5335}.
     \end{enumerate}
     \item Spusťte prohlížeč Firefox a přistupte znovu na stránku \texttt{idnes.cz}. Jaký rozdíl jste vypozorovali? Zapište do odpovědního archu.
-	\item Pořiďte snímek obrazovky s načtenou webovou stránkou \texttt{idnes.cz} tak, aby vypozorovaný rozdíl byl na snímku obrazovky viditelný, a uložte snímek obrazovky jako obrázek s názvem\\ \texttt{cv3-idnes.\{jpg|jpeg|tiff|...\}} v dostatečně nízkém rozlišením, aby ho bylo možné odevzdat do WIS-u.
+	\item Pořiďte snímek obrazovky s načtenou webovou stránkou \texttt{idnes.cz} tak, aby vypozorovaný rozdíl byl na snímku obrazovky viditelný, a uložte snímek obrazovky jako obrázek s názvem\\ \texttt{cv3-idnes.\{png|jpg|jpeg|...\}} v dostatečně nízkém rozlišením, aby ho bylo možné odevzdat do WIS-u.
 \end{enumerate}
 
 \section*{Poznámka ke cvičení}
@@ -133,7 +137,7 @@ Zkontrolujte, zda máte všechny soubory které se budou odevzdávat:
   \item \texttt{cv3-dns.pcap}
   \item \texttt{cv3-DoH.pcap}
   \item \texttt{cv3-DoT.pcap}
-  \item \texttt{cv3-idnes.\{jpg|jpeg|tiff|...\}}
+  \item \texttt{cv3-idnes.\{png|jpg|jpeg|...\}}
 \end{itemize}
 
 \section*{Ukončení práce v laboratoři}
