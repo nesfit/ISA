@@ -90,18 +90,6 @@ forward-zone:
 
 \section{Blokování reklam a další}
 \begin{enumerate}
-    \item Na začátek souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
-\begin{verbatim}
-    interface: 127.0.0.1
-    port: 5335
-    do-ip4: yes
-    do-udp: yes
-    do-tcp: yes
-    do-ip6: yes
-\end{verbatim}
-    \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
-    \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
-	
 	\item Stáhněte pi-hole instalační skript pomocí příkazu\\ \texttt{wget -O basic-install.sh https://install.pi-hole.net}.\footnote{Pihole je populární open-source DNS sink-hole, jehož zdrojové kódy můžete nalézt na adrese\\
 	\texttt{https://github.com/pi-hole/pi-hole/}, ostatně taktéž tento instalační skript se stahuje z tohoto oficiálního GitHub repozitáře}
 	\item Instalační skript si prohlédněte, zdali neobsahuje žádný škodlivý kus zdrojového kódu.\footnote{Tento krok jsme již provedli a proto ho můžete v tomto případě přeskočit.}
@@ -117,7 +105,19 @@ forward-zone:
         \item Dále při výběrů blocking listů ponechte zaškrtnuté oba dva listy.
         \item Zbytek nastavení ponecháme ve výchozím stavu a jenom vždy odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
     \end{enumerate}
-    \item Jakmile je instalace pi-hole dokončena, restartujte systém pomocí příkazu \texttt{reboot}.
+    \item Na začátek souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
+\begin{verbatim}
+    interface: 127.0.0.1
+    port: 5335
+    do-ip4: yes
+    do-udp: yes
+    do-tcp: yes
+    do-ip6: yes
+\end{verbatim}
+    \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
+    \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
+	
+    \item Restartujte systém pomocí příkazu \texttt{reboot}.
     \item Přihlašte se do systému a zkontrolujte zdali pi-hole běží v pořádku:
     \begin{enumerate}
         \item Spusťte příkaz \texttt{pihole status}.
