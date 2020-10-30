@@ -20,7 +20,30 @@
   \item Vyčistěte si pravidla ve firewall pomocí příkazu {\tt iptables --flush}.
 \end{itemize}
 
-\section*{Úkoly}
+\section{Instalace Jitsi SoftPhone}
+\begin{itemize}
+  \item Jitsi SoftPhone je aplikace, která simuluje chování fyzického IP telefonu.
+  \item Pro instalaci Jitsi SoftPhone na CentOS 7 je nejdříve potřeba vyřešit problém se závislostmi na požadované RPM balíčky. Zadejte postupně následující příkazy:\footnote{Zdroj: \url{https://github.com/jitsi/jitsi/issues/425#issuecomment-345938823}}
+      
+	\begin{verbatim}
+	rpm -e --nodeps speex
+	
+	wget https://copr-be.cloud.fedoraproject.org/results/fedpop/speex/
+	epel-7-x86_64/00146973-speex/speex-1.2-0.23.rc2.el7.centos.x86_64.rpm
+	
+	rpm -i speex-1.2-0.23.rc2.el7.centos.x86_64.rpm
+	
+	wget https://copr-be.cloud.fedoraproject.org/results/fedpop/speexdsp/
+	epel-7-x86_64/00146970-speexdsp/speexdsp-1.2-0.7.rc3.el7.centos.x86_64.rpm
+	
+	rpm -i speexdsp-1.2-0.7.rc3.el7.centos.x86_64.rpm
+	\end{verbatim}
+  \item Následně spusťte lokální instalaci Jitsi SoftPhone příkazem\\
+  \texttt{yum localinstall https://github.com/jitsi/jitsi/releases/download/Jitsi-2.10/\\jitsi-2.10-5550.x86\_64.rpm}
+  \item V případě problémů se stažením RPM balíčku z oficiálního zdroje, můžete zkusit instalaci z alternativního zdroje příkazem\\
+  \texttt{yum localinstall \url{http://rover.borec.cz/jitsi-2.10-5550.x86_64.rpm}}
+\end{itemize}
+
 \section{Peer-to-peer VoIP pomocí signalizace SIP}
 Se svým sousedem nastavte komunikaci VoIP mezi Vašimi dvěma počítači bez použití ústředny (spojení peer-to-peer).
 
