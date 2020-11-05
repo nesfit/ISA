@@ -22,7 +22,7 @@
 	\end{table}
 
 	\item \textbf{PC-B}: Druhý klient (Jitsi).\\
-	Virtuální stroj: \url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}
+	Virtuální stroj: PC-B vytvoříte v průběhu laboratoře klonováním PC-A dle návodu níže.
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{|c|c|}
@@ -52,10 +52,11 @@
   \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
 \end{itemize}
 
-\section{Instalace Jitsi SoftPhone}
+\section{Instalace Jitsi SoftPhone na PC-A}
 \begin{itemize}
   \item Jitsi SoftPhone je aplikace, která simuluje chování fyzického IP telefonu.
-  \item Pro instalaci Jitsi SoftPhone na CentOS 7 je nejdříve potřeba vyřešit problém se závislostmi na požadované RPM balíčky. Zadejte postupně následující příkazy:\footnote{Zdroj: \url{https://github.com/jitsi/jitsi/issues/425#issuecomment-345938823}}
+  
+  \item Pro instalaci Jitsi SoftPhone na CentOS 7 je nejdříve potřeba vyřešit problém se závislostmi na požadované RPM balíčky. Na PC-A zadejte postupně následující příkazy:\footnote{Zdroj: \url{https://github.com/jitsi/jitsi/issues/425#issuecomment-345938823}}
       
 	\begin{verbatim}
 	rpm -e --nodeps speex
@@ -70,11 +71,16 @@
 	
 	rpm -i speexdsp-1.2-0.7.rc3.el7.centos.x86_64.rpm
 	\end{verbatim}
-  \item Následně spusťte lokální instalaci Jitsi SoftPhone příkazem\\
-  \texttt{yum localinstall\\
-  \small{\url{https://github.com/jitsi/jitsi/releases/download/Jitsi-2.10/jitsi-2.10-5550.x86_64.rpm}}}
+	
+  \item Následně spusťte lokální instalaci Jitsi SoftPhone na PC-A příkazem
+  
+  \verb{yum localinstall https://github.com/jitsi/jitsi/releases/download/Jitsi-2.10/{\\
+  \verb{jitsi-2.10-5550.x86_64.rpm{
+  
   \item V případě problémů se stažením RPM balíčku z oficiálního zdroje, můžete zkusit instalaci z alternativního zdroje příkazem\\
-  \texttt{yum localinstall \url{http://rover.borec.cz/jitsi-2.10-5550.x86_64.rpm}}
+  \verb{yum localinstall http://rover.borec.cz/jitsi-2.10-5550.x86_64.rpm{
+  
+  \item Pokud instalace selže (např. chyba související s Python), obnovte virtuální stroj do výchozího stavu (ze snímku vytvořeného před začátkem laboratoře) a pokuste se o instalaci Jitsi ještě jednou.
 \end{itemize}
 
 \section{Peer-to-peer VoIP pomocí signalizace SIP}
