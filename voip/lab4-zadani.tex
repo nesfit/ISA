@@ -1,23 +1,27 @@
-
-\section*{Cíle laboratoře}
+\section*{Cíle laboratorního cvičení}
 \begin{itemize}
-  \item Seznámení se signalizačním protokolem SIP.
+  \item Seznámení se se signalizačním protokolem SIP.
   \item Peer-to-peer VoIP pomocí signalizace SIP.
   \item Komunikace VoIP pomocí signalizace SIP přes ústřednu.
 \end{itemize}
 
 \section*{Základní instrukce}
 \begin{itemize}
-  \item Připojte k počítači headset se sluchátky a mikrofonem.
-  \item Přihlaste se do CentOS (F3), user/password {\tt user}/{\tt user4lab}.
-  \item V pravé horní části obrazovky {\bf zkontrolujte nastavení zvuku}. Sluchátka a mikrofon nastavte na optimální hlasitost.
-  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
-  \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user).
-  \item V případě potřeby si otevřete další terminál v novém okně.
-  \item Pro editaci konfiguračních souborů použijte libovolný editor (např. nano, vim, gedit).
-  \item Pracujte ve dvojicích, zkontrolujte, že máte počítač propojen
-    přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch panelu).
-  \item Vyčistěte si pravidla ve firewall pomocí příkazu {\tt iptables --flush}.
+  \item Pro práci ve cvičení budete používat následující virtuální stroje v programu VirtualBox:
+  \begin{itemize}
+	\item \textbf{PC-A}: První klient (Jitsi).\\
+	Virtuální stroj: \url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}
+	\item \textbf{PC-B}: Druhý klient (Jitsi).\\
+	Virtuální stroj: \url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}
+	\item \textbf{PC-U}: Ústředna (Asterisk).\\
+	Virtuální stroj: \url{http://nes.fit.vutbr.cz/isa/isa-asterisk.ova}
+  \end{itemize}
+  \item Pokud z předchozích cvičení máte provedeny nějaké změny ve virtuálních strojích, obnovte je do výchozího stavu.
+  \item Před zahájením cvičení si vytvořte snapshot virtuálního stroje za pomoci
+  menu \textit{Machine $\rightarrow$ Take snapshot} pro snadný návrat k výchozímu stavu.
+  \item Odpovědi pište do odpovědního archu \texttt{protokol.md} který odevzdáte do WIS-u.
+  Dostupný je na adrese \url{https://github.com/nesfit/ISA/blob/master/voip/protokol.md}.
+  \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
 \end{itemize}
 
 \section{Instalace Jitsi SoftPhone}
