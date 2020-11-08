@@ -52,7 +52,10 @@
   \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
 \end{itemize}
 
-\section{Instalace Jitsi SoftPhone na PC-A}
+
+\section{Příprava prostředí pro VoIP}
+
+\subsection{Instalace Jitsi SoftPhone na PC-A}
 \begin{itemize}
   \item Jitsi SoftPhone je aplikace, která simuluje chování fyzického IP telefonu.
   
@@ -81,20 +84,55 @@
   \verb{yum localinstall http://rover.borec.cz/jitsi-2.10-5550.x86_64.rpm{
   
   \item Pokud instalace selže (např. chyba související s Python), obnovte virtuální stroj do výchozího stavu (ze snímku vytvořeného před začátkem laboratoře) a pokuste se o instalaci Jitsi ještě jednou.
+  
+  \item Úspěch instalace ověřte spuštěním programu Jitsi příkazem \texttt{jitsi \&}.
+  
+  \item Vypněte virtuální počítač PC-A.
+  
+  \item V programu VirtualBox klikněte pravým tlačítkem na PC-A a zvolte \emph{Settings $\rightarrow$ Audio} a pokud ještě nejsou, zaškrtněte oba checkboxy (\emph{Enable Audio Output, Enable Audio Input}) a potvrďte kliknutím na \emph{OK}. Tento krok je nutný, i když nebudete fyzické audio zařízení používat. Pokud Jitsi nebude mít přístup k audio zařízení, nenaváže hovor.
+\end{itemize}
+  
+
+\subsection{Vytvoření virtuální LAN a připojení PC-A a PC-U do ní}
+\begin{itemize}
+  \item Ujistěte se, že PC-A i PC-U jsou vypnuté.
+  \item V programu Virtual Box klikněte na \emph{Tools $\rightarrow$ Preferences $\rightarrow$ Network $\rightarrow$ Zelené plus (Adds new NAT network)}. Tím vznikne nová virtuální LAN s názvem \emph{NatNetwork}. Potvrdíme kliknutím na tlačítko \emph{OK}.
+  \item Do nově vzniklé virtuální LAN připojte PC-A tak, že kliknete pravým tlačítkem na PC-A a zvolte \emph{Settings $\rightarrow$ Network}. Zde se ujistěte, že je povolený síťový adaptér a z rozbalovacího menu \emph{Attached to:} vyberte \emph{NAT Network}. A z rozbalovacího menu \emph{Name} vyberte \emph{NatNetwork}, což je vaše virtuální LAN vytvořená v předchozím kroku.
+  \item Stejným postupem připojte do stejné virtuální LAN také PC-U.
 \end{itemize}
 
+
+\subsection{Klonování PC-A a vytvoření jeho klonu PC-B}
+\begin{itemize}
+	\item Před klonování PC-A se ujistěte, že je PC-A vypnutý.
+	\item V programu VirtualBox klikněte pravým tlačítkem myši na váš virtuální počítač PC-A a vyberte \emph{Clone...}.
+	\item Z rozbalovacího menu \emph{MAC Address Policy:} vyberte \emph{Generate new MAC addresses for all network adapters}. Klikněte na tlačítko \emph{Další}, změňte \emph{Full clone} na \emph{Linked clone} a potvrďte kliknutím na tlačítko \emph{Clone}.
+	\item Nově vzniklý klon je váš PC-B.
+	\item Ověřte, že i PC-B má v programu Virtual Box povolený audio vstup a výstup a že je připojený do virtuální LAN.
+\end{itemize}
+
+
+\subsection{Ověření konektivity mezi vertuálními počítači}
+\begin{itemize}
+	\item Spusťte všechny 3 virtuální počítače (PC-A, PC-B, PC-U). Do počítačů PC-A a PC-B se přihlašte jako uživatel \emph{user} a do počítače PC-U se přihlašte jako uživatel \emph{isa}.
+	\item Na všech třech počítačích spusťte terminál (na PC-U nastartuje terminál automaticky jako hlavní uživatelské rozhraní) a pomocí příkazu \verb{ip address{ (respektive \verb{ifconfig{ na PC-U) zjistěte IPv4 adresu na rozhraní \verb{enp0s3{ (respektive \verb{em0{ na PC-U). IPv4 adresy včetně masky sítě v notaci CIDR (tj. číslo za lomítkem) jednotlivých strojů zapište do protokolu.
+	\item Otestujte konektivitu mezi všemi virtuálními počítači pomocí příkazu \verb{ping{. Výsledky zapište opět do protokolu do předpřipravené tabulky.
+\end{itemize}
+
+
 \section{Peer-to-peer VoIP pomocí signalizace SIP}
-Se svým sousedem nastavte komunikaci VoIP mezi Vašimi dvěma počítači bez použití ústředny (spojení peer-to-peer).
+Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B bez použití ústředny (spojení peer-to-peer).
 
 \begin{enumerate}
-    \item Zapněte program Jitsi a vyčkejte až se spustí okno programu.
-    \item V menu {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\bf SIP} a následně {\bf SIP id} na hodnotu 10XX, kde {\bf XX je číslo Vašeho počítače}, potvrďte tlačítkem {\it Add} a zkontrolujte, že se vytvořil {\it RegistrarLess SIP} účet.
-    \item Spusťte síťový analyzátor Wireshark a začněte zachytávat pakety na rozhraní, kterým jste připojeni k síti.
-    \item Po spuštění nastavte display filtr tak, aby zobrazoval pouze protokol
-      SIP (Display Filter: sip).
-    \item V hlavním okně programu zadejte do pole {\it Enter name or number} SIP adresu Vašeho souseda: \linebreak{\bf 10.10.10.1YY}, kde {\bf YY} je číslo počítače Vašeho souseda.
-    \item Zavolejte Vašemu sousedovi stisknutím zeleného telefonu. Na druhém počítači přijměte hovor, vyzkoušejte, zda se se sousedem navzájem slyšíte a po chvíli hovor ukončete.
-(V případě problémů se zvukem zkontrolujte, zda není v systému ztlumen mikrofon, či audio výstup, případně v aplikaci Jitsi v menu Options $\rightarrow$ Audio zkontrolujte nastavení zvukových zařízení.) 
+    \item Na PC-A zapněte program Jitsi a vyčkejte až se spustí okno programu.
+	V menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\bf SIP} a následně {\bf SIP id} na hodnotu {\bf PC-A}, potvrďte tlačítkem \emph{Add} a zkontrolujte, že se vytvořil {\it RegistrarLess SIP} účet.
+    \item Stejný postup jako v předchozím bodě zopakujte pro PC-B, kde ale nastavte {\bf SIP id} na hodnotu {\bf PC-B}.
+	\item Na PC-A i PC-B spusťte síťový analyzátor Wireshark a začněte zachytávat pakety na rozhraní \emph{enp0s3}.
+    \item Po spuštění nastavte display filtr tak, aby zobrazoval pouze protokol SIP (\textbf{Display filter:} \emph{sip}).
+    \item Na PC-A v hlavním okně programu Jitsi zadejte do pole {\it Enter name or number} IPv4 adresu virtuálního stroje PC-B.
+    \item Z PC-A zavolejte na PC-B stisknutím tlačítka zeleného telefonu. Na počítači PC-B přijměte hovor a po chvíli hovor ukončete.
+	\item Pokud se nepodaří navázat hovor napoprvé, opakujte pokus, případně zkuste zavolat z PC-B na PC-A.
+	\item Po ukončení hovoru zastavte zachytávání provozu v programu Wireshark na obou počítačích.
     \item Proveďte analýzu navazování spojení v odchycených datech ve Wiresharku. Využijte podpory v menu {\bf Telephony $\rightarrow$ VoIP Calls}, kde uvidíte jednotlivé zaznamenané hovory. Vyberte příslušný hovor a pro zobrazení průběhu klikněte na volbu {\bf Flow}.
     \item Zakreslete spojení do grafu v protokolu. Uveďte, pomocí kterých protokolů a mezi jakými IP adresami a porty probíhá signalizace a přenos dat. Zjistěte použitý kodek pro přenos hlasu.
 \end{enumerate}
@@ -104,7 +142,7 @@ Názvy a čísla podporovaných kodeků lze zobrazit v SIP/SDP zprávě v sekc
   \includegraphics[width=145mm]{img/3a.png}
 \end{figure}
 
-\noindent Informace o tom, který z podporovaných kodeků byl skutečně použit získáte z RTP paketů (Filter: RTP) podle čísla v poli {\bf Payload type}.
+\noindent Informace o tom, který z podporovaných kodeků byl skutečně použit získáte z RTP paketů (\textbf{Display filter:} \emph{rtp}) podle čísla v poli {\bf Payload type}.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=105mm]{img/3b.png}
@@ -112,7 +150,7 @@ Názvy a čísla podporovaných kodeků lze zobrazit v SIP/SDP zprávě v sekc
 
 
 \section{Komunikace VoIP pomocí signalizace SIP přes ústřednu}
-Se svým sousedem nastavte komunikaci VoIP mezi vašimi dvěma počítači pomocí SIP ústředny umístěné v laboratorní síti.
+Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B pomocí SIP ústředny na virtuálním stroji PC-U.
 
 \subsection{Analýza registrace a odregistrace}
 \begin{enumerate}
