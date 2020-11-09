@@ -142,7 +142,7 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B bez použití ús
 	\item Po ukončení hovoru zastavte zachytávání provozu v~programu Wireshark na obou počítačích.
 	\item Zachycenou komunikaci uložte do souborů \texttt{cv4-p2p-pcA.pcap} a \texttt{cv4-p2p-pcB.pcap}. Tyto soubory budete odevzdávat.
     \item Buď na PC-A nebo na PC-B proveďte analýzu spojení ve Wiresharku. Využijte podpory v~menu {\bf Telephony $\rightarrow$ VoIP Calls}, kde uvidíte jednotlivé zaznamenané hovory (měli byste vidět pouze jediný hovor). Vyberte příslušný hovor a pro zobrazení průběhu klikněte na tlačítko {\bf Flow Sequence}.
-    \item Zakreslete spojení do grafu v~protokolu. Uveďte, pomocí kterých protokolů a mezi jakými IP adresami a porty probíhá signalizace a přenos dat. Zjistěte použitý kodek pro přenos hlasu.\\
+    \item Zakreslete spojení do grafu v~protokolu. Z pohledu PC-A nebo PC-B uveďte, pomocí kterých protokolů a mezi jakými IP adresami a porty probíhá signalizace a přenos dat. Zjistěte použitý kodek pro přenos hlasu.\\
 
 Názvy a čísla podporovaných kodeků lze zobrazit v SIP/SDP zprávě v sekci {\bf Session Initiation Protocol} $\rightarrow$ {\bf Message body} $\rightarrow$ {\bf Session description protocol}:
 \begin{figure}[H]
@@ -191,7 +191,7 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B pomocí SIP úst�
     a potvrďte tlačítkama {\bf Next $\rightarrow$ Sign in}.
     \item Tímto jste provedli registraci k ústředně. Pokud jste vše nastavili správně, mělo by se v~pravém sloupci zobrazit \emph{SIP Online}.
     \item Zastavte zachytávání provozu v~programu Wireshark na obou počítačích a uložete zachycenou komunikaci do souborů \texttt{cv4-registerU-pcA.pcap} a \texttt{cv4-registerU-pcB.pcap}. Tyto soubory budete odevzdávat.
-	\item Buď na PC-A nebo na PC-B vyfiltrujte SIP komunikaci ze zachyceného provozu, analyzujte registraci k ústředně a doplňte do protokolu požadované údaje z~paketu zaslaného ústředně (PC-U), který obsahuje žádost o~registraci klienta Jitsi nainstalovaného na PC-A nebo PC-B.
+	\item Buď na PC-A nebo na PC-B vyfiltrujte SIP komunikaci ze zachyceného provozu, analyzujte registraci k ústředně a doplňte do protokolu požadované údaje z~paketu zaslaného z PC-A nebo PC-B směrek k ústředně (PC-U), který obsahuje žádost o~registraci klienta k ústředně.
 \end{enumerate}
 
 
@@ -203,7 +203,8 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B pomocí SIP úst�
 	\item Zastavte zachytávání provozu v~programu Wireshark na obou počítačích a uložete zachycenou komunikaci do souborů \texttt{cv4-calloverU-pcA.pcap} a \texttt{cv4-calloverU-pcB.pcap}. Tyto soubory budete odevzdávat.
 	\item Proveďte v~aplikaci Wireshark analýzu hovoru podobně jako u~peer-to-peer hovoru ({\bf Telephony $\rightarrow$ VoIP Calls $\rightarrow$ \bf Flow Sequence}).
     \item Zakreslete průběh spojení do grafu v~protokolu. Zkombinujte informace z~obou virtuálních počítačů (PC-A i PC-B) a do protokolu zaneste úplnou komunikaci všech
-      tří stanic (PC-A, PC-B a PC-U). Uveďte, mezi kterými IP adresami a porty probíhá signalizace a mezi kterými přenos dat. Vyplňte, které protokoly se používají pro signalizaci a které pro přenos. Dále zjistěte, jaký kodek pro přenos hlasu byl použit.
+      tří stanic (PC-A, PC-B a PC-U).
+	  Následně si vyberte jednoho z klientů (buď počítač PC-A nebo PC-B) a z jeho pohledu uveďte, mezi kterými IP adresami a porty probíhá signalizace a mezi kterými přenos dat hovoru. Vyplňte, které protokoly se používají pro signalizaci a které pro přenos hlasu. Dále zjistěte, jaký kodek pro přenos hlasu byl použit.
 \end{enumerate}
 
 
