@@ -62,7 +62,7 @@
   \item Jitsi SoftPhone je aplikace, která simuluje chování fyzického IP telefonu.
   
   \item Pro instalaci Jitsi SoftPhone na CentOS 7 je nejdříve potřeba vyřešit problém se závislostmi na požadované RPM balíčky.
-  Na PC-A zadejte postupně následující příkazy (nekopírujte konce řádků v dlouhých odkazech ze zadání -- odkazy zadávejte do terminálu souvisle bez konce řádku):\footnote{Zdroj: \url{https://github.com/jitsi/jitsi/issues/425#issuecomment-345938823}}
+  Na PC-A zadejte jako uživatel \texttt{root} postupně následující příkazy (nekopírujte konce řádků v dlouhých odkazech ze zadání -- odkazy zadávejte do terminálu souvisle bez konce řádku):\footnote{Zdroj: \url{https://github.com/jitsi/jitsi/issues/425#issuecomment-345938823}}
       
 	\begin{verbatim}
 	rpm -e --nodeps speex
@@ -78,7 +78,7 @@
 	rpm -i speexdsp-1.2-0.7.rc3.el7.centos.x86_64.rpm
 	\end{verbatim}
 	
-  \item Následně spusťte lokální instalaci Jitsi SoftPhone na PC-A příkazem:
+  \item Následně jako uživatel \texttt{root} spusťte lokální instalaci Jitsi SoftPhone na PC-A příkazem:
   
   \verb{yum localinstall https://github.com/jitsi/jitsi/releases/download/Jitsi-2.10/{\\
   \verb{jitsi-2.10-5550.x86_64.rpm{
@@ -127,7 +127,7 @@
 Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B bez použití ústředny (spojení peer-to-peer).
 
 \begin{enumerate}
-    \item Na PC-A spusťte program Jitsi příkazem \texttt{jitsi \&} a vyčkejte, až se spustí okno programu.
+    \item Na PC-A spusťte program Jitsi jako uživatel \texttt{user} příkazem \texttt{jitsi \&} a vyčkejte, až se spustí okno programu.
 	V~menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\tt SIP} a následně {\bf SIP id} na hodnotu {\tt PC-A}, potvrďte tlačítkem \textbf{Add} a zkontrolujte, že se vytvořil \emph{RegistrarLess SIP} účet.
     \item Stejný postup jako v~předchozím bodě zopakujte pro PC-B, kde ale nastavte {\bf SIP id} na hodnotu {\tt PC-B}.
 	\item Na PC-B v hlavním okně programu Jitsi zadejte do pole {\bf Enter name or number} IPv4 adresu virtuálního stroje PC-A.
@@ -158,7 +158,7 @@ Názvy a čísla podporovaných kodeků lze zobrazit v SIP/SDP zprávě v sekc
 
 
     \item Na PC-A i PC-B odstraňte vytvořený \emph{RegistrarLess SIP} účet v~menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts}.
-    \item Na PC-A i PC-B ukončete a znovu spusťte program Jitsi.
+    \item Na PC-A i PC-B ukončete a znovu spusťte program Jitsi jako uživatel \texttt{user}.
 \end{enumerate}
 
 \section{Komunikace VoIP pomocí signalizace SIP přes ústřednu}
