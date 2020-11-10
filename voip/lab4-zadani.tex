@@ -134,16 +134,15 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B bez použití ús
 
 \begin{enumerate}
     \item Na PC-A spusťte program Jitsi jako uživatel \texttt{user} příkazem \texttt{jitsi \&} a vyčkejte, až se spustí okno programu.
-	V~menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\tt SIP} a následně {\bf SIP id} na hodnotu {\tt PC-A}, potvrďte tlačítkem \textbf{Add} a zkontrolujte, že se vytvořil \emph{RegistrarLess SIP} účet.
+	V~menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. Pro ten nastavte pole {\bf Network} na hodnotu {\tt SIP} a následně {\bf SIP id} na hodnotu {\tt PC-A}.
+	Přepněte se do rozšířených nastavení (tlačítkem {\bf Advanced}) a na kartě {\bf Security} zrušte zaškrtnutí checkboxu {\tt Enable support to encrypt calls}. Tím zakážete šifrování hovoru. Potvrďte kliknutím na \textbf{Next} $\rightarrow$ \textbf{Sign in} a zkontrolujte, že se vytvořil \emph{RegistrarLess SIP} účet.
     \item Stejný postup jako v~předchozím bodě zopakujte pro PC-B, kde ale nastavte {\bf SIP id} na hodnotu {\tt PC-B}.
 	\item Na PC-B v hlavním okně programu Jitsi zadejte do pole {\bf Enter name or number} IPv4 adresu virtuálního stroje PC-A.
 	Z~PC-B zavolejte na PC-A stisknutím tlačítka zeleného telefonu. Napoprvé se pravděpodobně nepodaří hovor navázat, další pokus v~obráceném směru volání by však již měl být úspěšný.
-	Hovor ukončete.
+	Zkuste navazovat spojení mezi PC-A a PC-B v různých směrech, dokud se nepodaří spojit úspěšně hovor. Následně zkušební hovor ukončete.
 	\item Na PC-A i PC-B spusťte síťový analyzátor Wireshark jako uživatel \texttt{root} a začněte zachytávat pakety na rozhraní \emph{enp0s3}.
-    \item Po spuštění nastavte display filtr tak, aby zobrazoval pouze protokol SIP (\textbf{Display filter:} \texttt{sip}).
     \item Na PC-A v hlavním okně programu Jitsi zadejte do pole {\bf Enter name or number} IPv4 adresu virtuálního stroje PC-B.
     \item Z~PC-A zavolejte na PC-B stisknutím tlačítka zeleného telefonu. Na počítači PC-B přijměte hovor.
-	\item Pokud v~průběhu hovoru kliknete na tlačítka \textbf{Confirm} pro potvrzení bezpečnostního kódu, dojde k~zabezpečení komunikace a změny z~protokolu \texttt{RTP} na protokol \texttt{SRTP} (Secure Real-time Transport).
 	\item Po chvíli hovor ukončete.
 	\item Po ukončení hovoru zastavte zachytávání provozu v~programu Wireshark na obou počítačích.
 	\item Zachycenou komunikaci uložte do souborů \texttt{cv4-p2p-pcA.pcap} a \texttt{cv4-p2p-pcB.pcap}. Tyto soubory budete odevzdávat.
@@ -172,7 +171,7 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B pomocí SIP úst�
 
 \subsection{Registrace k~ústředně}
 \begin{enumerate}
-    \item Na PC-A i PC-B spusťte znovu zachytávání paketů na rozhraní \emph{enp0s3} v aplikaci Wireshark tlačítkem \includegraphics[width=3mm]{img/ws_start.png}.
+    \item Na PC-A i PC-B spusťte znovu zachytávání paketů na rozhraní \emph{enp0s3} v aplikaci Wireshark.
     \item V~aplikaci Jitsi na PC-A i PC-B otevřete menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts}.
     \item Na PC-A i PC-B vytvořte nový účet. V~poli {\bf Network} vyberte hodnotu {\tt SIP}, přepněte se do rozšířených nastavení (tlačítkem {\bf Advanced}) a postupujte podle obrázků \ref{fig:sip_account}, \ref{fig:sip_connection} a \ref{fig:sip_security}, kde místo {\tt XX} dosaďte \texttt{01} na PC-A a \texttt{02} na PC-B (do polí \textbf{SIP id} a \textbf{Authorization name}).
 	Do pole \textbf{Heslo} doplňte \texttt{password}. Do polí \textbf{Registrar} a \textbf{Proxy} doplňte IP adresu virtuálního počítače PC-U (ústředny). V~případě ukázkové konfigurace na obrázcích je IP adresa ústředny \texttt{10.0.2.15}.\\
@@ -203,7 +202,7 @@ Nastavte komunikaci VoIP mezi virtuálními stroji PC-A a PC-B pomocí SIP úst�
 
 \subsection{Analýza hovoru přes ústřednu}
 \begin{enumerate}
-    \item Na PC-A i na PC-B znovu spusťte zachytávání paketů v aplikaci Wireshark tlačítkem \includegraphics[width=3mm]{img/ws_start.png}.
+    \item Na PC-A i na PC-B znovu spusťte zachytávání paketů v aplikaci Wireshark.
     \item Na PC-A (jako uživatel test01) zadejte v~aplikaci Jitsi do pole pro telefonní číslo SIP adresu uživatele test02: {\tt 1002@10.0.2.15}, kde místo {\tt 10.0.2.15} napište IP adresu počítače PC-U (ústředny). {\tt 1002} je telefonní klapka uživatele test02.
     \item Zahajte hovor z~PC-A na PC-B stisknutím tlačítka zeleného sluchátka. Po chvíli hovor ukončete.
 	\item Zastavte zachytávání provozu v~programu Wireshark na obou počítačích a uložete zachycenou komunikaci do souborů \texttt{cv4-calloverU-pcA.pcap} a \texttt{cv4-calloverU-pcB.pcap}. Tyto soubory budete odevzdávat.
