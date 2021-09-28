@@ -1,4 +1,4 @@
-TEX=latex
+TEX=pdflatex
 BIB=bibtex
 NAME=manual
 
