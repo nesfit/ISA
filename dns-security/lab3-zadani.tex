@@ -18,12 +18,21 @@
   \item Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
 \end{itemize}
 
+\section{Seznámení s DNS}
+\begin{enumerate}
+    \item Otevřete ve webovém prohlížeči (např. Mozilla Firefox) online nástroj pro vyhledávání DNS záznamů \url{https://www.nslookup.io/}.
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k této doméně. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu DNS záznamů je klíčové pro celé cvičení.
+    \item Do protokolu ze cvičení zapište A a MX záznamy domény \texttt{vutbr.cz} v korektním formátu (dle RFC 1034 a RFC 1035). TTL (time-to-live) můžete zvolit libovolnou reálnou hodnotu. Jaký je správný formát záznamů si můžete ověřit na příkaldech ve slidech z přednášky.
+    \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{www.fit.vutbr.cz} nebo \texttt{seznam.cz}).
+    \item Na nové kartě webového prohlížeče otevřete pokročilejší nástroj pro vyhledávání DNS záznamů \url{https://centralops.net/co/}.
+    \item Opět zadejte do vyhledávacího pole doménu \texttt{vutbr.cz} a prohlédněte si zobrazené informace k doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}} 
+\end{enumerate}
 
 \section{Překlad DNS dotazů}
 \begin{enumerate}
     \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp0s3}).
     \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu.
-    \item Zastavte zachytávání komunikace v programu Wireshark. Zachycený provoz uložte do souboru \texttt{cv3-dns.pcap}, který budete odevzdávat.
+    \item Zastavte zachytávání komunikace v programu Wireshark.
     \item V zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
 	\item Do odpovědního archu zapište \emph{display filter}, kterým vyfiltrujete pouze pakety související s DNS provozem.
 	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do odpovědního archu.
@@ -88,7 +97,7 @@ forward-zone:
 \end{enumerate}
 
 
-\section{Blokování reklam a další}
+\section{Blokování reklam}
 \begin{enumerate}
 	\item Stáhněte pi-hole instalační skript pomocí příkazu\\ \texttt{wget -O basic-install.sh https://install.pi-hole.net}.\footnote{Pihole je populární open-source DNS sink-hole, jehož zdrojové kódy můžete nalézt na adrese\\
 	\texttt{https://github.com/pi-hole/pi-hole/}, ostatně taktéž tento instalační skript se stahuje z tohoto oficiálního GitHub repozitáře}
