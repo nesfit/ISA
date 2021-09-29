@@ -1,43 +1,51 @@
-\section*{Cíl laboratorního cvičení}
+\section*{Cíle laboratorního cvičení}
 \begin{itemize}
-  \item Seznámit se s systémem DNS.
-  \item Prozkoumat data přenášená v protokolu DNS, DNS over HTTPS pomocí programu Wireshark.
-  \item Rozšifrovat zachycenou komunikaci z prohlížeče (Firefox).
+  \item Seznámit se s DNS a databází Whois.
+  \item Prozkoumat data přenášená v protokolu DNS pomocí programu Wireshark.
+  \item Vyzkoušet zabezpečení DNS over HTTPS.
+  \item Rozšifrovat zachycenou komunikaci z webového prohlížeče Mozilla Firefox.
   \item Nastavit šifrovanou komunikaci DNS over TLS.
   \item Nastavit šifrovanou komunikaci DNS přes DNS over TLS a zároveň filtrace DNS reklamních a malware domén.
 \end{itemize}
 
 \section*{Pokyny}
 \begin{itemize}
-  \item Pro práci v cvičení budeme používat virtuální stroj v programu
-  VirtualBox\footnote{\url{https://nes.fit.vutbr.cz/isa/ISA2020.ova}}. Pokud z předchozích cvičení máte provedeny nějaké změny ve virtuálním stroji, obnovte ho do výchozího stavu.
-  \item Před zahájením cvičení si vytvořte snapshot virtuálního stroje za pomoci menu \textit{Machine $\rightarrow$ Take snapshot} pro snadný návrat k výchozímu stavu.
-  \item Odpovědi pište do odpovědního archu \texttt{protokol.md} který odevzdáte do WIS-u. Dostupný je na adrese \url{https://github.com/nesfit/ISA/blob/master/dns-security/protokol.md}.
-  \item Do WIS-u budete také odevzdávat všechny zachycené \texttt{pcap} soubory.
-  \item Uživatelé a hesla pro přihlášení: \texttt{user - user4lab}, \texttt{root - root4lab}.
-  \item Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
+  \item Přihlaste se do OS CentOS (\texttt{F3} - při bootování) jako uživatel \texttt{user} (heslo: \texttt{user4lab}).
+  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
+  \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user). Heslo: \texttt{root4lab}
+  \item Pro editaci konfiguračních souborů použijte libovolný editor (např. \texttt{nano}, \texttt{vim}, \texttt{gedit}).
+  \item Odpovědi pište do \textbf{protokolu} ke cvičení.
 \end{itemize}
 
 \section{Seznámení s DNS}
 \begin{enumerate}
     \item Otevřete ve webovém prohlížeči (např. Mozilla Firefox) online nástroj pro vyhledávání DNS záznamů \url{https://www.nslookup.io/}.
-    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k této doméně. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu DNS záznamů je klíčové pro celé cvičení.
-    \item Do protokolu ze cvičení zapište A a MX záznamy domény \texttt{vutbr.cz} v korektním formátu (dle RFC 1034 a RFC 1035). TTL (time-to-live) můžete zvolit libovolnou reálnou hodnotu. Jaký je správný formát záznamů si můžete ověřit na příkaldech ve slidech z přednášky.
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k této doméně. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu základních DNS záznamů je klíčové pro celé cvičení.
+    \item Do protokolu ze cvičení zapište A a MX záznamy domény \texttt{vutbr.cz} v korektním formátu (dle RFC 1034 a RFC 1035). TTL (time-to-live) můžete zvolit libovolnou reálnou hodnotu. Jaký je správný formát záznamů si můžete ověřit na příkladech ve slidech z přednášky.
     \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{www.fit.vutbr.cz} nebo \texttt{seznam.cz}).
     \item Na nové kartě webového prohlížeče otevřete pokročilejší nástroj pro vyhledávání DNS záznamů \url{https://centralops.net/co/}.
-    \item Opět zadejte do vyhledávacího pole doménu \texttt{vutbr.cz} a prohlédněte si zobrazené informace k doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}} 
+    \item Opět zadejte do vyhledávacího pole doménu \texttt{vutbr.cz} a prohlédněte si zobrazené informace k doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}. Povšimněte si zejména PTR záznamu. K čemu tento záznam slouží?
 \end{enumerate}
 
-\section{Překlad DNS dotazů}
+\section{Seznámení s Whois}
 \begin{enumerate}
-    \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp0s3}).
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu.
+    \item Otevřete ve webovém prohlížeči online nástroj pro prohledávání databáze Whois\\ \url{https://www.nic.cz/whois/}. Btw. Odkud znáte \emph{CZ.NIC}? Co toto sdružení zajišťuje?
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Do protokolu zapište, od jakého roku je doména registrována.
+    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v Terminálu pomocí příkazu \texttt{ifconfig} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhranní nevidíte svoji veřejnou IP adresu? (nápověda: NAT) Požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{re0} nastaven učitelský počítač. Je to stejná IP adresa jako Vaše veřejná?
+    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://lookup.icann.org/} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Do protokolu zapište, do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen. Btw. Odkud znáte \emph{ICANN}? Co tato organizace zajišťuje?
+\end{enumerate}
+
+\section{Prozkoumání protokolu DNS}
+\begin{enumerate}
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Odpovídá IP adresa předchozímu hledání A záznamu přes webový nástroj?
+    \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp2s0}).
+	\item Vyfiltrujete pouze pakety související s DNS provozem a do odpovědního archu zapište \emph{display filter}, který jste pro to použili.
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
     \item Zastavte zachytávání komunikace v programu Wireshark.
     \item V zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
-	\item Do odpovědního archu zapište \emph{display filter}, kterým vyfiltrujete pouze pakety související s DNS provozem.
 	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do odpovědního archu.
 	\item Byl proveden rekurzivní nebo iterativní DNS dotaz? Jak jste to zjistili ze zachyceného provozu? Zapište do odpovědního archu.
-	\item Na jakou IP adresu směřoval paket s DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat na virtuálním systému do souboru \texttt{/etc/resolv.conf} a/nebo v příkazové řádce hostujícího operačního systému zadejte příkaz \texttt{ipconfig /all} (v případě OS Windows) a prohlédněte si výpis.
+	\item Na jakou IP adresu směřoval paket s DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
 \end{enumerate}
 
 \section{Zabezpečení a překlad pomocí DNS over HTTPS}

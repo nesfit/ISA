@@ -1,3 +1,5 @@
+Login:
+
 # ISA 2021: Odpovědní arch pro cvičení č. 3: DNS
 
 ## (1.) Seznámení s DNS
@@ -7,7 +9,14 @@ A a MX záznamy domény *vutbr.cz*:\
   \
 &nbsp;
 
-## (2.) Překlad DNS dotazů
+## (2.) Seznámení s Whois
+
+Od jakého roku je doména *vutbr.cz* registrována?
+
+Do jakého rozsahu patří Vaše veřejná IP adresa a komu je tento rozsah přidělen?
+
+
+## (3.) Prozkoumání protokolu DNS
 
 Jaké jsou autoritativní DNS servery pro doménu *vutbr.cz*?\
   \
@@ -23,7 +32,7 @@ Podle čeho jste zjistili zakroužkovaný typ DNS dotazu v zachyceném paketu?
 
 Cílová IP adresa paketu s DNS dotazem:
 
-Jakému zařízení náleží zapsaná IP adresa?
+Jakému zařízení náleží tato IP adresa?
 
 
 ## (3.) Zabezpečení a překlad pomocí DNS over HTTPS
