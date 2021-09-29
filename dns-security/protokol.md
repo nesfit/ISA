@@ -60,8 +60,3 @@ Doménové jméno patřící k doplněné IP adrese:
 Služba běžící nad portem 53:
 
 Počet zachycených paketů se zdrojovým nebo cílovým portem 53:
-
-
-## (5.) Blokování reklam
-
-Jaký rozdíl jste zpozorovali na webu *idnes.cz* při jeho načtení s aktivním nástrojem *pi-hole*?

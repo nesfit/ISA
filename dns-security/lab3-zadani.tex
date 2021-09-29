@@ -48,6 +48,11 @@
 	\item Na jakou IP adresu směřoval paket s DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
 \end{enumerate}
 
+\section{Blokování vybraných domén}
+\begin{enumerate}
+	\item 
+\end{enumerate}
+
 \section{Zabezpečení a překlad pomocí DNS over HTTPS}
 \begin{enumerate}
     \item Spusťe prohlížeč Firefox.
@@ -77,7 +82,8 @@
 \section{Zabezpečení a překlad pomocí DNS over TLS}
 \label{sec:dot}
 \begin{enumerate}
-    \item Deaktivujte SELinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce 0}.
+    \item Ověřte stav programu SELinux příkazem \texttt{sestatus}.
+    \item Dočasně deaktivujte SELinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce permissive}. Ověřte, že došlo ke změně nastavení, příkazem \texttt{sestatus}.
 	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}. NErestartujte v tuto chvíli počítač.
     \item Nainstalujete Unbound DNS caching resolver pomocí příkazu \texttt{yum install unbound -y}.
     \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{\# Forward zones} a přidejte následující:
@@ -98,64 +104,10 @@ forward-zone:
     \item Pokuste se vygenerovat nějaký DNS provoz pomocí webového prohlížeče, a to konkrétně přístupem na web \texttt{idnes.cz}.
     \item Vyčkejte než se stránka celá načte a důkladně si ji prohlédněte.
     \item Následně zavřete tab s načtenou stránkou i prohlížeč samotný.
-    \item Zastavte zachytávání provozu. Zachycený provoz uložte jako soubor \texttt{cv3-DoT.pcap}, který budete odevzdávat.
-    \item V programu Wireshark pomocí \emph{display filteru} vyfiltrujte pouze pakety, které využívají port 853 nad protokolem TCP. Jaký filtr přesně jste použili? Zapište do odpovědního archu.
+    \item Zastavte zachytávání provozu v programu Wireshark a pomocí \emph{display filteru} vyfiltrujte pouze pakety, které využívají port 853 nad protokolem TCP. Jaký filtr přesně jste použili? Zapište do odpovědního archu.
     \item Následně vyfiltrujte pakety, které obsahují port 53 nad protokolem TCP nebo UDP. Jaký filtr přesně jste použili zde? Opět zapište do odpovědního archu.
-	\item Jaká služba běží nad portem 53? Kolik paketů se zdrojovým nebo cílovým portem 53 bylo zachyceno? Odpovězte do odpovědního archu a zamyslete se, proč právě takové číslo.
+	\item Jaká služba (obecně) běží nad portem 53? Kolik paketů se zdrojovým nebo cílovým portem 53 bylo zachyceno? Odpovězte do odpovědního archu a zamyslete se, proč právě takové číslo.
 \end{enumerate}
-
-
-\section{Blokování reklam}
-\begin{enumerate}
-	\item Stáhněte pi-hole instalační skript pomocí příkazu\\ \texttt{wget -O basic-install.sh https://install.pi-hole.net}.\footnote{Pihole je populární open-source DNS sink-hole, jehož zdrojové kódy můžete nalézt na adrese\\
-	\texttt{https://github.com/pi-hole/pi-hole/}, ostatně taktéž tento instalační skript se stahuje z tohoto oficiálního GitHub repozitáře}
-	\item Instalační skript si prohlédněte, zdali neobsahuje žádný škodlivý kus zdrojového kódu.\footnote{Tento krok jsme již provedli a proto ho můžete v tomto případě přeskočit.}
-	\item Spusťte instalační skript pi-hole pomocí příkazu \texttt{sudo bash basic-install.sh}.
-    \item Instalací pi-hole vás bude provázet dialogové okno, ve kterém bude nutné vybrat následující možnosti:
-    \begin{enumerate}
-        \item V dialogovém okně budete dotázáni na instalaci PHP. V tomto případě vyberte možnost \texttt{no}.
-		\item Potvrďte, že souhlasíte, aby se Vaše zařízení stalo blokátorem reklam.
-		\item Potvrďte informaci, že se jedná o software zdarma.
-		\item Potvrďte, že rozumíte nutnosti přidělení statické IP adresy v lokální síti.
-        \item Při výběru síťového rozhraní nechte zaškrtnuté ethernetové (\texttt{enp0s3}).
-        \item U výběru "Upstream DNS Provider" sescrollujte dolů, kde zvolte možnost \texttt{Custom} a následně pro adresu serveru zadejte \texttt{127.0.0.1\#5335} a potvrďte klávesou \texttt{Enter}. Také v dalším okně potvrďte adresu serveru.
-        \item Dále při výběrů blocking listů ponechte zaškrtnuté oba dva listy.
-        \item Zbytek nastavení ponecháme ve výchozím stavu a jenom vždy odsouhlasíme buď \texttt{yes} nebo \texttt{ok}.
-    \end{enumerate}
-    \item Na začátek souboru \texttt{/etc/unbound/unbound.conf} pod řádek obsahující \texttt{server:} přidejte následující:
-\begin{verbatim}
-    interface: 127.0.0.1
-    port: 5335
-    do-ip4: yes
-    do-udp: yes
-    do-tcp: yes
-    do-ip6: yes
-\end{verbatim}
-    \item Restartujte službu unbound DNS caching serveru pomocí příkazu \texttt{systemctl restart unbound}.
-    \item Pomocí příkazu \texttt{systemctl enable unbound} nastavte povolení služby na systému.
-	
-    \item Restartujte systém pomocí příkazu \texttt{reboot}.
-    \item Přihlašte se do systému a zkontrolujte zdali pi-hole běží v pořádku:
-    \begin{enumerate}
-        \item Spusťte příkaz \texttt{pihole status}.
-        \item Zkontrolujte obsah souboru \texttt{/etc/resolv.conf}, měl by obsahovat záznam pro nameserver ukazující na \texttt{127.0.0.1\#5335}.
-    \end{enumerate}
-    \item Spusťte prohlížeč Firefox a přistupte znovu na stránku \texttt{idnes.cz}. Jaký rozdíl jste vypozorovali? Zapište do odpovědního archu.
-	\item Pořiďte snímek obrazovky s načtenou webovou stránkou \texttt{idnes.cz} tak, aby vypozorovaný rozdíl byl na snímku obrazovky viditelný, a uložte snímek obrazovky jako obrázek s názvem\\ \texttt{cv3-idnes.\{png|jpg|jpeg|...\}} v dostatečně nízkém rozlišením, aby ho bylo možné odevzdat do WIS-u.
-\end{enumerate}
-
-\section*{Poznámka ke cvičení}
-Použití nasazení nástroje pi-hole lokálně na zařízení není úplně standardní a je v této konfiguraci pouze z demonstračních důvodů. Standardně je tato aplikace určena pro nasazení na samostatném serveru (například Raspberry Pi) běžícím v lokální síti a použití tohoto serveru všemi zařízeními v síti jednotně. Je možné jej pak zkombinovat i s tunelováním DNS přes TLS jako v tomto cvičení (viz úloha \ref{sec:dot}). Pro případné nasazení na serveru v lokální síti bude potřeba pár drobných změn v tomto cvičení.
-
-\section*{Odevzdávané soubory}
-Zkontrolujte, zda máte všechny soubory které se budou odevzdávat:
-\begin{itemize}
-  \item \texttt{protokol.md}
-  \item \texttt{cv3-dns.pcap}
-  \item \texttt{cv3-DoH.pcap}
-  \item \texttt{cv3-DoT.pcap}
-  \item \texttt{cv3-idnes.\{png|jpg|jpeg|...\}}
-\end{itemize}
 
 \section*{Ukončení práce v laboratoři}
 \begin{itemize}
