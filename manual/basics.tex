@@ -106,12 +106,12 @@ které jsou na OS Linux k~dispozici.
 
 \subsubsection{Zobrazení konfigurace}
 Jedním ze základních příkazů je \texttt{ip}. Pomocí tohoto příkazu můžeme zjistit
-konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah routovací tabulky aj. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{ip-<volba>}.
+konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah směrovací tabulky aj. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{ip-<volba>}.
 
 \begin{itemize}
   \item \texttt{ip address} - zobrazí adresu na všech síťových zařízení (příkaz
     \texttt{ifconfig} je dnes již zavržený\footnote{\url{https://www.root.cz/clanky/prikaz-ip-ovladnete-linuxova-sitova-rozhrani/}}).
-				\item \texttt{ip route} - zobrazí všechna pravidla v~routovací tabulce.
+				\item \texttt{ip route} - zobrazí všechna pravidla v~směrovací tabulce.
 				\item \texttt{ip link} - vylistuje všechna síťová zařízení.
         \item \texttt{ip neighbour} - zobrazí obsah ARP záznamů (případně můžete
           využít starší příkaz \texttt{arp}).
@@ -121,9 +121,9 @@ Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobraz
 
 %- nmcli
 
-Alternativou k~zobrazení obsahu routovací a ARP tabulky jsou tyto příkazy:
+Alternativou k~zobrazení obsahu směrovací a ARP tabulky jsou tyto příkazy:
 \begin{itemize}
-\item \texttt{netstat} - zobrazí mimo jiné obsah routovací tabulky (volba \texttt{-rn})
+\item \texttt{netstat} - zobrazí mimo jiné obsah směrovací tabulky (volba \texttt{-rn})
 \end{itemize}
 
 K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové
