@@ -2,10 +2,9 @@
 \begin{itemize}
   \item Seznámit se s DNS a databází Whois.
   \item Prozkoumat data přenášená v protokolu DNS pomocí programu Wireshark.
-  \item Vyzkoušet zabezpečení DNS over HTTPS.
-  \item Rozšifrovat zachycenou komunikaci z webového prohlížeče Mozilla Firefox.
+  \item Blokovat vybrané domény prostřednictvím změny konfigurace v souboru \texttt{/etc/hosts}.
   \item Nastavit šifrovanou komunikaci DNS over TLS.
-  \item Nastavit šifrovanou komunikaci DNS přes DNS over TLS a zároveň filtrace DNS reklamních a malware domén.
+  \item Analyzovat komunikaci DNS over HTTPS.
 \end{itemize}
 
 \section*{Pokyny}
@@ -14,17 +13,15 @@
   \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
   \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user). Heslo: \texttt{root4lab}
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např. \texttt{nano}, \texttt{vim}, \texttt{gedit}).
-  \item Odpovědi pište do \textbf{protokolu} ke cvičení.
+  \item V průběhu práce vyplňte \textbf{protokol} ke cvičení.
 \end{itemize}
 
 \section{Seznámení s DNS}
 \begin{enumerate}
     \item Otevřete ve webovém prohlížeči (např. Mozilla Firefox) online nástroj pro vyhledávání DNS záznamů \url{https://www.nslookup.io/}.
-    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k této doméně. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu základních DNS záznamů je klíčové pro celé cvičení.
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu základních DNS záznamů je klíčové pro celé cvičení.
     \item Do protokolu ze cvičení zapište A a MX záznamy domény \texttt{vutbr.cz} v korektním formátu (dle RFC 1034 a RFC 1035). TTL (time-to-live) můžete zvolit libovolnou reálnou hodnotu. Jaký je správný formát záznamů si můžete ověřit na příkladech ve slidech z přednášky.
     \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{www.fit.vutbr.cz} nebo \texttt{seznam.cz}).
-    \item Na nové kartě webového prohlížeče otevřete pokročilejší nástroj pro vyhledávání DNS záznamů \url{https://centralops.net/co/}.
-    \item Opět zadejte do vyhledávacího pole doménu \texttt{vutbr.cz} a prohlédněte si zobrazené informace k doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}. Povšimněte si zejména PTR záznamu. K čemu tento záznam slouží?
 \end{enumerate}
 
 \section{Seznámení s Whois}
@@ -39,60 +36,44 @@
 \begin{enumerate}
     \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Odpovídá IP adresa předchozímu hledání A záznamu přes webový nástroj?
     \item Spusťte program Wireshark (vždy jako \texttt{root} z příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp2s0}).
-	\item Vyfiltrujete pouze pakety související s DNS provozem a do odpovědního archu zapište \emph{display filter}, který jste pro to použili.
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do odpovědního archu. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
+	\item Vyfiltrujete pouze pakety související s DNS provozem a do protokolu zapište \emph{display filter}, který jste pro to použili.
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do protokolu. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
     \item Zastavte zachytávání komunikace v programu Wireshark.
     \item V zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
-	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do odpovědního archu.
-	\item Byl proveden rekurzivní nebo iterativní DNS dotaz? Jak jste to zjistili ze zachyceného provozu? Zapište do odpovědního archu.
+	\item Kolik paketů souvisejících s Vaším dotazem na doménu bylo zachyceno? Číslo zapište do protokolu.
+	\item Byl proveden rekurzivní nebo iterativní DNS dotaz? Jak jste to zjistili ze zachyceného provozu? Zapište do protokolu.
 	\item Na jakou IP adresu směřoval paket s DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
+	\item V souboru \texttt{/etc/resolv.conf} zaměňte IP adresu \texttt{10.10.10.1} za IP adresu \texttt{8.8.8.8}.
+    \item V programu Wireshark spusťte zachytávání komunikace na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp2s0}).
+    \item Ve webovém prohlížeči vygenerujte DNS provoz přistupováním na webové stránky, které jste ještě nenavštívili.
+    \item Zastavte zachytávání komunikace v programu Wireshark a pomocí \emph{display filteru} zobrazte pouze DNS provoz. Na jakou IP adresu směřovaly DNS dotazy nyní? Zapište do protokolu.
 \end{enumerate}
 
 \section{Blokování vybraných domén}
 \begin{enumerate}
-	\item 
+	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:
+    \begin{verbatim}
+        127.0.0.1    facebook.com
+    \end{verbatim}
+    \item Ve webovém prohlížeči zadejte do adresního řádku adresu \url{https://www.facebook.com/}. Podařilo se Vám stránku zobrazit?
+    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o otevření webové aplikace YouTube došlo k otevření webové stránky \url{https://www.fit.vutbr.cz/}. Tento nový záznam zapište také do protokolu.
+    \item Se spolužáky diskutujte slabiny tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
 \end{enumerate}
-
-\section{Zabezpečení a překlad pomocí DNS over HTTPS}
-\begin{enumerate}
-    \item Spusťe prohlížeč Firefox.
-    \item V prohlížeči přistupte do \texttt{Preferences} pak sescrollujte dolů na položku \texttt{Network Settings} a klikněte na tlačítko \texttt{Settings}. V dialogovém okně najděte položku \texttt{Enable DNS over HTTPS} a zaškrtněte. Provider nastavte na \texttt{Custom} a vyplňte nově vzniklé pole tímto url\\ \texttt{https://odvr.nic.cz/doh}.
-    \item Potvrďte změny kliknutím na tlačítko \texttt{OK} a prohlížeč zavřete.
-    \item Spusťte program Wireshark jako uživatel \texttt{root} z terminálu příkazem \texttt{wireshark \&} a začněte zachytávat provoz na všech rozhraních.
-    \item Pro pozdější rozšifrování HTTPS komunikace z prohlížeče je nutné nastavit proměnnou prostředí\\ \texttt{SSLKEYLOGFILE=<cesta\_k\_souboru>}, na kterou prohlížeče Firefox, Chrome a případně další reagují.
-    \item Otevřete terminál a jako uživatel \texttt{user} zadejte\\ \texttt{export SSLKEYLOGFILE=/home/user/Desktop/keylogfile.log}.
-    \item Následně ve stejném okně terminálu, ve kterém jste nastavili proměnnou prostředí \texttt{SSLKEYLOGFILE}, spusťte jako uživatel \texttt{user} prohlížeč Firefox příkazem \texttt{firefox \&}.
-    \item Přistupte na pár webových stránek, které Vás napadnou. Následně prohlížeč zavřete a tuto akci ještě jednou či vícekrát zopakujte, pokaždé ideálně s jinými webovými stránkami. Nakonec prohlížeč zavřete.
-    \item Následně zastavte zachytávání v programu Wireshark.
-    \item Zachycenou komunikaci uložte do souboru \texttt{cv3-DoH.pcap}, který budete odevzdávat.
-	\item Představ si sebe jako útočníka, který zachytil neznámou komunikaci do souboru \texttt{cv3-DoH.pcap} a nemá k ní žádné další informace. Dokázali byste v tuto chvíli zjistit ze zachyceného DNS provozu, jaké domény byly přes prohlížeč Firefox navštíveny? Proč? Odvěď uveďte do odpovědního archu.
-    \item V programu Wireshark otevřete \texttt{Edit > Preferences} a zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. Na této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na váš keylogfile (\texttt{/home/user/Desktop/keylogfile.log}). Aplikujte změnu kliknutím na \texttt{OK}. Nyní by mělo proběhnout rozšifrování provozu.
-    \item Pomocí \emph{display filteru} vyfiltrujte pouze TLS provoz. Do odpovědního archu zapište, jaký \emph{display filter} jste zadali. Pokuste se nalézt pakety protokolu DoH (DNS over HTTPS).
-    \item Pokud se Vám to podařilo, podívejte se jak vypadá obsah paketu.
-    \begin{itemize}
-        \item Pokud se vám nepodařilo nalézt pakety s DoH, ve složce \texttt{/home/user/doh-pcaps/} naleznete \texttt{.zip} soubor po jehož rozbalení objevíte soubor \texttt{doh-decrypted.pcapng}.
-		Když ve Wiresharku otevřete tento soubor, měli byste narazit na již dešifrovaný TLS provoz, ve kterém DoH pakety již určitě naleznete.
-    \end{itemize}
-	\item Vyberte si libovolnou zachycenou DoH odpověď a do odpovědního archu opište jeden řádek z položky \texttt{Answers}.
-	\item Jaká je cílová IP adresa pro pakety s DoH dotazy? Jaké doménové jméno patří k této IP adrese? Zapište do odpovědního archu.
-    \item Před postupem k další části cvičení nezapomeňte otevřít prohlížeč a na stejném místě v \texttt{Preferences} položku \texttt{Enable DNS over HTTPS} opět vypnout a prohlížeč zavřít.
-\end{enumerate}
-
 
 \section{Zabezpečení a překlad pomocí DNS over TLS}
 \label{sec:dot}
 \begin{enumerate}
-    \item Ověřte stav programu SELinux příkazem \texttt{sestatus}.
-    \item Dočasně deaktivujte SELinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce permissive}. Ověřte, že došlo ke změně nastavení, příkazem \texttt{sestatus}.
-	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}. NErestartujte v tuto chvíli počítač.
+%    \item Ověřte stav programu SELinux příkazem \texttt{sestatus}.
+%    \item Dočasně deaktivujte SELinux jako uživatel \texttt{root} pomocí příkazu \texttt{setenforce permissive}. Ověřte, že došlo ke změně nastavení, příkazem \texttt{sestatus}. NErestartujte v tuto chvíli počítač.
+%	\item Zároveň v souboru \texttt{/etc/selinux/config} zkontrolujte a případně upravte řádek s proměnnou \texttt{SELINUX} následovně \texttt{SELINUX=disabled}.
+    \item Pokud jsou na počítači nainstalované programy \texttt{bind} a \texttt{dnsmasq} odstraňte je příkazy\\ \texttt{yum remove bind} a \texttt{yum remove dnsmasq}.
     \item Nainstalujete Unbound DNS caching resolver pomocí příkazu \texttt{yum install unbound -y}.
-    \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{\# Forward zones} a přidejte následující:
+    \item V souboru \texttt{/etc/unbound/unbound.conf} najděte příslušnou část pro úpravu forward zón (pod řádkem začínajícím \texttt{\# Forward zones} - skoro na konci souboru) a přidejte následující:
     
 \begin{verbatim}
 forward-zone:
     name: "."
     forward-ssl-upstream: yes
-    # Cloudflare DNS
     forward-addr: 1.1.1.1@853
     forward-addr: 1.0.0.1@853
 \end{verbatim}
@@ -100,17 +81,24 @@ forward-zone:
     \item Jakmile je soubor upraven, uložte jej a restartujte službu pomocí příkazu \texttt{systemctl restart unbound}.
     \item Ověřte zdali služba běží bez problémů pomocí \texttt{systemctl status unbound}.
     \item V souboru \texttt{/etc/resolv.conf} nastavte nameserver na IP adresu \texttt{127.0.0.1}.
-    \item Nyní spusťte program Wireshark a spusťte zachytávání na rozhraní, pomocí kterého jste připojeni k Internetu.
-    \item Pokuste se vygenerovat nějaký DNS provoz pomocí webového prohlížeče, a to konkrétně přístupem na web \texttt{idnes.cz}.
-    \item Vyčkejte než se stránka celá načte a důkladně si ji prohlédněte.
-    \item Následně zavřete tab s načtenou stránkou i prohlížeč samotný.
-    \item Zastavte zachytávání provozu v programu Wireshark a pomocí \emph{display filteru} vyfiltrujte pouze pakety, které využívají port 853 nad protokolem TCP. Jaký filtr přesně jste použili? Zapište do odpovědního archu.
-    \item Následně vyfiltrujte pakety, které obsahují port 53 nad protokolem TCP nebo UDP. Jaký filtr přesně jste použili zde? Opět zapište do odpovědního archu.
-	\item Jaká služba (obecně) běží nad portem 53? Kolik paketů se zdrojovým nebo cílovým portem 53 bylo zachyceno? Odpovězte do odpovědního archu a zamyslete se, proč právě takové číslo.
+    \item Nyní spusťte program Wireshark a spusťte zachytávání na rozhraní, pomocí kterého jste připojeni k Internetu (\texttt{enp2s0}).
+    \item Pokuste se vygenerovat nějaký DNS provoz pomocí webového prohlížeče, například přístupem na web \url{https://www.idnes.cz/}.
+	\item Představ si sebe jako útočníka, který právě zachytil neznámou komunikaci a nemá k ní žádné další informace. Dokázali byste v tuto chvíli zjistit z DNS provozu, jaké domény byly přes prohlížeč Firefox navštíveny? Proč? Odvěď uveďte do protokolu.
+    \item Zastavte zachytávání provozu v programu Wireshark a pomocí \emph{display filteru} vyfiltrujte pouze pakety, které využívají port 853 nad protokolem TCP. Jaký filtr přesně jste použili? Zapište do protokolu.
+    \item Následně vyfiltrujte pakety, které obsahují port 53 nad protokolem TCP nebo UDP. Jaký filtr přesně jste použili zde? Opět zapište do protokolu.
+	\item Jaká služba (obecně) běží nad portem 53? Kolik paketů se zdrojovým nebo cílovým portem 53 bylo zachyceno? Odpovězte do protokolu a zamyslete se, proč právě takové číslo.
+    \item \textbf{Jako uživatel \texttt{root} spuťte dávku {\tt /root/isa3/clean.sh}.}
 \end{enumerate}
 
-\section*{Ukončení práce v laboratoři}
-\begin{itemize}
-	\item Do WIS-u odevzdejte vyplněný \texttt{protokol.md}, všechny zachycené \texttt{pcap} soubory a snímek obrazovky.
-	\item Vypňete virtuální stroj a obnovte jeho snapshot vytvořený na začátku této laboratoře.
-\end{itemize}
+\section{Analýza komunikace DNS over HTTPS}
+\begin{enumerate}
+    \item Přepněte se do OS Windows (Wireshark na CentOS neumí dešifrovat TLS komunikaci) a přihlaste se jako uživatel \texttt{root} (heslo: \texttt{root4lab}).
+    \item Ve složce \texttt{C:/Users/root/Downloads/doh-pcaps} je pcap soubor a dešifrovací soubor, případně si oboje stáhněte z \url{https://github.com/nesfit/ISA/tree/master/dns-security/doh-pcaps}.
+    \item V programu Wireshark otevřete soubor \texttt{doh.pcapng}, který obsahuje zašifrovanou komunikaci DNS over HTTPS (DoH).
+    \item Představ si sebe jako útočníka, který zachytil neznámou komunikaci do souboru \texttt{doh.pcap} a nemá k ní žádné další informace. Dokázali byste v tuto chvíli zjistit ze zachyceného DNS provozu, jaké domény byly přes prohlížeč Firefox navštíveny? Proč?
+    \item V programu Wireshark otevřete \texttt{Edit > Preferences}, zde v levém sloupci rozklikněte \texttt{Protocols} a zde nalezněte položku \texttt{TLS}. Na této kartě je potřeba nastavit \texttt{(Pre)-Master-Secret log filename} na keylogfile s dešifrovacím klíčem (\texttt{C:/Users/root/Downloads/\\doh-pcaps/keylogfile.log}). Aplikujte změnu kliknutím na \texttt{OK}. Nyní by mělo proběhnout rozšifrování provozu.
+    \item Pomocí \emph{display filteru} vyfiltrujte pouze TLS provoz. Do protokolu zapište, jaký \emph{display filter} jste zadali. Pokuste se nalézt pakety protokolu DoH (DNS over HTTPS).
+    \item Vyberte si libovolnou zachycenou DoH odpověď a do protokolu opište jeden řádek z položky \texttt{Answers}. DoH odpověď je DoH komunikace ve směru 193.17.47.1 -> 10.0.2.15.
+	\item Jaká je cílová IP adresa pro pakety s DoH dotazy? Jaké doménové jméno patří k této IP adrese? Zapište do protokolu.
+    \item Můžete ještě vyzkoušet, jak se nastavují statické IP adresy DNS serverů ve Windows\\ (\url{https://www.windowscentral.com/how-change-your-pcs-dns-settings-windows-10}).\\ Poté počítač prosím vypněte (bez spouštění aktualizací).
+\end{enumerate}
