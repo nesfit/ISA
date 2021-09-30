@@ -17,9 +17,9 @@
 \end{itemize}
 
 \subsection*{Příprava laboratoře}
-Před samotnou konfigurací je potřeba přepojit počítače kabelem přes patch panel
-pro kabely DXX (XX je číslo vašeho počítače) vepředu laboratoře. Na PC budete
-pracovat s rozhraníma {\bf enp2s0}.
+Váš počítač je připojený kabelem přes patch panel
+pro kabely EXX (XX je číslo vašeho počítače) vepředu laboratoře. Na PC budete
+pracovat s rozhraním {\bf enp2s0}.
 
 \section{Zjišťování konfigurace}
 V případě, že se v OS Linux úplně neorientujete, přečtěte si kapitolu \ref{basics} v
@@ -29,15 +29,21 @@ informace, které budete potřebovat ke splnění této části cvičení, nalez
 v~sekci \ref{basic_ipconfig} laboratorního manuálu --- Konfigurace síťových zařízení. V~případě, že si nejste jistí některým příkazem, neváhejte nahlédnout do manuálové stránky.
 
 \begin{enumerate}
-\item Vypište konfiguraci vašeho stroje (MAC adresu, IPv4 adresu, masku, síť, broadcastovou adresu).
-\item Zobrazte si záznamy ve~směrovací a ARP tabulce. Zapište IPv4 adresu výchozí brány a přiřaďte k ní MAC adresu.
+\item Vypište konfiguraci vašeho stroje (MAC adresu, IPv4 adresu, masku, síť,
+  broadcastovou adresu). ({\tt ip address show})
+\item Zobrazte si záznamy ve~směrovací a ARP tabulce. Zapište IPv4 adresu
+  výchozí brány a přiřaďte k ní MAC adresu. ({\tt ip route}, {\tt ip neighbour})
 \item Otestujte konektivitu k~výchozí bráně a následně konektivitu do Internetu.
-\item Vypište implicitní servery DNS a název souboru, ve kterém jste tuto informaci nalezli.
-\item Upravte patřičný soubor tak, aby po spuštění příkazu \texttt{ping gw}, byl ping proveden vůči IPv4 adrese 10.10.10.1. Zapište jak a který soubor jste upravili a jaký záznam jste přidali.
-\item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké vygenerujte, například pomocí webového prohlížeče.
+  ({\tt ping})
+\item Vypište implicitní servery DNS ze souboru {\tt /etc/resolv.conf}.
+\item Upravte soubor {\tt /etc/hosts} tak, aby po spuštění příkazu \texttt{ping gw}, byl ping proveden vůči IPv4 adrese 10.10.10.1. Zapište jak jste soubor upravili a jaký záznam jste přidali.
+\item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište
+  význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké
+    vygenerujte, například pomocí webového prohlížeče. ({\tt ss})
 \item Zobrazte systémové události pomocí programu \texttt{journalctl}.
-\item Zobrazte pouze události týkající se NetworkManager.
-\item Pokuste se jako uživatel user spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě správně zadaného hesla, ale odepřeného přístupu.
+\item Zobrazte pouze události týkající se NetworkManager. (\texttt{journalctl})
+\item Pokuste se jako uživatel user spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě správně zadaného hesla, ale odepřeného přístupu. (\texttt{journalctl})
+
 \end{enumerate}
 
 \section{Wireshark}
@@ -57,7 +63,12 @@ potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} labo
   přijatého paketu. Zamyslete se nad tím, co vypsané MAC adresy a IPv4 adresy
     identifikují --- nalezené identifikátory porovnejte s identifikátory
     vypsanými v předchozích bodech zadání.
-\item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP. V příkazové řádce odstraňte ARP záznamy (příkaz \texttt{ip neighbor ...}). Ve wiresharku zobrazte veškerou komunikaci, následně vyfiltrujte pouze ARP a ICMP pakety. Vygenerujte ICMP komunikaci. Analyzujte obsah ARP paketů. Zapište, co jste zadali do filtru.
+\item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP,
+  zachytávejte veškerou komunikaci. V~příkazové řádce odstraňte ARP záznamy
+    (příkaz \texttt{ip neighbor ...}). Vygenerujte ICMP komunikaci. We
+    Wiresharku zobrazte pouze komunikaci
+    protokoly ARP a ICMP. Analyzujte obsah ARP paketů. Zapište, jaký filtr jste
+    použili.
 \item Zachyťte pouze HTTP a DNS provoz (na výchozích portech). Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů.
 \item Znovu si otevřete dříve uložený soubor s nešifrovanou komunikaci pomocí
   HTTP, zobrazte si TCP stream této komunikace (\emph{Follow TCP stream}).
@@ -71,30 +82,25 @@ potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} labo
 
 \section{Konfigurace IPv4 a IPv6}
 
-\subsection{Manuální konfigurace IPv4}
+\subsection{Příprava}
+
+Pracujte samostatně, nebo spolupracujte se svým spolužákem v okolí, který se také
+chystá plnit tento bod zadání, můžete spolupracovat i ve větších skupinách.
+Ze své skupiny vyberte velitele, jehož číslo počítače (pracovního místa)
+použijete níže jako konstantu $N$.
 
 Teorie \emph{IPv4 adresování} je popsaná v sekci \ref{adresy_ipv4} laboratorního manuálu --- Adresy v IPv4 síti.
 Možnosti manuální konfigurace IP adres jsou v sekci \ref{ipconfig} --- Konfigurace síťování koncových zařízení.
-Pracujte samostatně, nebo spolupracujte se svým spolužákem v okolí, který se také
-chystá plnit tento bod zadání, můžete spolupracovat i ve větších skupinách.
 
-\begin{enumerate}
-    \item Zvolte nejdelší možnou masku sítě \texttt{192.168.0.0} tak, aby síť obsahovala prostor pro 100 koncových stanic.
-    \item Jako adresu sítě použijte \texttt{192.168.0.0}. Na svém počítači
-      nakonfigurujte adresu spadající do této sítě, kde poslední oktet bude
-      odpovídat číslu vašeho počítače.
-    \item Správnou konfiguraci si ověřte příkazem {\tt ping}. Pokud
-      spolupracujete ve skupině, ověřte konektivitu ke všem spolupracujícím
-      členům skupiny.
-\end{enumerate}
-
-\subsection{Manuální konfigurace IPv6}
 Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{adresy_ipv6} --- Adresy v IPv6 síti.
-Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4. Pracujte
-samostatně nebo ve skupine.
+Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 
 \begin{enumerate}
-    \item Zvolte si adresu sítě vhodnou pro použití v privátních lokálních
+    \item Zvolte nejdelší možnou masku sítě \texttt{192.168.N.0} tak, aby síť obsahovala prostor pro 100 koncových stanic.
+    \item Jako adresu sítě použijte \texttt{192.168.N.0}.
+    \item Každému členu skupiny přiřaďte jednu IP adresu. Kolik by mohla mít
+      vaše skupina maximálně členů?
+    \item Zvolte si adresu sítě IPv6 vhodnou pro použití v privátních lokálních
         sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
         sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
         použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
@@ -102,9 +108,21 @@ samostatně nebo ve skupine.
         všichni shodné Global ID i Subnet ID.
     \item Pro zajímavost si můžete unikátnost vygenerovaného Global ID
         zkontrolovat na \url{https://www.sixxs.net/tools/grh/ula/list}.
-    \item Na svůj počítač nakonfigurujte adresu s Host ID rovným číslu vašeho
-      počítače.
-    \item Správnou konfiguraci si ověřte příkazem {\tt ping6}.
+\end{enumerate}
+
+\subsection{Manuální konfigurace IPv4 a IPv6}
+
+\begin{enumerate}
+    \item Na svém počítači
+      nakonfigurujte adresu vybranou výše. Klikněte na ikonu sítě vpravo nahoře,
+      vyberte drátové Ethernetové připojení a vyberte položku nastavení.
+      Klikněte na ozubené kolo u tohoto připojení. Na záložkách IPv4 a IPv6
+      manuálně vyplňte adresy a prefixy. Konfiguraci uložte.
+    \item Aplikujte manuálně nastavené adresy dočasnou deaktivaci rozhraní a
+      následnou aktivací s pomocí menu v pravém horním rohu obrazovky.
+    \item Správnou konfiguraci si ověřte příkazem {\tt ping} a {\tt ping6}. Pokud
+      spolupracujete ve skupině, ověřte konektivitu ke všem spolupracujícím
+      členům skupiny.
 \end{enumerate}
 
 \section{Ukončení práce v~laboratoři}

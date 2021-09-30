@@ -126,9 +126,11 @@ Alternativou k~zobrazení obsahu směrovací a ARP tabulky jsou tyto příkazy:
 \item \texttt{netstat} - zobrazí mimo jiné obsah směrovací tabulky (volba \texttt{-rn})
 \end{itemize}
 
-K~zobrazení aktuálně běžících spojení včetně protokolu, portu, zdrojové a cílové
-adresy slouží příkaz \texttt{ss} (\texttt{sockstat}). Příkaz \texttt{lsof -ni}
-zobrazuje otevřená spojení.
+Příkaz \texttt{ss} (\texttt{sockstat}) slouží
+k~zobrazení aktuálně běžících spojení včetně protokolu (parametry {\tt -t}, {\tt
+-u}), portu, zdrojové a cílové
+adresy. Aktuálně existující spojení můžete filtrovat pomocí stavového filtru.
+Např. {\tt ss state ESTABLISHED -t}.
 
 \subsubsection{Konfigurační soubory a logy}
 Na OS Linux je veškeré nastavení systému a služeb uloženo v~adresáři \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s~příslušným názvem. Pro lepší přehlednost je možné vytvářet více konfiguračních souborů, pro tyto účely zde pak existují adresáře \texttt{"nazevsluzby.d/"} (například \texttt{/etc/rsyslog.d/}). Veškeré nastavení v~souborech v~těchto adresářích je pak aplikováno na danou službu.
