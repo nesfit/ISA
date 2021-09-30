@@ -286,6 +286,7 @@ Do verze 9.6 se používala direktiva {\em trusted-keys} v~konfiguračním soubo
 %
 
 \section{DNS Over TLS}
+\label{DoT}
 DNS Over TLS (DOT) přináší šifrování a autentizaci do DNS komunikace. Tento protokol je definován v RFC 7858\cite{RFC7858}. Protokol má přidělen standardizovaný port 853 jako defaultní. TLS protokol zde zaobaluje DNS požadavky a odpovědi jako přenášený payload viz obrázek \ref{fig:dot-encapsulation}.
 
 \begin{figure}[h]
@@ -313,6 +314,7 @@ forward-zone:
 Následně službu zapnout a nastavit systémový resolver na adresu \texttt{127.0.0.1}.
 
 \section{DNS Over HTTPS}
+\label{DoH}
 DNS Over HTTPS (DOH) je nový standard pro bezpečný a šifrovanz přenos DNS provozu tunelovaný v protokolu HTTPS. Tento protokol nemá vlastní definovaný port a je přenášen jako ostatní HTTPS provoz pod portem 443. DOH je definován standardem vydaným roku 2018 skrývajícím se pod dokumentem označeným jako RFC 8484 \cite{RFC8484}.
 
 \begin{figure}[h]
