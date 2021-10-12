@@ -248,50 +248,11 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
       \item V menu \emph{Edit » Preferences » Privacy \& Security} v sekci
         \emph{Certificates} zobrazte důvěryhodné certifikáty. Prohlédněte si
-        seznam a odhadněte jejich počet. Najděte certifikát autority Brno
-        University of Technology a podívejte se na jeho detaily.
+        seznam a odhadněte jejich počet.
 
       \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
         informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
         {\bf Nalezené jméno serveru ukažte cvičícímu}.
-
-    \end{enumerate}
-
-  \item {\bf Ověření použitého certifikátu}
-
-    \begin{enumerate}
-
-      \item Pomocí programu {\tt openssl} se připojte k WISu \\
-        \verb|openssl s_client -showcerts -connect wis.fit.vutbr.cz:443|. \\
-        Všimněte si řádku \emph{Verify return code}, co
-        říká o certifikátu?
-
-      \item V terminálu se přesuňte do adresáře s dočasnými soubory:
-        \verb|cd /tmp| a dále pracujte v tomto adresáři. Vytvořte pracovní
-        adresář a přepněte se do něj: \verb|mkdir <login> && cd <login>|.
-
-      \item V adresáři vytvořte soubor s názvem \verb|wis.fit.vutbr.cz.pem|
-        obsahující certifikát WISu. Ve výstupu příkazu
-        \verb|openssl s_client -showcerts -connect wis.fit.vutbr.cz:443|
-        se nachází mezi řádky
-        \verb|-----BEGIN CERTIFICATE-----| a \verb|-----END CERTIFICATE-----|
-        včetně těchto řádků. Použijte certifikát s kanonickým jménem (CN)
-        \verb|wis.fit.vutbr.cz|.
-
-      \item V prohlížeči se připojte na stránku \verb|http://ca.vutbr.cz/| a
-        stáhněte certifikát CA ve formátu PEM, soubor stáhněte do pracovního
-        adresáře. Alternaticně použijte příkaz \\
-        \verb|wget http://ca.vutbr.cz/pki/pub/cacert/cacert.pem -O vut.pem|. \\
-        V praxi byste tento krok měli provádět důvěryhodným kanálem.
-
-      \item Programem {\tt c\_rehash} vytvořte symbolické odkazy, které používá
-        knihovna openssl: \\ \verb|c_rehash /tmp/<login>|
-
-      \item Znovu se připojte k WISu a sledujte řádek \emph{Verify return code},
-        tentokrát příkazem: \\
-        \verb|openssl s_client -showcerts -CApath /tmp/<login> -connect wis.fit.vutbr.cz:443|
-
-      \item {\bf O svůj úspěch se podělte se svým cvičícím}.
 
     \end{enumerate}
 
