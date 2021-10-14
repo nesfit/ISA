@@ -140,7 +140,9 @@ se liší práva mezi souborem s privátním a veřejným klíčem?}
       \item Oba veřejné klíče zkopírujte na vzdálený počítač hYY do
         souboru \verb|.ssh/authorized_keys|
         pro klíč uživatele {\tt user} např.: \\
-        {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys; chmod g-w .ssh/authorized_keys"&} \\
+        {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys"&}\\
+        a nastavte správná přístupová práva:\\
+        {\verb&ssh user@hXX "chmod g-w .ssh/authorized_keys"&} \\
         pro klíč uživatele {\tt root} např.: \\
         {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}. \\
 
