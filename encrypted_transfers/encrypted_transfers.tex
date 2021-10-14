@@ -35,11 +35,11 @@
   \item V případě potřeby si otevřete další terminál v novém okně.
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
   nano, mcedit, vim, gedit).
-\item Pracujte jednotlivě či ve dvojicích (váš počítač je dále v textu označen jako hXX a
+\item Pracujte ve dvojicích (váš počítač je dále v textu označen jako hXX a
   počítač souseda hYY, kde XX a YY je číslo počítače 01--20). Zkontrolujte, že máte počítač propojen
     přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch
-    panelu).
-  
+    panelu). Pokud souseda nemáte, zapněte si jeden z volných počítačů.
+
 \end{itemize}
 
 %\newpage
@@ -85,7 +85,10 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
   \end{lstlisting}
 
   Pokud budete otevírat v průběhu řešení úkolu nové terminály, nezapomeňte
-    v nich také vypnout podporu agenta SSH.
+  v nich také vypnout podporu agenta SSH.
+
+  {\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
+  Na konci úkolu je sdělíte cvičícímu.}
 
   \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
 
@@ -125,8 +128,8 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
       \item Jako uživatel {\tt root} vygenerujte příkazem \verb|# ssh-keygen -N "" -C <login>@root|
         implicitní klíč pro uživatele {\tt root} bez hesla.
 
-      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (\verb|ls -l ~/.ssh|). Jak
-se liší práva mezi souborem s privátním a veřejným klíčem?
+      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (\verb|ls -l ~/.ssh|). {\bf Jak
+se liší práva mezi souborem s privátním a veřejným klíčem?}
 
     \end{enumerate}
 
@@ -137,14 +140,14 @@ se liší práva mezi souborem s privátním a veřejným klíčem?
       \item Oba veřejné klíče zkopírujte na vzdálený počítač hYY do
         souboru \verb|.ssh/authorized_keys|
         pro klíč uživatele {\tt user} např.: \\
-        {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys"&} \\
+        {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys; chmod g-w .ssh/authorized_keys"&} \\
         pro klíč uživatele {\tt root} např.: \\
         {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}. \\
-        
-      Jaká hesla bylo nutné zadat?
 
-      \item Zkuste se znovu přihlásit na stejný vzdálený počítač hYY. Jaké heslo bylo nyní nutné zadat? Zkuste
-        zadat (opakovaně) špatné heslo a pozorujte, co se stalo. Při experimentech můžete také
+      {\bf Jaká hesla bylo nutné zadat?}
+
+      \item Zkuste se znovu přihlásit na stejný vzdálený počítač hYY. {\bf Jaké heslo bylo nyní nutné zadat? Zkuste
+        zadat (opakovaně) špatné heslo a pozorujte, co se stalo.} Při experimentech můžete také
 využít tzv. verbose režim ssh ({\tt ssh -v}).
 
     \end{enumerate}
@@ -162,10 +165,11 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         {\tt <login>@root}) napíšete
         \verb|command="ntpq -p" | \\ (následovaný jednou mezerou a původním
         obsahem řádku).
+        Odhlaste se ze vzdáleného počítače.
 
-      \item Odhlaste se ze vzdáleného počítače a znovu se na něj přihlaste z
-        účtu {\tt root} jako {\tt root}. Aplikovalo se
-        omezené využití klíče?
+      \item Znovu se přihlaste na počítač hYY z
+        účtu {\tt root} jako {\tt root}.  {\bf Aplikovalo se
+        omezené využití klíče?}
 
     \end{enumerate}
 
@@ -178,7 +182,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         příkazu \verb|env| ověřte, že je nastavená proměnná
         \verb|SSH_AUTH_SOCK|.
 
-      \item Přihlaste se k serveru hYY. Museli jste zadávat znovu heslo?
+      \item Přihlaste se k serveru hYY. {\bf Museli jste zadávat znovu heslo?}
 
     \end{enumerate}
   \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (3c, 4a, 4b,
@@ -206,8 +210,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
         odpověď.
 
-      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP. Je možné
-        přečíst obsah komunikace?
+      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP. {\bf Je možné
+        přečíst obsah komunikace?}
 
     \end{enumerate}
 
@@ -218,7 +222,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
       \item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
 
       \item Pomocí programu {\tt openssl} se připojte k fakultnímu webovému
-        serveru: \\ \verb|openssl s_client -quiet -connect www.fit.vutbr.cz:443|.
+        serveru: \\ \verb|openssl s_client -connect www.fit.vutbr.cz:443|.
         Všimněte si řádku \emph{Verify return code}, co
         říká o certifikátu?
 
@@ -230,7 +234,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         odpověď.
 
       \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP s využitím
-        TLS. Je možné přečíst obsah komunikace?
+        TLS. {\bf Je možné přečíst obsah komunikace?}
 
     \end{enumerate}
 
@@ -271,7 +275,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
       \item V prohlížeči se připojte na stránku \url{https://crt.sh}.
 
       \item Nalezněte certifikáty vydané pro servery v rámci domény
-        \emph{fit.vutbr.cz}, použijte znak \verb|%| jako zástupný znak.
+        \emph{fit.vutbr.cz}.
 
       \item Najděte na stránce ikonu směřují k souboru Atom odkazující na soubor
         obsahující vystavené certifikáty. {\bf Zamyslete se k čemu byste tento soubor
