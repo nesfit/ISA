@@ -1,8 +1,10 @@
 
 \section*{Cíle laboratoře}
 \begin{itemize}
-  \item Systém DNS.
-  \item Zabezpečení DNSSEC.
+  \item Seznámení se systémem DNS a databází Whois.
+  \item Prozkoumání dat přenášených v~protokolu DNS pomocí programu Wireshark.
+  \item Blokování vybraných doménových jmen.
+  \item Konfigurace a spuštění DNS serveru obsluhujícího vlastní doménu.
 \end{itemize}
 
 \section*{Základní instrukce}
@@ -11,124 +13,127 @@
   \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
   \item Otevřete si příkazovou řádku pro uživatele {\tt root} příkazem {\tt su}
     (switch user).
-  \item V případě potřeby si otevřete další terminál v novém okně.
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
     nano, vim, gedit).
-  \item Pracujte ve dvojicích, zkontrolujte, že máte počítač propojen
-    přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch panelu).
 \end{itemize}
 
 \section*{Úkoly}
-\section{Konfigurace DNS serveru}
-\begin{enumerate}
 
-  \item Pracujte ve dvojicích. Jeden z dvojice bude konfigurovat server (PC A)
-    a druhý počítač bude mít roli klienta (PC B). Propojte rozhraní enp4s1 (zdířka
-    D na patch panelu) mezi počítači ve dvojici křížovým kabelem.
-  \item Nastavte statické IP adresy na rozhraní enp4s1 vašich počítačů pomocí {\tt 
-    ip addr}. Otestujte konektivitu příkazem {\tt ping}. Pokud konektivita nefunguje,
-    ověřte nastavení IP adres {\tt ip a} a zamyslete se, co je špatně.
-  \item Upravte konfigurační soubor {\tt /etc/named.conf} (parametr
-    {\tt listen-on} v~sekci {\tt options}) tak, aby
-    PC A naslouchalo i na adrese, která mu byla přiřazena staticky na rozhraní enp4s1.
-    Inspirovat se můžete již uvedeným paramterem {\tt listen-on-v6}, případně v
-    manuálových stránkách. Dále nastavte {\tt allow-query} na {\tt any}.
-  \item Na PC A rozšiřte konfiguraci DNS serveru tak, aby obsluhoval požadavky pro Vámi
-    zvolenou doménu, např. {\tt isa.cz}. Doména bude obsahovat:
+\section{Seznámení s~DNS}
+\begin{enumerate}
+    \item Otevřete ve webovém prohlížeči (např. Mozilla Firefox) online nástroj pro vyhledávání DNS záznamů \url{https://www.nslookup.io/}.
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k~doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu základních DNS záznamů je klíčové pro celé cvičení.
+    \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{www.fit.vutbr.cz} nebo \texttt{seznam.cz}).
+\end{enumerate}
+
+\section{Seznámení s~Whois}
+\begin{enumerate}
+    \item Otevřete ve webovém prohlížeči online nástroj pro prohledávání databáze Whois\\ \url{https://www.nic.cz/whois/}. Btw. Odkud znáte \emph{CZ.NIC}? Co toto sdružení zajišťuje?
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Všimněte si například, od jakého roku je doména registrována.
+    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhranní nevidíte svoji veřejnou IP adresu? (nápověda: NAT) Požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{re0} nastaven učitelský počítač. Je to stejná IP adresa jako Vaše veřejná?
+    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://lookup.icann.org/} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Všimněte si, do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen. Btw. Odkud znáte \emph{ICANN}? Co tato organizace zajišťuje?
+\end{enumerate}
+
+\section{Prozkoumání protokolu DNS}
+\begin{enumerate}
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Odpovídá IP adresa předchozímu hledání A~záznamu přes webový nástroj?
+    \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
+	\item Vyfiltrujete pouze pakety související s~DNS provozem.
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do protokolu. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
+    \item Zastavte zachytávání komunikace v~programu Wireshark.
+    \item V~zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
+	\item Kolik paketů souvisejících s~Vaším dotazem na doménu bylo zachyceno?
+	\item Byl proveden rekurzivní nebo iterativní DNS dotaz?
+	\item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v~Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
+	\item \textbf{Odpovědi sdělte cvičícímu.}
+
+\end{enumerate}
+
+\section{Blokování vybraných domén}
+\begin{enumerate}
+	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
+    \verb|0.0.0.0    facebook.com|
+    \item Ve webovém prohlížeči zadejte do adresního řádku adresu \url{https://www.facebook.com/}. Podařilo se Vám stránku zobrazit?
+    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové aplikace YouTube došlo k~otevření webové stránky \url{https://www.fit.vutbr.cz/}.
+    \item Se spolužáky diskutujte slabiny tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
+\end{enumerate}
+
+\section{Konfigurace vlastního DNS serveru}
+\begin{enumerate}
+  \item Prostudujte si začátek kapitoly 9.2.3 z~manuálu k~laboratořím.
+  \item Váš budoucí DNS server bude spravovat doménu  {\tt isa.cz}.
+  \item Nejdříve upravte konfigurační soubor {\tt /etc/named.conf} následujícím způsobem:
     \begin{itemize}
-      \item Nameserver pojmenovaný {\tt server} (záznam typu NS).
-      \item Záznam typu A pro {\tt server}.
-      \item Záznam typu A pro jméno {\tt pcb}, který odkazuje na IP adresu
-        počítače PC B.
-      \item Záznam typu CNAME pro jméno {\tt pca} ukazující na {\tt server}.
+      \item Do parametru {\tt listen-on} v~sekci {\tt options} přidejte svoji IP adresu na rozhraní {\tt enp2s0}
+            (tj.~IP adresu 10.10.10.1XX, kde XX je číslo Vašeho počítače).
+            Zajistíte tím, že Váš budoucí DNS server bude přijímat a zpracovávat DNS dotazy, které mu na toto rozhraní ({\tt enp2s0}) přijdou. 
+      \item Nastavte {\tt allow-query} na {\tt any;}.
+            Tím zajistíte, že kdokoliv (v~lokální síti) bude moci poslat na Váš DNS server dotaz a on ho bude zpracovávat.
+            Kdybyste nechali v~nastavení možnost {\tt localhost;}, zpracovával by Váš DNS server dotazy pouze z~Vašeho počítače a
+            když by mu zaslal DNS dotaz třeba sousední počítač, zahodil by tento dotaz a neodpověděl by.
+      \item Téměř na konci souboru vytvořte dvě nové zóny. První zónu pro Vaši doménu {\tt isa.cz} a druhou zónu pro reverzní překlad ({\tt 10.10.10.in-addr.arpa}).
+            Podívejte se do laboratorního manuálu, jak má vypadat definice nových zón v~souboru {\tt /etc/named.conf}.
+            Cesty k~zónovým souborům nastavíte později -- až po vytvoření těchto souborů.
     \end{itemize}
-    Inzerujte platnost vámi zasílaných záznamů 1 hodina.
-    Jako základ zónového souboru pro vaší doménu můžete použít soubor 
-    {\tt /root/isa3/template.dns.zone}.
-    Needitujte však soubor přímo, ale zkopírujte jej do {\tt /var/named}, 
-    nezapomeňte zaregistrovat zóny v~souboru \linebreak{\tt /etc/named.conf} 
-    (potřebné informace jsou k dispozici v~manuálu v~kapitole 6). 
-  \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6
-    (záznamy AAAA).
+  
+  \item Nyní je potřeba pro nově registrované zóny vytvořit zónové soubory. V~nich používejte vždy FQDN.
+  \item Začněte zónovým souborem pro doménu {\tt isa.cz}:
+  
+    \begin{itemize}
+      \item V~souboru {\tt /root/isa3/template.dns.zone} je připravena šablona zónového souboru.
+            Zkopírujte tento soubor do složky {\tt /var/named} pod novým jménem {\tt db.isa.cz}.
+      \item V~nově vytvořeném souboru {\tt /var/named/db.isa.cz} upravte hodnotu TTL na {\tt 3h}.
+      \item Upravte SOA záznam domény {\tt isa.cz} dle manuálu k~laboratořím. Autoritativní server bude {\tt ns1.isa.cz.}
+            Email správce bude {\tt admin.isa.cz.} (nelekněte se, že se v~e-mailové adrese místo znaku '{\tt @}' používá znak '{\tt .}').
+      \item Vytvořte NS záznam, který bude ukazovat na autoritativní server {\tt ns1.isa.cz}.
+      \item Pro autoritativní server {\tt ns1.isa.cz} vytvořte A~záznam, který bude ukazovat na IP adresu Vašeho počítače (na rozhraní {\tt enp2s0}).
+            Uvědomte si, že nyní jste pomocí SOA, NS a A~záznamu nastavili, že Váš počítač je tím autoritativním DNS serverem pro doménu {\tt ns1.isa.cz} (tj. Váš počítač spravuje zónový soubor domény).
+      \item Přidejte další tři A~záznamy, které budou ukazovat na počítače 01, 02 a 03 v~laboratoři. Záznamy zadejte v~tomto tvaru:\\
+            \verb|PC01    IN    A    10.10.10.101|
+      \item Přidejte záznam typu CNAME pro jméno {\tt server} ukazující na {\tt ns1.isa.cz.}
+      \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6 (záznamy AAAA).
+    \end{itemize}
+    
+  \item Tím je zónový soubor pro doménu {\tt isa.cz} připravený. Nyní vytvořte zónový soubor pro reverzní překlad:
+  
+    \begin{itemize}
+      \item V~souboru {\tt /root/isa3/db.127} je připravena šablona zónového souboru pro reverzní překlad.
+            Zkopírujte tento soubor do složky {\tt /var/named} pod novým jménem {\tt db.10.10.10.rev}.
+      \item V~nově vytvořeném souboru {\tt db.10.10.10.rev} upravte SOA záznam domény. Autoritativní server bude {\tt ns1.isa.cz.}
+            Email správce bude {\tt admin.isa.cz.}
+      \item Vytvořte NS záznam, který bude ukazovat na autoritativní server {\tt ns1.isa.cz}.
+      \item Přidejte další tři PTR záznamy, které budou ukazovat na počítače 01, 02 a 03 v~laboratoři. Záznamy zadejte v~tomto tvaru:
+            \verb|101.10.10.10    IN    PTR    PC01|
+      \item V~případě zájmu nakonfigurujte pro doménu překlad z~adres IPv6 (záznamy PTR).
+    \end{itemize} 
+    
+  \item Nezapomeňte nzn9 zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
+  \item Upravte nastavení firewallu, aby propouštěl DNS dotazy. To provedete příkazy \\{\tt iptables -F INPUT}, {\tt iptables -F OUTPUT} a {\tt iptables -F FORWARD}
 
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
     Případné chyby týkající se chybějící konektivity pomocí protokolu IPv6 ignorujte.
-  \item Přidejte konfigurační soubor {\tt /etc/dhcp/dhclient-enp2s0.conf} a nastavte na obou počítačích
-    použití vlastního serveru DNS běžícího na PC A, do souboru přidejte řádek \\
-    {\tt prepend domain-name-servers 192.168.X.X;} \\ 
+
+  \item Najděte si někoho do dvojice, s~kým si nyní navzájem vyzkoušíte, že Vaše DNS servery jsou správně nakonfigurované.
+        Váš počítač označme jako PCA, počítač Vašeho kolegy jako PCB.
+  \item NA PCA i PCB přidejte konfigurační soubor {\tt /etc/dhcp/dhclient-enp2s0.conf} a nastavte
+    použití DNS serveru běžícího na PCB, do souboru přidejte řádek \\
+    {\tt prepend domain-name-servers 10.10.10.1XX;} \\
+    kde XX bude tedy číslo počítače Vašeho kolegy. 
     Na obou počítačích restartujte síťování: {\tt systemctl restart network.service}.
-    Ověřte nastavení IP adres a obsah souboru {\tt /etc/resolv.conf}.
-  \item Proveďte {\tt iptables -F INPUT}, {\tt iptables -F OUTPUT} a {\tt iptables -F FORWARD}
-  \item Ověřte, že PC A používá pro překlad lokální DNS server ({\tt dig
-    localhost}). Adresu dotazovaného serveru udává položka {\em SERVER} v
-    poslední části odpovědi.
-  \item Ověřte, že PC B používá pro překlad lokální DNS server a dostává od něj odpověď.
-
-  \item Nakonfigurujte reverzní překlad. Jako základ
-    zónového souboru s reverzní zónou můžete použít např. {\tt /root/isa3/db.127}.
-    Zkopírujte soubor do {\tt /var/named/}, upravte jej a přidejte do
-    souboru {\tt named.conf.local}. Restartujte DNS server {\tt systemctl restart named.service}.
-
-  \item Ověřte, zda lze z obou počítačů přeložit dopředné i zpětné záznamy.
-  \item {\bf Pochlubte se se svými výsledky cvičícímu}.
-  \item Odchyťte si komunikaci v rámci DNS na obou počítačích programem
-    {\tt wireshark}. Analyzujte si jednotlivé položky a porovnejte je s výpisem
-    programu {\tt dig}.
-
-\end{enumerate}
-
-\section{Jednoduchý útok na DNS}
-
-\begin{enumerate}
-  \item Na PC B spusťte prohlížeč Firefox. Zobrazte si webové stánky v
-    doménách {\tt www.fit.vutbr.cz} a {\tt www.seznam.cz}.
-
-  \item Na PC A vytvořte zónové soubory pro domény {\tt fit.vutbr.cz} a {\tt
-    seznam.cz}. Nastavte IP adresu počítače {\tt www} v obou doménách na adresu
-    PC A. Zónové soubory najdete připraveny ve složce {\tt /root/isa3}. Zónové
-    soubory přidejte do souboru {\tt /etc/named.conf} a restartujte
-    {\tt named}.
-
-  \item Na PC A se v příkazové řádce přesuňte do adresáře {\tt /root/isa3}.
-    Spusťte zde jednoduchý webový server příkazem {\tt python -m
-    SimpleHTTPServer 80}.
-
-  \item Na PC B ověřte, že se doménová jména {\tt www.seznam.cz} a {\tt
-    www.fit.vutbr.cz} překládají na IP adresu PC A.
-
-  \item Na PC B si zobrazte webové prezentace v doménách {\tt http://www.fit.vutbr.cz}
-    a \linebreak{\tt http://www.seznam.cz}. Všimněte si zámku v levé části adresního řádku.
-
-\end{enumerate}
-
-\section{Zabezpečení DNS -- DNSSEC}
-
-\begin{enumerate}
-
-  \item Zkontrolujte, že oba počítače mají synchronizovaný čas. Pokud ne,
-    spusťte službu NTP obdobně jako v minulém cvičení.
-
-  \item Pomocí nástroje {\tt dnssec-keygen} vygenerujte Key Signing Key (KSK) a Zone Signing Key. Zkontrolujte, že
-    jste vytvořili \textbf{dva} páry klíčů.
-
-  \item Přidejte záznamy typu DNSKEY do zónového souboru (podle uvážení přímo,
-    či pomocí direktivy \verb|$INCLUDE|).
-
-  \item Podepište zónový soubor příkazem {\tt dnssec-signzone -o isa.cz isa.cz.zone}.
+    Ověřte nastavení IP adres a obsah souboru {\tt /etc/resolv.conf}. V~tomto souboru by měla být IP adresa počítače Vašeho kolegy, který se tímto stává Vaším DNS serverem.
+  \item V~rogramu Wireshark začněte zachytávat DNS komunikaci na rozhraní {\tt enp2s0}.
+  \item V~Terminálu zadejte {\tt ping PC01.isa.cz}. Došlo k~přeložení doménového jména na IP adresu? Pokud ano, gratuluji! Pokud ne, pomozte Vašemu kolegovi najít chybu
+    v~konfiguraci jeho DNS serveru.
+  \item Prohlédněte si zachycenou DNS komunikaci ve Wiresharku. Nalezněte DNS dotaz a DNS odpověď provedených při {\tt pingu}.
   
-  \item Upravte konfiguraci {\tt /etc/named.conf} tak, aby se jako zónový
-    soubor použil soubor obsahující podepsané záznamy. 
-
-  \item Restartujte {\tt named}.
-
-  \item Na PC B si pomocí příkazu {\tt dig +dnssec DNSKEY <doména> @<adresa PC A>} vyžádejte obsah záznamů
-    DNSKEY. To stejné prověďte pro RRSIG.
-
+  \item {\bf Pochlubte se svými výsledky cvičícímu}.
 \end{enumerate}
 
 
-\section{Ukončení práce v laboratoři}
+
+
+\section{Ukončení práce v~laboratoři}
 \begin{itemize}
   \item Počítač vypněte dávkou {\tt /root/isa3/clean}.
 \end{itemize}
