@@ -1,0 +1,23 @@
+;
+; Template of DNS zone file
+;
+
+$TTL	3h ; TTL of the record
+
+; Replace '@' character in email with '.'
+; '@' charatcer replaces domain name of zone
+@			IN	SOA	ns1.example.cz. admin.example.cz. (
+				1	; Serial
+				1w	; Refresh
+				1d	; Retry
+				4w	; Expire
+				1w )	; Negative Cache TTL
+
+
+; Other DNS records should follow
+
+@			IN	NS	ns1.example.cz.
+
+ns1.example.cz.	IN	A	10.10.10.101
+PCUC			IN	A	10.10.10.1
+
