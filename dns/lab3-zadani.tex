@@ -21,9 +21,20 @@
 
 \section{Seznámení s~DNS}
 \begin{enumerate}
-    \item Otevřete ve webovém prohlížeči (např. Mozilla Firefox) online nástroj pro vyhledávání DNS záznamů \url{https://www.nslookup.io/}.
-    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené DNS záznamy k~doméně naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}. Pokud některému ze zobrazených DNS záznamů nerozumíte, nechte si jeho význam vysvětlit od spolužáka nebo cvičícího. Pochopení významu základních DNS záznamů je klíčové pro celé cvičení.
-    \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{www.fit.vutbr.cz} nebo \texttt{seznam.cz}).
+    \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat DNS komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}.
+    \item Zachycený DNS dotaz a odpověď si prohlédněte v~programu Wireshark.
+    \item Příkazem \texttt{nslookup -type=soa vutbr.cz} si zobrazte SOA záznam naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}.
+    \item SOA záznam si dobře prohlédněte (později budete sami vytvářet SOA záznam pro vlastní doménu).
+    \item V~programu Wireshark spusťte zachytávání DNS komunikace znovu (dříve zachycený provoz můžete zahodit).
+    \item Pomocí příkazu \texttt{nslookup -type=X vutbr.cz}, kde za \texttt{X} doplňte vhodný typ DNS záznamu, zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz}. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
+    \item Zastavte zachytávání komunikace v~programu Wireshark.
+    \item V~zachyceném provozu nalezněte pakety obsahující komunikaci posledního Vámi provedeného DNS dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
+    \item Kolik paketů souvisejících s~Vaším dotazem na doménu bylo zachyceno?
+    \item Byl proveden rekurzivní nebo iterativní DNS dotaz?
+    \item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v~Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
+    \item \textbf{Odpovědi sdělte cvičícímu.}
+    \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{MX} záznamy pro \texttt{seznam.cz}~--~všimnněte si priorit u~e-mailových serverů).
 \end{enumerate}
 
 \section{Seznámení s~Whois}
@@ -32,21 +43,6 @@
     \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Všimněte si například, od jakého roku je doména registrována.
     \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhranní nevidíte svoji veřejnou IP adresu? (nápověda: NAT) Požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{re0} nastaven učitelský počítač. Je to stejná IP adresa jako Vaše veřejná?
     \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://lookup.icann.org/} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Všimněte si, do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen. Btw. Odkud znáte \emph{ICANN}? Co tato organizace zajišťuje?
-\end{enumerate}
-
-\section{Prozkoumání protokolu DNS}
-\begin{enumerate}
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Odpovídá IP adresa předchozímu hledání A~záznamu přes webový nástroj?
-    \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
-	\item Vyfiltrujete pouze pakety související s~DNS provozem.
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=ns vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} a zapište je do protokolu. (Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.)
-    \item Zastavte zachytávání komunikace v~programu Wireshark.
-    \item V~zachyceném provozu nalezněte pakety obsahující komunikaci Vámi provedeného dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
-	\item Kolik paketů souvisejících s~Vaším dotazem na doménu bylo zachyceno?
-	\item Byl proveden rekurzivní nebo iterativní DNS dotaz?
-	\item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v~Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
-	\item \textbf{Odpovědi sdělte cvičícímu.}
-
 \end{enumerate}
 
 \section{Blokování vybraných domén}
@@ -88,7 +84,7 @@
       \item Vytvořte NS záznam, který bude ukazovat na autoritativní server {\tt ns1.isa.cz}.
       \item Pro autoritativní server {\tt ns1.isa.cz} vytvořte A~záznam, který bude ukazovat na IP adresu Vašeho počítače (na rozhraní {\tt enp2s0}).
             Uvědomte si, že nyní jste pomocí SOA, NS a A~záznamu nastavili, že Váš počítač je tím autoritativním DNS serverem pro doménu {\tt ns1.isa.cz} (tj. Váš počítač spravuje zónový soubor domény).
-      \item Přidejte další tři A~záznamy, které budou ukazovat na počítače 01, 02 a 03 v~laboratoři. Záznamy zadejte v~tomto tvaru:\\
+      \item Přidejte další tři A~záznamy, které budou ukazovat na počítače 01, 02 a 03 v~laboratoři. Záznamy zadejte v~tomto tvaru:
             \verb|PC01    IN    A    10.10.10.101|
       \item Přidejte záznam typu CNAME pro jméno {\tt server} ukazující na {\tt ns1.isa.cz.}
       \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6 (záznamy AAAA).
@@ -107,7 +103,7 @@
       \item V~případě zájmu nakonfigurujte pro doménu překlad z~adres IPv6 (záznamy PTR).
     \end{itemize} 
     
-  \item Nezapomeňte nzn9 zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
+  \item Nezapomeňte nyní zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
   \item Upravte nastavení firewallu, aby propouštěl DNS dotazy. To provedete příkazy \\{\tt iptables -F INPUT}, {\tt iptables -F OUTPUT} a {\tt iptables -F FORWARD}
 
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
