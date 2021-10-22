@@ -21,7 +21,7 @@
 \section{Seznámení s~DNS}
 \begin{enumerate}
     \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat DNS komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}? \textbf{(0,25~b.)}
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Zjištěnou IPv4 adresu zapište do protokolu ke cvičení. \textbf{(0,25~b.)}
     \item Zachycený DNS dotaz a odpověď si prohlédněte v~programu Wireshark.
     \item Příkazem \texttt{nslookup -type=soa vutbr.cz} si zobrazte SOA záznam naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}.
     \item SOA záznam si dobře prohlédněte (později budete sami vytvářet SOA záznam pro vlastní doménu).
@@ -111,13 +111,13 @@
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
 
   \item Najděte si někoho do dvojice, s~kým si nyní navzájem vyzkoušíte, že Vaše DNS servery jsou správně nakonfigurované.
-  \item Oba dva na~svém počítači upravte IP adresu výchozího DNS serveru následujícím způsobem:
+  \item Oba dva na~svém počítači upravte IP adresu výchozího DNS serveru tímto postupem:
   \begin{itemize}
     \item Na konec souboru {\tt /etc/sysconfig/network-scripts/ifcfg-Wired\char`_connection\char`_1} přidejte následující dva řádky:\\
           \verb|PEERDNS=no|\\
-          \verb|DNS1=10.10.10.1YY|, kde {\tt YY} je číslo počítače Vašeho kolegy.
+          \verb|DNS1=10.10.10.1YY| , kde {\tt YY} je číslo počítače Vašeho kolegy.
     \item Vypněte a znovu zapněte síťové rozhraní {\tt enp2s0} příkazy: {\tt ifdown enp2s0}; {\tt ifup enp2s0}
-    \item Ověřte, že došlo ke změně výchozího DNS serveru v~souboru {\tt /etc/resolv.conf} a že nyní je výchozím serverem počítač Vašeho kolegy.
+    \item Ověřte, že došlo ke změně výchozího DNS serveru v~souboru {\tt /etc/resolv.conf} a že nyní je výchozím DNS serverem počítač Vašeho kolegy.
   \end{itemize}
   \item V~programu Wireshark začněte zachytávat DNS komunikaci na rozhraní {\tt enp2s0}.
   \item V~Terminálu zadejte {\tt ping PCUC.fit.cz}. Došlo k~přeložení doménového jména na IP adresu? Pokud ano, gratuluji! Pokud ne, pomozte Vašemu kolegovi najít chybu
