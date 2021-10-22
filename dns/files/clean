@@ -21,4 +21,7 @@ chmod 0544 /root/isa3/clean
 systemctl restart network.service
 systemctl stop named.service
 
+sed -i '/^PEERDNS/d/g' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
+sed -i '/^DNS/d/g' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
+
 shutdown -h now
