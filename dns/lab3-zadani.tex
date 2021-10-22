@@ -1,9 +1,7 @@
 
 \section*{Cíle laboratoře}
 \begin{itemize}
-  \item Seznámení se systémem DNS a databází Whois.
-  \item Prozkoumání dat přenášených v~protokolu DNS pomocí programu Wireshark.
-  \item Blokování vybraných doménových jmen.
+  \item Seznámení se systémem a protokolem DNS a s~databází Whois.
   \item Konfigurace a spuštění DNS serveru obsluhujícího vlastní doménu.
 \end{itemize}
 
@@ -15,6 +13,7 @@
     (switch user).
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
     nano, vim, gedit).
+  \item {\bf Odpovědi na bodované otázky pište do protokolu.}
 \end{itemize}
 
 \section*{Úkoly}
@@ -22,39 +21,38 @@
 \section{Seznámení s~DNS}
 \begin{enumerate}
     \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat DNS komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}.
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}? \textbf{(0,25~b.)}
     \item Zachycený DNS dotaz a odpověď si prohlédněte v~programu Wireshark.
     \item Příkazem \texttt{nslookup -type=soa vutbr.cz} si zobrazte SOA záznam naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}.
     \item SOA záznam si dobře prohlédněte (později budete sami vytvářet SOA záznam pro vlastní doménu).
     \item V~programu Wireshark spusťte zachytávání DNS komunikace znovu (dříve zachycený provoz můžete zahodit).
-    \item Pomocí příkazu \texttt{nslookup -type=X vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} (kde za \texttt{X} doplňte vhodný typ DNS záznamu pro zjištění autoritativních serverů). Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Diskutujte, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.
+    \item Pomocí příkazu \texttt{nslookup -type=X vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} (kde za \texttt{X} doplňte vhodný typ DNS záznamu pro zjištění autoritativních serverů \textbf{(0,25~b.)}). Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Nahlédněte do slidů z~přednášky, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.
     \item Zastavte zachytávání komunikace v~programu Wireshark.
-    \item V~zachyceném provozu nalezněte pakety obsahující komunikaci posledního Vámi provedeného DNS dotazu na doménu \texttt{vutbr.cz} a prozkoumejte je.
-    \item Kolik paketů souvisejících s~Vaším dotazem na doménu bylo zachyceno?
-    \item Byl proveden rekurzivní nebo iterativní DNS dotaz? Podívejte se do \texttt{Flags} v DNS dotazu a odpovědi.
-    \item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? Pokud netušíte, jakému zařízení IP adresa náleží, zkuste se podívat do souboru \texttt{/etc/resolv.conf}, poté zadejte v~Terminálu příkaz \texttt{ip route} a prohlédněte si výpis a nakonec požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{em0} nastavený učitelský počítač. Diskutujte, jak spolu tyto informace souvisí a proč jste na všech třech místech viděli stejnou IP adresu.
-    \item \textbf{Odpovědi sdělte cvičícímu.}
+    \item V~zachyceném provozu nalezněte pakety obsahující komunikaci poslední Vámi provedené DNS rezoluce a prozkoumejte je.
+    \item Kolik paketů souvisejících s~Vaší DNS rezolucí bylo zachyceno? \textbf{(0,25~b.)}
+    \item Byl proveden rekurzivní nebo iterativní DNS dotaz? Podívejte se do \texttt{Flags} v~DNS dotazu a odpovědi. \textbf{(0,25~b.)}
+    \item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? \textbf{(0,25~b.)} Pokud netušíte, zkuste se podívat do souboru \texttt{/etc/resolv.conf}. V~tomto souboru je uložena IP~adresa lokálně používaného rekurzivního DNS serveru.
     \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{MX} záznamy pro\\ \texttt{fit.vutbr.cz}~--~všimnněte si priorit u~e-mailových serverů).
 \end{enumerate}
 
 \section{Seznámení s~Whois}
 \begin{enumerate}
-    \item Otevřete ve webovém prohlížeči online nástroj pro prohledávání databáze Whois\\ \url{https://www.nic.cz/whois/}. Btw. Odkud znáte \emph{CZ.NIC}? Co toto sdružení zajišťuje?
-    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Všimněte si například, od jakého roku je doména registrována.
-    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhranní nevidíte svoji veřejnou IP adresu? (nápověda: NAT) Požádejte cvičícího, ať vám ukáže, jakou IP adresu má na rozhraní \texttt{re0} nastaven učitelský počítač. Je to stejná IP adresa jako Vaše veřejná?
-    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://whois.domaintools.com} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Všimněte si, do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen.
+    \item Otevřete ve webovém prohlížeči online nástroj pro prohledávání databáze Whois\\ \url{https://www.nic.cz/whois/}. Tento online nástroj provozuje sdružení~\emph{CZ.NIC}, které je správcem naší národní domény~\texttt{cz.}
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Od jakého roku je doména registrována? \textbf{(0,25~b.)}
+    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhranní nevidíte svoji veřejnou IP adresu? (nápověda: NAT)
+    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://whois.domaintools.com} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen? \textbf{(0,25~b.)}
 \end{enumerate}
 
 \section{Blokování vybraných domén}
 \begin{enumerate}
 	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
     \verb|0.0.0.0    www.facebook.com|
-    \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte počítač, aby se vymazala mezipaměť DNS, a zkuste znovu.
-    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno.
-    \item Se spolužáky diskutujte slabiny tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
+    \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč (případně i celý počítač), aby se vymazala mezipaměť DNS, a zkuste znovu.
+    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v~prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno. \textbf{(0,25~b.)}
+    \item Zamyslete se nad slabinami tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
 \end{enumerate}
 
-\section{Konfigurace vlastního DNS serveru}
+\section{Konfigurace vlastního DNS serveru \textbf{(2~b.)}}
 \begin{enumerate}
   \item Prostudujte si začátek kapitoly 9.2.3 z~manuálu k~laboratořím.
   \item Váš budoucí DNS server bude spravovat doménu  {\tt fit.cz}.
@@ -69,7 +67,7 @@
             když by mu zaslal DNS dotaz třeba sousední počítač, zahodil by tento dotaz a neodpověděl by.
       \item Vytvořte dvě nové zóny (téměř na konci souboru před klíčovým slovem {\tt include}). První zónu pro Vaši doménu {\tt fit.cz} a druhou zónu pro reverzní překlad ({\tt 10.10.10.in-addr.arpa}).
             Podívejte se do laboratorního manuálu, jak má vypadat definice nových zón v~souboru {\tt /etc/named.conf}.
-            Cesty k~zónovým souborům nastavíte později -- až po vytvoření těchto souborů.
+            Cesty k~zónovým souborům nastavíte později~--~až po vytvoření těchto souborů.
     \end{itemize}
   
   \item Nyní je potřeba pro nově registrované zóny vytvořit zónové soubory. V~nich používejte \textbf{FQDN}! (Tedy: Doménová jména musí mít na konci tečku.)
@@ -113,9 +111,14 @@
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
 
   \item Najděte si někoho do dvojice, s~kým si nyní navzájem vyzkoušíte, že Vaše DNS servery jsou správně nakonfigurované.
-  \item Oba dva na~svém počítači upravte IP adresu výchozího DNS serveru v soubor {\tt /etc/resolv.conf} tak, aby se
-    používal DNS server běžící na~počítači toho druhého~--~v~{\tt /etc/resolv.conf} bude: \\
-    {\tt nameserver 10.10.10.1YY} , kde {\tt YY} je číslo počítače Vašeho kolegy.
+  \item Oba dva na~svém počítači upravte IP adresu výchozího DNS serveru následujícím způsobem:
+  \begin{itemize}
+    \item Na konec souboru {\tt /etc/sysconfig/network-scripts/ifcfg-Wired\char`_connection\char`_1} přidejte následující dva řádky:\\
+          \verb|PEERDNS=no|\\
+          \verb|DNS1=10.10.10.1YY|, kde {\tt YY} je číslo počítače Vašeho kolegy.
+    \item Vypněte a znovu zapněte síťové rozhraní {\tt enp2s0} příkazy: {\tt ifdown enp2s0}; {\tt ifup enp2s0}
+    \item Ověřte, že došlo ke změně výchozího DNS serveru v~souboru {\tt /etc/resolv.conf} a že nyní je výchozím serverem počítač Vašeho kolegy.
+  \end{itemize}
   \item V~programu Wireshark začněte zachytávat DNS komunikaci na rozhraní {\tt enp2s0}.
   \item V~Terminálu zadejte {\tt ping PCUC.fit.cz}. Došlo k~přeložení doménového jména na IP adresu? Pokud ano, gratuluji! Pokud ne, pomozte Vašemu kolegovi najít chybu
     v~konfiguraci jeho DNS serveru.
