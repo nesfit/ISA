@@ -9,6 +9,9 @@ rm /var/named/* &> /dev/null
 rm /home/user/.ssh/* &> /dev/null
 rm /home/root/.ssh/* &> /dev/null
 
+sed -i '/^PEERDNS/d' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
+sed -i '/^DNS/d' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
+
 chmod -R 0755 /root/isa3/
 tar -C / --overwrite -xf /root/isa3/default.tar
 chmod -R 0444 /root/isa3/
@@ -20,8 +23,5 @@ chmod 0544 /root/isa3/clean
 
 systemctl restart network.service
 systemctl stop named.service
-
-sed -i '/^PEERDNS/d/g' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
-sed -i '/^DNS/d/g' /etc/sysconfig/network-scripts/ifcfg-Wired_connection_1
 
 shutdown -h now
