@@ -21,38 +21,38 @@
 \section{Seznámení s~DNS}
 \begin{enumerate}
     \item Spusťte program Wireshark (vždy jako \texttt{root} z~příkazové řádky příkazem \texttt{wireshark \&}) a začněte zachytávat DNS komunikaci na rozhraní, pomocí kterého jste připojeni k~Internetu (\texttt{enp2s0}).
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doména \texttt{vutbr.cz}. Zjištěnou IPv4 adresu zapište do protokolu ke cvičení. \textbf{(0,25~b.)}
+    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a www.vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doménové jméno \texttt{www.vutbr.cz}. Zjištěnou IPv4 adresu zapište do protokolu ke cvičení.
     \item Zachycený DNS dotaz a odpověď si prohlédněte v~programu Wireshark.
     \item Příkazem \texttt{nslookup -type=soa vutbr.cz} si zobrazte SOA záznam naší Alma mater\footnote{\textbf{Alma mater} (latinsky \textbf{matka živitelka}) je původně antické označení pro bohyni matku. Ve středověké poezii se spojení někdy užívalo i pro Pannu Marii jako \emph{Matku Boží} (např. v~hymnu \emph{Alma Redemptoris Mater}). Nejstarší evropská univerzita v~Boloni užívá motto \emph{Alma mater studiorum}. Odtud dnes spojení \textbf{alma mater} metaforicky označuje univerzitu nebo vysokou školu, na které student získal své vzdělání. \emph{Zdroj: Ottův slovník naučný}}.
     \item SOA záznam si dobře prohlédněte (později budete sami vytvářet SOA záznam pro vlastní doménu).
     \item V~programu Wireshark spusťte zachytávání DNS komunikace znovu (dříve zachycený provoz můžete zahodit).
-    \item Pomocí příkazu \texttt{nslookup -type=X vutbr.cz} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz} (kde za \texttt{X} doplňte vhodný typ DNS záznamu pro zjištění autoritativních serverů \textbf{(0,25~b.)}). Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Nahlédněte do slidů z~přednášky, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.
+    \item Pomocí příkazu \texttt{nslookup -type=<X> <doména>} zjistěte autoritativní DNS servery pro doménu \texttt{vutbr.cz}, kde za \texttt{<X>} doplňte vhodný typ DNS záznamu pro zjištění autoritativních serverů a za \texttt{<doména>} doplňte vhodnou doménu. Nenechte se zmást tím, že jste dostali neautoritativní odpověď. Nahlédněte do slidů z~přednášky, abyste si ujasnili pojmy (ne)autoritativní odpověď a autoritativní DNS server pro danou doménu.
     \item Zastavte zachytávání komunikace v~programu Wireshark.
     \item V~zachyceném provozu nalezněte pakety obsahující komunikaci poslední Vámi provedené DNS rezoluce a prozkoumejte je.
-    \item Kolik paketů souvisejících s~Vaší DNS rezolucí bylo zachyceno? \textbf{(0,25~b.)}
-    \item Byl proveden rekurzivní nebo iterativní DNS dotaz? Podívejte se do \texttt{Flags} v~DNS dotazu a odpovědi. \textbf{(0,25~b.)}
-    \item Na jakou IP adresu směřoval paket s~DNS dotazem? Komu náleží tato IP adresa? \textbf{(0,25~b.)} Pokud netušíte, zkuste se podívat do souboru \texttt{/etc/resolv.conf}. V~tomto souboru je uložena IP~adresa lokálně používaného rekurzivního DNS serveru.
-    \item Vyzkoušejte zobrazení DNS záznamů pro další libovolné domény (např. \texttt{MX} záznamy pro\\ \texttt{fit.vutbr.cz}~--~všimněte si priorit u~e-mailových serverů).
+    \item Kolik paketů souvisejících s~Vaší DNS rezolucí bylo zachyceno?
+    \item Byl proveden rekurzivní nebo iterativní DNS dotaz? Podívejte se do \texttt{Flags} v~DNS dotazu a odpovědi.
+    \item Na jakou IP adresu směřoval paket s~DNS dotazem? Kde je počítač s~touto IP adresou umístěný?
+    \item Zobrazte \texttt{MX} záznamy pro doménu \texttt{fit.vutbr.cz}. Jaký je primární e-mailový server pro doménu \texttt{fit.vutbr.cz}?
 \end{enumerate}
 
 \section{Seznámení s~Whois}
 \begin{enumerate}
     \item Otevřete ve webovém prohlížeči online nástroj pro prohledávání databáze Whois\\ \url{https://www.nic.cz/whois/}. Tento online nástroj provozuje sdružení~\emph{CZ.NIC}, které je správcem naší národní domény~\texttt{cz.}
-    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Od jakého roku je doména registrována? \textbf{(0,25~b.)}
-    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například pomocí webového nástroje\\ \url{https://www.whatismyip.com/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhraní nevidíte svoji veřejnou IP adresu? (nápověda: NAT)
-    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://whois.domaintools.com} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen? \textbf{(0,25~b.)}
+    \item Zadejte do vyhledávacího pole doménu \texttt{vutbr.cz}. Prohlédněte si zobrazené informace. Od jakého roku je doména registrována?
+    \item Zjistěte, jaká je veřejná IP adresa Vašeho počítače - například v patičce webu \url{https://www.fit.vutbr.cz/}. Následně si v~Terminálu pomocí příkazu \texttt{ip addres show} zobrazte IP adresy na rozhraních Vašeho počítače. Proč ani na jednom rozhraní nevidíte svoji veřejnou IP adresu? (nápověda: NAT)
+    \item Na nové kartě webového prohlížeče otevřete nástroj \url{https://whois.domaintools.com} a svoji veřejnou IP adresu zadejte do vyhledávacího pole. Do jakého rozsahu IP adresa patří a kdo má tento rozsah IP adres přidělen?
 \end{enumerate}
 
 \section{Blokování vybraných domén}
 \begin{enumerate}
 	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
     \verb|0.0.0.0    www.facebook.com|
-    \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč (případně i celý počítač), aby se vymazala mezipaměť DNS, a zkuste znovu.
-    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v~prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno. \textbf{(0,25~b.)}
+    \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč, aby se vymazala DNS mezipaměť webového prohlížeče, a zkuste znovu.
+    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v~prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno.
     \item Zamyslete se nad slabinami tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
 \end{enumerate}
 
-\section{Konfigurace vlastního DNS serveru \textbf{(2~b.)}}
+\section{Konfigurace vlastního DNS serveru}
 \begin{enumerate}
   \item Prostudujte si začátek kapitoly 9.2.3 z~manuálu k~laboratořím.
   \item Váš budoucí DNS server bude spravovat doménu  {\tt fit.cz}.
@@ -93,7 +93,7 @@
     \begin{itemize}
       \item Jako šablonu zónového souboru pro reverzní překlad využijte opět soubor\\ {\tt /root/isa3/template.dns.zone}.
             Zkopírujte tento soubor do složky {\tt /var/named} pod novým jménem {\tt db.10.10.10.rev}.
-      \item V~nově vytvořeném souboru {\tt /var/named/db.fit.cz} upravte hodnotu TTL na {\tt 3h}.
+      \item V~nově vytvořeném souboru {\tt /var/named/db.10.10.10.rev} upravte hodnotu TTL na {\tt 3h}.
       \item Upravte SOA záznam domény {\tt 10.10.10.in-addr.arpa.} Autoritativní server bude opět {\tt ns1.fit.cz.}
             Email správce bude také opět {\tt admin.fit.cz.}
       \item Místo všech znaků~{\tt @} používejte celý identifikátor domény {\tt 10.10.10.in-addr.arpa.}
@@ -104,8 +104,7 @@
     \end{itemize} 
     
   \item Nezapomeňte nyní zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
-  \item Upravte nastavení firewallu, aby propouštěl DNS dotazy a odpovědi. To provedete příkazy \\{\tt iptables -I INPUT -p udp -m udp --dport 53 -j ACCEPT}\\
-        {\tt iptables -I OUTPUT -p udp -m udp --sport 53 -j ACCEPT}
+  \item Dočasně upravte nastavení firewallu, aby propouštěl DNS dotazy a odpovědi. To provedete příkazem {\tt firewall-cmd --add-service=dns}
 
   \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
     Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
@@ -124,7 +123,7 @@
     v~konfiguraci jeho DNS serveru.
   \item Prohlédněte si zachycenou DNS komunikaci ve Wiresharku. Nalezněte DNS dotaz a DNS odpověď provedených při {\tt pingu}.
   \item Otestujte funkčnost dalších DNS záznamů -- například:\\
-        {\tt ping server.fit.cz}, {\tt nslookup -type=soa fit.cz}, {\tt dig fit.cz}, {\tt dig fit.cz NS}
+        {\tt ping server.fit.cz}, {\tt nslookup -type=soa fit.cz}, {\tt dig fit.cz}, {\tt dig fit.cz NS},\\ {\tt nslookup 10.10.10.1}
   \item {\bf Pochlubte se svými výsledky cvičícímu}.
 \end{enumerate}
 
