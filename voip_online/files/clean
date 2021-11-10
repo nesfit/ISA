@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+rm -rf /home/user/.jitsi > /dev/null
+rm -rf /root/.jitsi > /dev/null
+
+shutdown -h now
