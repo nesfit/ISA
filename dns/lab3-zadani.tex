@@ -47,7 +47,6 @@
 	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
     \verb|0.0.0.0    www.facebook.com|
     \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč, aby se vymazala DNS mezipaměť webového prohlížeče, a zkuste znovu.
-    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v~prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno.
     \item Zamyslete se nad slabinami tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
 \end{enumerate}
 
@@ -57,12 +56,12 @@
   \item Zvolte si vlastní doménu, kterou bude Váš budoucí DNS server spravovat. Například {\tt xlogin00.cz.} V zadání bude Vaše vybraná doména označována jako {\tt xlogin00.cz}. Vy ale řetězec {\tt xlogin00.cz} v názvech souborů a v konfiguraci nahrazujte svojí vlastní doménou.
   \item Nejdříve upravte konfigurační soubor {\tt /etc/named.conf}. Při úpravách se můžete inspirovat ukázkovým konfiguračním souborem {\tt /root/isa3/named.conf}. Proveďte následující úpravy:
     \begin{itemize}
-      \item Vytvořte dvě nové zóny (téměř na konci souboru před klíčovým slovem {\tt include}). První zónu pro Vaši doménu {\tt xlogin00.cz} a druhou zónu pro reverzní překlad\\ ({\tt 10.10.10.in-addr.arpa}).
-            \item Cesty k~zónovým souborům nastavíte později~--~až po vytvoření těchto souborů.
+      \item Vytvořte novou dopřednou zónu (téměř na konci souboru před klíčovým slovem {\tt include}) pro Vaši doménu {\tt xlogin00.cz}.
+            \item Cestu k~zónovému souboru nastavíte později~--~až po vytvoření tohoto souboru.
     \end{itemize}
   
-  \item Nyní je potřeba pro nově registrované zóny vytvořit zónové soubory. V~nich používejte \textbf{FQDN}! (Tedy: Doménová jména musí mít na konci tečku.)
-  \item Začněte zónovým souborem pro doménu {\tt xlogin00.cz}:
+  \item Nyní je potřeba pro nově registrovanou zónu vytvořit zónový soubor. V~něm používejte \textbf{FQDN}! (Tedy: Doménová jména musí mít na konci tečku.)
+  \item Zónový soubor pro doménu {\tt xlogin00.cz} vytvořte dle následujících instrukcí:
   
     \begin{itemize}
       \item Soubor {\tt /root/isa3/cz.vutbr.fit.netlab} je ukázkový zónový soubor.\\
@@ -80,8 +79,13 @@
       \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6 (záznamy AAAA).
       \item Nepotřebné záznamy smažte!
     \end{itemize}
-    
-  \item Tím je zónový soubor pro doménu {\tt xlogin00.cz} připravený. Nyní vytvořte zónový soubor pro reverzní překlad:
+
+  \item Nezapomeňte nyní zaregistrovat zónový soubor v~souboru {\tt /etc/named.conf} (doplnit cestu k~zónovému souboru).
+  \item Zkuste spustit DNS server příkazem {\tt systemctl start named.service}.
+    Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
+  \item Pokud se podařilo DNS server v pořádku spustit, nakonfigurujte ještě reverzní překlad pro Vaši doménu.
+  \item Vytvořte v~souboru {\tt /etc/named.conf} novou zónu (téměř na konci souboru před klíčovým slovem {\tt include}) pro reverzní překlad ({\tt 10.10.10.in-addr.arpa}).
+  \item Zónový soubor pro reverzní překlad vytvořte dle následujících instrukcí:
   
     \begin{itemize}
       \item Jako šablonu zónového souboru pro reverzní překlad využijte soubor {\tt /root/isa3/10.10.10}.
@@ -98,9 +102,9 @@
       \item Nepotřebné záznamy smažte!
     \end{itemize} 
     
-  \item Nezapomeňte nyní zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
-  \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
-    Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
+  \item Nezapomeňte nyní ještě zaregistrovat zónový soubor pro reverzní překlad v~souboru {\tt /etc/named.conf} (doplnit cesty k~zónovému souboru).
+  \item Restartujte DNS server příkazem {\tt systemctl restart named.service}.
+    Příkazem {\tt systemctl status named} opět ověřte, zda byla služba správně spuštěna.
 
   \item Upravte IP adresu výchozího DNS serveru tímto postupem:
   \begin{itemize}
