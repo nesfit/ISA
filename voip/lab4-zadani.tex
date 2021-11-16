@@ -58,10 +58,10 @@ Nakonfigurujte si nový účet v aplikaci Jitsi, který bude komunikovat přes �
     \item Spusťte znovu zachytávání paketů v aplikaci Wireshark.
     \item Vraťte se do hlavního okna aplikace Jitsi a otevřete menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts}.
     \item Vytvořte nový účet. V poli {\bf Network} vyberte opět možnost {\tt SIP}. Tlačítkem {\bf Advanced} zvolte pokročilou konfiguraci.
-    \item V poli {\bf SIP id} nastavte hodnotu {\tt user{\bf XX}@isa-lab.cz}, heslo {\tt heslo{\bf XX}}, kde {\tt\bf XX} je číslo Vašeho počítače. Volitelně můžete zadat své jméno do pole {\tt Display Name}. Obrázek \ref{fig:registration1} ilustruje příklad nastavení.
+    \item V poli {\bf SIP id} nastavte hodnotu {\tt user{\bf XX}@isa-lab.cz}, heslo {\tt heslo{\bf XX}}, kde {\tt\bf XX} je číslo Vašeho počítače. Do pole {\tt Display Name} zadejte své jméno a příjmení (bez diakritiky), viz obrázek \ref{fig:registration1}.
       \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.7]{img/jitsi-registration1b.png}
+        \includegraphics[scale=0.7]{img/jitsi-registration1c.png}
         \caption{Vytvoření účtu.}
         \label{fig:registration1}
       \end{figure}
@@ -81,18 +81,19 @@ Nakonfigurujte si nový účet v aplikaci Jitsi, který bude komunikovat přes �
 
 \subsection{Analýza hovoru přes ústřednu}
 \begin{enumerate}
-    \item Znovu se zaregistrujte k ústředně, viz předchozí část 2.1.
+  \item Znovu se zaregistrujte k ústředně, viz předchozí část 2.1.
+  \item Otestujte spojení voláním na linku {\tt 123}. V případě správného nastavení vám systém přehraje automatickou kontrolní hlášku. 
     \item Obnovte zachytávání paketů v aplikaci Wireshark.
     \item Zavolejte svému sousedovi. V hlavním okně Jitsi zadejte telefonní číslo Vašeho souseda ve formátu {\tt 10xx}, kde {\it xx} je číslo počítače.
     \item Proveďte analýzu odchycených paketů v programu Wireshark. Zaměřte se na příkazy {\bf INVITE}, {\bf OK} a {\bf ACK}. Z hlaviček {\it From} a {\it Contact} určete User URI a Device URI volající i volaného.
     \item Z protokolu SDP určete IP adresu a port pro přenos hlasových dat na straně volajícího i volaného. Určete použitý kodek. 
-    \item Průběh spojení zakreslete do protokolu a zapište požadované hodnoty. 
+    \item Průběh spojení zakreslete do protokolu a zapište požadované hodnoty. {\it Poznámka: každý student zakreslí svou část hovoru, kdy volal sousedovi.}
 \end{enumerate}
 
 \subsection{Telefonování přes ústřednu do jiné VoIP domény}
 \begin{enumerate}
     \item Na telefonu zvolte telefonní číslo na linku VUT s číslem 54114 1046.
-    \item Oznamte vyučujícímu, že jste skončili s prací a odevzdejte mu protokol ke kontrole. 
+    \item Oznamte vyučujícímu, že jste skončili s prací a odevzdejte mu ke kontrole vypracovaný protokol. 
     \item Podle pokynů vyučujícího zkontrolujte a opravte případné nepřesnosti v protokolu. 
 \end{enumerate}
 
