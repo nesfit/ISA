@@ -47,7 +47,6 @@
 	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
     \verb|0.0.0.0    www.facebook.com|
     \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč, aby se vymazala DNS mezipaměť webového prohlížeče, a zkuste znovu.
-    \item Přidejte další záznam do souboru \texttt{/etc/hosts} tak, aby při pokusu o~otevření webové stránky \url{httpforever.com} došlo k~otevření webové stránky \url{httpbin.org}. Pozor, v~prvním sloupečku souboru \texttt{/etc/hosts} musí být vždy IP adresa, ne doménové jméno.
     \item Zamyslete se nad slabinami tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
 \end{enumerate}
 
@@ -57,12 +56,12 @@
   \item Zvolte si vlastní doménu, kterou bude Váš budoucí DNS server spravovat. Například {\tt xlogin00.cz.} V zadání bude Vaše vybraná doména označována jako {\tt xlogin00.cz}. Vy ale řetězec {\tt xlogin00.cz} v názvech souborů a v konfiguraci nahrazujte svojí vlastní doménou.
   \item Nejdříve upravte konfigurační soubor {\tt /etc/named.conf}. Při úpravách se můžete inspirovat ukázkovým konfiguračním souborem {\tt /root/isa3/named.conf}. Proveďte následující úpravy:
     \begin{itemize}
-      \item Vytvořte dvě nové zóny (téměř na konci souboru před klíčovým slovem {\tt include}). První zónu pro Vaši doménu {\tt xlogin00.cz} a druhou zónu pro reverzní překlad\\ ({\tt 10.10.10.in-addr.arpa}).
-            \item Cesty k~zónovým souborům nastavíte později~--~až po vytvoření těchto souborů.
+      \item Vytvořte novou dopřednou zónu (téměř na konci souboru před klíčovým slovem {\tt include}) pro Vaši doménu {\tt xlogin00.cz}.
+            \item Cestu k~zónovému souboru nastavíte později~--~až po vytvoření tohoto souboru.
     \end{itemize}
   
-  \item Nyní je potřeba pro nově registrované zóny vytvořit zónové soubory. V~nich používejte \textbf{FQDN}! (Tedy: Doménová jména musí mít na konci tečku.)
-  \item Začněte zónovým souborem pro doménu {\tt xlogin00.cz}:
+  \item Nyní je potřeba pro nově registrovanou zónu vytvořit zónový soubor. V~něm používejte \textbf{FQDN}! (Tedy: Doménová jména musí mít na konci tečku.)
+  \item Zónový soubor pro doménu {\tt xlogin00.cz} vytvořte dle následujících instrukcí:
   
     \begin{itemize}
       \item Soubor {\tt /root/isa3/cz.vutbr.fit.netlab} je ukázkový zónový soubor.\\
@@ -75,13 +74,18 @@
             Uvědomte si, že nyní jste pomocí SOA, NS a A~záznamu nastavili, že Váš počítač je tím autoritativním DNS serverem pro doménu {\tt xlogin00.cz} (tj. Váš počítač spravuje zónový soubor domény).
       \item Přidejte další A~záznam, který bude ukazovat na učitelský počítač v~laboratoři. Záznam zadejte v~tomto tvaru:
             \verb|PCUC    IN    A    10.10.10.1|
-      \item Přidejte další A~záznamy, které budou ukazovat na počítače PC01, PC02 a PC03 v~laboratoři.
+      \item Přidejte další A~záznamy, které budou ukazovat na tři libovolné počítače v~laboratoři (např. PC01, PC02 a PC03).
       \item Přidejte záznam typu CNAME pro jméno {\tt server} ukazující na {\tt ns1.xlogin00.cz.}
       \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6 (záznamy AAAA).
       \item Nepotřebné záznamy smažte!
     \end{itemize}
-    
-  \item Tím je zónový soubor pro doménu {\tt xlogin00.cz} připravený. Nyní vytvořte zónový soubor pro reverzní překlad:
+
+  \item Nezapomeňte nyní zaregistrovat zónový soubor v~souboru {\tt /etc/named.conf} (doplnit cestu k~zónovému souboru).
+  \item Zkuste spustit DNS server příkazem {\tt systemctl start named.service}.
+    Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
+  \item Po úspěšném spuštění DNS serveru nakonfigurujte ještě reverzní překlad pro Vaši doménu.
+  \item Vytvořte v~souboru {\tt /etc/named.conf} novou zónu (téměř na konci souboru před klíčovým slovem {\tt include}) pro reverzní překlad ({\tt 10.10.10.in-addr.arpa}).
+  \item Zónový soubor pro reverzní překlad vytvořte dle následujících instrukcí:
   
     \begin{itemize}
       \item Jako šablonu zónového souboru pro reverzní překlad využijte soubor {\tt /root/isa3/10.10.10}.
@@ -92,15 +96,15 @@
       \item Vytvořte NS záznam, který bude ukazovat na autoritativní server {\tt ns1.xlogin00.cz.}
       \item Přidejte PTR záznam, který bude mapovat IP adresu Vašeho počítače (na rozhraní {\tt enp2s0}) na doménové jméno autoritativního serveru {\tt ns1.xlogin00.cz.}
       \item Přidejte další PTR záznam, který bude ukazovat na učitelský počítač v~laboratoři. Záznam zadejte v~tomto tvaru:
-            \verb|1    IN    PTR    PCUC.xlogin00.cz|
-            \item Přidejte další PTR~záznamy, které budou ukazovat na počítače PC01, PC02 a PC03 v~laboratoři.
+            \verb|1    IN    PTR    PCUC.xlogin00.cz.|
+      \item Přidejte další tři PTR~záznamy, které budou ukazovat na vybrané tři počítače v~laboratoři (např. PC01, PC02 a PC03).
       \item V~případě zájmu nakonfigurujte pro doménu překlad z~adres IPv6 (záznamy PTR).
       \item Nepotřebné záznamy smažte!
     \end{itemize} 
     
-  \item Nezapomeňte nyní zaregistrovat zónové soubory v~souboru {\tt /etc/named.conf} (doplnit cesty k~vytvořeným zónám).
-  \item Spusťte DNS server příkazem {\tt systemctl start named.service}.
-    Příkazem {\tt systemctl status named} ověřte, zda byla služba správně spuštěna.
+  \item Nezapomeňte nyní ještě zaregistrovat zónový soubor pro reverzní překlad v~souboru {\tt /etc/named.conf} (doplnit cestu k~zónovému souboru).
+  \item Restartujte DNS server příkazem {\tt systemctl restart named.service}.
+    Příkazem {\tt systemctl status named} opět ověřte, zda byla služba správně spuštěna.
 
   \item Upravte IP adresu výchozího DNS serveru tímto postupem:
   \begin{itemize}
@@ -114,7 +118,7 @@
   \item V~Terminálu zadejte {\tt ping PCUC.xlogin00.cz}. Došlo k~přeložení doménového jména na IP adresu? Pokud ano, gratuluji!
   \item Prohlédněte si zachycenou DNS komunikaci ve Wiresharku. Nalezněte DNS dotaz a DNS odpověď provedených při {\tt pingu}.
   \item Otestujte funkčnost dalších DNS záznamů -- například:\\
-        {\tt ping server.xlogin00.cz}, {\tt ping server.xlogin00.cz}, {\tt nslookup -type=soa xlogin00.cz}, {\tt dig xlogin00.cz}, {\tt dig xlogin00.cz NS}, {\tt nslookup 10.10.10.1}, {\tt nslookup 10.10.10.101}
+        {\tt ping server.xlogin00.cz}, {\tt ping PC01.xlogin00.cz}, {\tt nslookup -type=soa xlogin00.cz}, {\tt dig xlogin00.cz}, {\tt dig xlogin00.cz NS}, {\tt nslookup 10.10.10.1}, {\tt nslookup 10.10.10.101}
   \item V~Wiresharku začněte zachytávat DNS komunikaci na rozhraních {\tt enp2s0} a {\tt Loopback: lo}.
   \item V~Terminálu zadejte {\tt ping www.google.com} (nebo zvolte jiné doménové jméno, které Váš vlastní DNS server nezná).
   \item Zastavte zachytávání DNS provozu v programu Wireshark a analyzujte, co se stalo, když jste potřebovali přeložit doménové jméno, které Váš DNS server nezná. Koho se zeptal? Zejména si povšimněte, kdy byl DNS dotaz rekurzivní a kdy iterativní.
