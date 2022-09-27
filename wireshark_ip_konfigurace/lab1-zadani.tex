@@ -3,15 +3,13 @@
 	\item Seznámení se se základní prací v~OS Linux.
 	\item Seznámení se se základními nástroji pro zjišťování konfigurace zařízení.
 	\item Analýza síťového provozu pomocí programu Wireshark.
-	\item Seznámit se s manuální konfigurací IPv4 a IPv6 na OS Linux
+	\item Seznámit se s manuální konfigurací IPv4 a IPv6 na OS Linux.
 \end{itemize}
 
 \section*{Pokyny}
 \begin{itemize}
-\item Do zadání nepište, slouží pro další skupiny. K zápisu používejte pouze
-  záznamový arch, který vám zůstane. Cvičící může použít zápisky v záznamovém
-    archu při hodnocení cvičení.
-\item Pro práci v laboratoři budeme používat OS Linux, při bootu volba F3.
+\item Do zadání nepište, slouží pro další skupiny. Výsledky zapisujte do protokolu, který na konci cvičení odevzdáte cvičícímu. Cvičící může použít zápisky v záznamovém archu při hodnocení cvičení.
+\item Pro práci v laboratoři budeme používat OS Linux, při bootu vyberte volbu F3.
 \item Uživatelé a hesla pro přihlášení: \texttt{user - user4lab}, \texttt{root - root4lab}.
 \item Přihlaste se jako uživatel \texttt{user}. Veškeré potřebné příkazy následně spouštějte jako \texttt{root}.
 \end{itemize}
@@ -29,20 +27,18 @@ informace, které budete potřebovat ke splnění této části cvičení, nalez
 v~sekci \ref{basic_ipconfig} laboratorního manuálu --- Konfigurace síťových zařízení. V~případě, že si nejste jistí některým příkazem, neváhejte nahlédnout do manuálové stránky.
 
 \begin{enumerate}
-\item Vypište konfiguraci vašeho stroje (MAC adresu, IPv4 adresu, masku, síť,
-  broadcastovou adresu). ({\tt ip address show})
+\item Vypište konfiguraci vašeho stroje, konkrétně MAC adresu, IPv4 adresu, masku, síť a broadcastovou adresu ({\tt ip address show}).
 \item Zobrazte si záznamy ve~směrovací a ARP tabulce. Zapište IPv4 adresu
-  výchozí brány a přiřaďte k ní MAC adresu. ({\tt ip route}, {\tt ip neighbour})
-\item Otestujte konektivitu k~výchozí bráně a následně konektivitu do Internetu.
-  ({\tt ping})
+  výchozí brány a přiřaďte k ní MAC adresu ({\tt ip route}, {\tt ip neighbour}).
+\item Otestujte konektivitu k~výchozí bráně a následně konektivitu do Internetu ({\tt ping}).
 \item Vypište implicitní servery DNS ze souboru {\tt /etc/resolv.conf}.
-\item Upravte soubor {\tt /etc/hosts} tak, aby po spuštění příkazu \texttt{ping gw}, byl ping proveden vůči IPv4 adrese 10.10.10.1. Zapište jak jste soubor upravili a jaký záznam jste přidali.
+\item Upravte soubor {\tt /etc/hosts} tak, aby po spuštění příkazu \texttt{ping gw}, byl ping proveden vůči IPv4 adrese 10.10.10.1. Zapište, jak jste soubor upravili a jaký záznam jste přidali.
 \item Vypište aktivní TCP spojení, vyberte jeden záznam, zapište si ho a popište
   význam jednotlivých položek. Pokud se žádné TCP spojení nezobrazuje, nějaké
-    vygenerujte, například pomocí webového prohlížeče. ({\tt ss})
+    vygenerujte, například pomocí webového prohlížeče ({\tt ss}).
 \item Zobrazte systémové události pomocí programu \texttt{journalctl}.
-\item Zobrazte pouze události týkající se NetworkManager. (\texttt{journalctl})
-\item Pokuste se jako uživatel user spustit Wireshark s pomocí programu \texttt{sudo}. Následně nalezněte v~logu zprávu, která byla zaznamenána v~případě správně zadaného hesla, ale odepřeného přístupu. (\texttt{journalctl})
+\item Zobrazte pouze události týkající se NetworkManager (\texttt{journalctl}).
+\item Pokuste se jako uživatel user spustit Wireshark s pomocí programu \texttt{sudo}. Následně vyhledejte v~logu zprávu, která byla zaznamenána v~případě správně zadaného hesla, ale odepřeného přístupu (\texttt{journalctl}).
 
 \end{enumerate}
 
@@ -54,38 +50,38 @@ potřebovat k~této části cvičení, naleznete v~kapitole \ref{wireshark} labo
 --- Analýza síťového provozu programem Wireshark.
 
 \begin{enumerate}
-  \item Pomocí programu Wireshark začněte \textbf{zachytávat} pouze HTTP komunikaci na výchozím portě
+  \item Pomocí programu Wireshark začněte \textbf{zachytávat} pouze HTTP komunikaci na výchozím portu
     (výchozí porty je možné nalézt např. v \texttt{/etc/services}). Zapište
     použitý \emph{capture filter} do odpovědního archu. Spusťte si prohlížeč a
     načtěte stránku \texttt{http://cphoto.fit.vutbr.cz} (po zapnutí zachytávání
-    provozu). Zachycený provoz uložte do adresáře \texttt{/tmp}. (přípona \texttt{.pcap})
+    provozu). Zachycený provoz uložte do adresáře \texttt{/tmp} (přípona \texttt{.pcap}).
 \item Vypište zdrojovou a cílovou IPv4 adresu a MAC adresu odeslaného a
   přijatého paketu. Zamyslete se nad tím, co vypsané MAC adresy a IPv4 adresy
     identifikují --- nalezené identifikátory porovnejte s identifikátory
     vypsanými v předchozích bodech zadání.
 \item Zahajte znovu zachytávání komunikace, nyní bez použití filtru pro HTTP,
-  zachytávejte veškerou komunikaci. V~příkazové řádce odstraňte ARP záznamy
-    (příkaz \texttt{ip neighbor ...}). Vygenerujte ICMP komunikaci. We
+  zachytávejte veškerou komunikaci. V~příkazové řádce odstraňte ARP záznamy v systému
+    (zadejte příkaz \texttt{ip neighbor flush dev enp2s0}). Vygenerujte ICMP komunikaci. Ve
     Wiresharku zobrazte pouze komunikaci
-    protokoly ARP a ICMP. Analyzujte obsah ARP paketů. Zapište, jaký filtr jste
+    protokoly ARP a~ICMP. Analyzujte obsah ARP paketů. Zapište, jaký filtr jste
     použili.
-\item Zachyťte pouze HTTP a DNS provoz (na výchozích portech). Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a následných HTTP paketů.
+\item Zachyťte pouze HTTP, HTTPS a DNS provoz (na výchozích portech). Ve webovém prohlížeči zkuste otevřít několik stránek na různých URL adresách. Analyzujte obsah a posloupnost DNS paketů a HTTP(S) paketů, zaměřte se na návaznost/závislost paketů.
+
 \item Znovu si otevřete dříve uložený soubor s nešifrovanou komunikaci pomocí
-  HTTP, zobrazte si TCP stream této komunikace (\emph{Follow TCP stream}).
-    Najděte dotaz, který odpovídá stránce zobrazené v prohlížeči. Pokuste se
-    zachytit šifrovanou komunikaci HTTPS na libovolnou stránku, analyzujte
-    zachycenou komunikaci, zaměřte se také na provoz DNS; využijte funkci \emph{Follow TCP stream}.
-\item Do odpovědního archu slovně popište význam funkce \emph{Follow TCP stream},
-    zamyslete se nad formátem zobrazených dat funkcí \emph{Follow TCP stream} a
-    rozdílem oproti výchozímu pohledu na data ve formě paketů.
+  HTTP, zobrazte si TCP a HTTP stream této komunikace (\emph{Follow TCP stream} a \emph{Follow HTTP stream}).
+    Najděte dotaz, který odpovídá stránce zobrazené v prohlížeči.
+
+\item Do odpovědního archu slovně popište význam funkce \emph{Follow TCP stream} a \emph{Follow HTTP stream},
+    zamyslete se nad formátem zobrazených dat těchto funkcí
+    a rozdílem oproti výchozímu pohledu na data ve formě paketů.
 \end{enumerate}
 
 \section{Konfigurace IPv4 a IPv6}
 
 \subsection{Příprava}
 
-Pracujte samostatně, nebo spolupracujte se svým spolužákem v okolí, který se také
-chystá plnit tento bod zadání, můžete spolupracovat i ve větších skupinách.
+Pracujte samostatně nebo spolupracujte se svým spolužákem v okolí, který se také
+chystá plnit tento bod zadání. Můžete spolupracovat i ve větších skupinách.
 Ze své skupiny vyberte velitele, jehož číslo počítače (pracovního místa)
 použijete níže jako konstantu $N$.
 
@@ -96,15 +92,14 @@ Teorie \emph{IPv6 adresování} je popsaná v sekci \ref{adresy_ipv6} --- Adresy
 Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 
 \begin{enumerate}
-    \item Zvolte nejdelší možný prefix sítě tak, aby síť obsahovala prostor pro 100 koncových stanic.
+    \item Zvolte nejdelší možný prefix IPv4 sítě tak, aby síť obsahovala prostor pro 100 koncových stanic.
     \item Jako adresu sítě použijte \texttt{192.168.N.0}.
-    \item Každému členu skupiny přiřaďte jednu IP adresu. Kolik by mohla mít
-      vaše skupina maximálně členů?
+    \item Každému členu skupiny přiřaďte jednu IPv4 adresu z vybraného adresního prostoru.
     \item Zvolte si adresu sítě IPv6 vhodnou pro použití v privátních lokálních
-        sítích, s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
-        sekci \ref{adresy_ipv6}, pro vygenerování unikátního Global ID můžete
+        sítích s prefixem délky 64 bitů. Prvních 48 bitů zvolte podle popisu v
+        sekci \ref{adresy_ipv6}. Pro vygenerování unikátního Global ID můžete
         použít web \url{https://cd34.com/rfc4193/}, zbývajících 16 bitů (Subnet
-        ID) si můžete zvolit libovolně. Pokud pracujete ve skupině, použijte
+        ID) zvolte libovolně. Pokud pracujete ve skupině, použijte
         všichni shodné Global ID i Subnet ID.
       \item Unikátnost vygenerovaného Global ID můžete (částečně)
         zkontrolovat na \url{https://www.sixxs.net/tools/grh/ula/list}.
@@ -114,12 +109,12 @@ Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 
 \begin{enumerate}
     \item Na svém počítači
-      nakonfigurujte adresu vybranou výše. Klikněte na ikonu sítě vpravo nahoře,
-      vyberte drátové Ethernetové připojení a vyberte položku nastavení.
+      nakonfigurujte IPv4 a IPv6 adresy zvolené výše. Klikněte na ikonu sítě vpravo nahoře v GUI CentOS,
+      vyberte drátové Ethernetové připojení a položku nastavení.
       Klikněte na ozubené kolo u tohoto připojení. Na záložkách IPv4 a IPv6
       manuálně vyplňte adresy a prefixy. Konfiguraci uložte.
-    \item Aplikujte manuálně nastavené adresy dočasnou deaktivaci rozhraní a
-      následnou aktivací s pomocí menu v pravém horním rohu obrazovky.
+    \item Aplikujte manuálně nastavené adresy dočasnou deaktivací rozhraní (vypnout rozhraní) a
+      následnou aktivací (zapnout rozhraní) s pomocí menu v pravém horním rohu obrazovky.
     \item Správnou konfiguraci si ověřte příkazem {\tt ping} a {\tt ping6}. Pokud
       spolupracujete ve skupině, ověřte konektivitu ke všem spolupracujícím
       členům skupiny.
@@ -127,5 +122,5 @@ Možnosti manuální konfigurace IP adres jsou stejné jako pro IPv4.
 
 \section{Ukončení práce v~laboratoři}
 Jakmile máte veškerou práci hotovou, ohlaste se u vyučujícího, který Vám
-konfiguraci zkontroluje. Pak můžete spustit skript {\tt /root/isa1/clean} (jako
-\texttt{root}).
+konfiguraci zkontroluje. Jakmile Vám vyučující práci zkontroluje, spusťte skript {\tt /root/isa1/clean} (jako
+\texttt{root}), který smaže Vaši konfiguraci a vypne počítač.
