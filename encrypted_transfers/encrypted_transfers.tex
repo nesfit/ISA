@@ -36,9 +36,11 @@
   \item Pro editaci konfiguračních souborů použijte libovolný editor (např.
   nano, mcedit, vim, gedit).
 \item Pracujte ve dvojicích (váš počítač je dále v textu označen jako hXX a
-  počítač souseda hYY, kde XX a YY je číslo počítače 01--20). Zkontrolujte, že máte počítač propojen
-    přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch
-    panelu). Pokud souseda nemáte, zapněte si jeden z volných počítačů.
+  počítač souseda hYY, kde XX a YY je číslo počítače 01--20).
+  %Zkontrolujte, že máte počítač propojen
+  % přímým kabelem s přístupovým přepínačem (rozhraní enp2s0, zdířka E na patch
+  %panelu).
+  Pokud souseda nemáte, zapněte si jeden z volných počítačů.
 
 \end{itemize}
 
@@ -52,17 +54,17 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
 
 \begin{enumerate}
 
-  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/ntp.conf}. V souboru
+  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/chrony.conf}. V souboru
     nahraďte využívání poolu serveru Cent OS ({\tt *.centos.pool.ntp.org}) za
     servery na FIT: {\tt ntp.fit.vutbr.cz} a {\tt ntpm.fit.vutbr.cz}.
 
-  \item Zapněte démona pro NTP ({\tt systemctl start ntpd.service}).
-    Ověřte pomocí {\tt systemctl status ntpd.service}, že služba běží; pokud
-    neběží, zobrazte chyby pomocí příkazu {\tt journalctl -u ntpd}, nalezené
-    chyby opravte a službu {\tt ntpd} restartujte.
+  \item Zapněte démona pro NTP ({\tt systemctl restart chronyd.service}).
+    Ověřte pomocí {\tt systemctl status chronyd.service}, že služba běží; pokud
+    neběží, zobrazte chyby pomocí příkazu {\tt journalctl -u chronyd}, nalezené
+    chyby opravte a službu {\tt chronyd} restartujte.
 
   \item Sledujte postup synchronizace příkazem {\tt
-    watch ntpq -p}. Nemusíte čekat na dokončení synchronizace, nechte okno
+    chronyc sources}. Nemusíte čekat na dokončení synchronizace, nechte okno
     spuštěné a pokračujte dalšími úkoly.
 
 \end{enumerate}
@@ -165,7 +167,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
         řádku s klíčem uživatele {\tt root} (řádek poznáte tak, že končí řetězcem
         {\tt <login>@root}) napíšete
-        \verb|command="ntpq -p" | \\ (následovaný jednou mezerou a původním
+        \verb|command="chronyc sources" | \\ (následovaný jednou mezerou a původním
         obsahem řádku).
         Odhlaste se ze vzdáleného počítače.
 
@@ -203,7 +205,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
       \item Spusťte program Wireshark, zachytávejte komunikaci na portu 80.
 
       \item Pomocí programu {\tt telnet} se připojte k fakultnímu webovému
-        serveru: \\ \verb|telnet www.fit.vutbr.cz 80|.
+        serveru: \\ \verb|telnet nes.fit.vutbr.cz 80|.
 
       \item V programu Wireshark pozorujte navázání spojení TCP pomocí
         trojcestného handshaku.
@@ -294,4 +296,4 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 \end{itemize}
 
 \end{document}
-%% END OF FILE 
+%% END OF FILE
