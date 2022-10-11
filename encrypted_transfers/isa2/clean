@@ -7,6 +7,6 @@ rm -rf /tmp/*
 
 tar -C / --overwrite -xf /root/isa2/default.tar
 
-systemctl stop ntpd.service &> /dev/null
+systemctl restart chronyd.service &> /dev/null
 
 shutdown -h now
