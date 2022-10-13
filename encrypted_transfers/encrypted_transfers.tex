@@ -53,27 +53,29 @@ důležité provozovat počítač se správným časem kvůli časovým razítk�
 označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
 
 \begin{enumerate}
+  \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda běží služba
+    \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP.
 
-  \item Zkontrolujte obsah konfiguračního souboru {\tt /etc/chrony.conf}. V souboru
+  \item Do protokolu vyplňte adresu nakonfigurovaného \textbf{NTP serveru} a jeho \textbf{hodnotu stratum}.
+
+  \item \textit{(volitelně)} Pod uživatelem \texttt{root} Otevřete
+    konfiguračního soubor {\tt /etc/chrony.conf}. V souboru
     nahraďte využívání poolu serveru Cent OS ({\tt *.centos.pool.ntp.org}) za
-    servery na FIT: {\tt ntp.fit.vutbr.cz} a {\tt ntpm.fit.vutbr.cz}.
+    server na FIT ({\tt ntp.fit.vutbr.cz}).
 
-  \item Zapněte démona pro NTP ({\tt systemctl restart chronyd.service}).
+    Po úpravě restartujte démona pro NTP ({\tt systemctl restart chronyd.service}).
     Ověřte pomocí {\tt systemctl status chronyd.service}, že služba běží; pokud
     neběží, zobrazte chyby pomocí příkazu {\tt journalctl -u chronyd}, nalezené
-    chyby opravte a službu {\tt chronyd} restartujte.
-
-  \item Sledujte postup synchronizace příkazem {\tt
-    chronyc sources}. Nemusíte čekat na dokončení synchronizace, nechte okno
-    spuštěné a pokračujte dalšími úkoly.
+    chyby v konfiguraci opravte a službu {\tt chronyd} restartujte.
+    Zadejte znovu {\tt chronyc -n sources} a zkontrolujte, zda je čas nyní sysnchronizován se serverem FIT.
 
 \end{enumerate}
 
 \section{Vzdálený terminál -- SSH, Secure Shell}
 
-\noindent {\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
-  Na konci úkolu je sdělíte cvičícímu.}
-~\\~\\
+%\noindent {\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
+%  Na konci úkolu je sdělíte cvičícímu.}
+%~\\~\\
 Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
 
 \begin{enumerate}
@@ -96,7 +98,7 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
 
     \begin{enumerate}
 
-      \item Spusťte program wireshark a zachytávejte komunikaci na portu 22
+      \item Spusťte program Wireshark a zachytávejte komunikaci na portu 22
         (rozhraní enp2s0).
 
       \item Přihlaste se na počítač souseda hYY příkazem {\tt ssh user@hYY.netlab.fit.vutbr.cz.} a zadejte heslo \textbf{user4lab}.
@@ -108,13 +110,10 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
 
       \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl-D} spojení ukončete.
 
-      \item V programu Wireshark zobrazte obsah komunikace (follow TCP stream) a
-        {\bf zjistěte informace o spojení} --- verze programu {\tt ssh} na serveru i
-        klientovi, podporované šifry, autentizační mechanismus HMAC, mechanismus
-        pro výměnu klíčů.
-        {\bf Byly ve Wiresharku vidět příkazy zadané v předchozích bodech a jejich výstup? Proč?}
-	{\bf Můžete na základě zachycené
-        komunikace říct něco o jejím obsahu? Svá zjištění na konci úkolu sdělíte cvičícímu}.
+      \item V programu Wireshark zobrazte obsah komunikace (pomocí Follow TCP stream).
+        Zhodnoťte, \textbf{co lze z uvedené komunikace vyčíst}. Jsou v komunikaci vidět
+        \textbf{zadávané příkazy a jejich výstup?} Vaše odpovědi zapište do protokolu.
+
 
     \end{enumerate}
 
@@ -126,13 +125,15 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
         implicitní klíč pro uživatele
         {\tt user}. Neměňte jeho
         název a zvolte heslo o délce alespoň osmi znaků, například
-        \textbf{fitvutisa}.
+        \texttt{fitvutisa}.
 
       \item Jako uživatel {\tt root} vygenerujte příkazem \verb|# ssh-keygen -N "" -C <login>@root|
         implicitní klíč pro uživatele {\tt root} bez hesla.
 
-      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (\verb|ls -l ~/.ssh|). {\bf Jak
-se liší práva mezi souborem s privátním a veřejným klíčem? Proč se liší? Jaký je rozdíl v jejich významu?}
+      \item Ověřte obsah a přístupová práva u nově vzniklých souborů (\verb|ls -l ~/.ssh|).
+
+      \item Do protokolu uveďte, jaký je \textbf{význam obou klíčů}, v \textbf{jakých souborech} se nacházejí a~jaké mají nastaveno \textbf{oprávnění}.
+
 
     \end{enumerate}
 
@@ -148,11 +149,14 @@ se liší práva mezi souborem s privátním a veřejným klíčem? Proč se li�
         {\verb&ssh user@hXX "chmod g-w .ssh/authorized_keys"&} \\
         pro klíč uživatele {\tt root} např.: \\
         {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}. \\
-      {\bf Jaká hesla bylo nutné zadat?}
 
-      \item Zkuste se znovu přihlásit na stejný vzdálený počítač hYY. {\bf Jaké heslo bylo nyní nutné zadat? Zkuste
-        zadat (opakovaně) špatné heslo a pozorujte, co se stalo.} Při experimentech můžete také
-využít tzv. verbose režim ssh ({\tt ssh -v}).
+      \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na stejný vzdálený počítač hYY.
+
+      \item Do tabulky v~protokolu vyplňte, \textbf{jaká hesla bylo nutné zadat}. Vysvětlete také, jaký
+      je význam souboru \texttt{authorized\_keys}.
+
+      \item Zkuste zadat \textbf{opakovaně špatné heslo}. Do protokolu napište, co se stalo.
+      Při experimentech můžete také využít tzv. verbose režim ssh (\texttt{ssh -v}).
 
     \end{enumerate}
 
@@ -167,13 +171,13 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
         řádku s klíčem uživatele {\tt root} (řádek poznáte tak, že končí řetězcem
         {\tt <login>@root}) napíšete
-        \verb|command="chronyc sources" | \\ (následovaný jednou mezerou a původním
+        \verb|command="chronyc -n sources" | \\ (následovaný jednou mezerou a původním
         obsahem řádku).
         Odhlaste se ze vzdáleného počítače.
 
       \item Znovu se přihlaste na počítač souseda hYY z
-        účtu {\tt root} jako {\tt root}.  {\bf Aplikovalo se
-        omezené využití klíče? Pokud ano, jak se projevilo?}
+        účtu \texttt{root} jako \texttt{root}.  \textbf{Aplikovalo se
+        omezené využití klíče? Pokud ano, jak se projevilo?} Odpovězte v~protokolu.
 
     \end{enumerate}
 
@@ -186,11 +190,14 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         příkazu \verb|env| ověřte, že je nastavená proměnná
         \verb|SSH_AUTH_SOCK|.
 
-      \item Přihlaste se znovu k počítači hYY. {\bf Museli jste zadávat znovu heslo?}
+      \item Přihlaste se znovu k počítači hYY.
+
+      \item Odhlaste se a přihlašte ještě jednou. \textbf{Bylo tentokrát nutné znovu zadávat heslo?}
+      Odpovězte v~protokolu.
+
 
     \end{enumerate}
-  \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (3c, 4a, 4b,
-    5b, 6b)}.
+
 
 \end{enumerate}
 
@@ -217,8 +224,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
         odpověď.
 
-      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP. {\bf Je možné
-        přečíst obsah komunikace? Proč?}
+      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP.
+      Do~protokolu uveďte, zda a~proč je/není možné \textbf{přečíst obsah komunikace}.
 
     \end{enumerate}
 
@@ -229,19 +236,27 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
       \item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
 
       \item Pomocí programu {\tt openssl} se připojte k fakultnímu webovému
-        serveru: \\ \verb|openssl s_client -connect www.fit.vutbr.cz:443|.
+        serveru: \\ \verb|openssl s_client -connect www.fit.vutbr.cz:443 -tls1_2|.
         Všimněte si řádku \emph{Verify return code}, co
         říká o certifikátu?
 
-      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
-        informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
+      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Je možné zjistit \textbf{jméno serveru}?
+      Zodpovězte v protokolu.
 
-      \item Zašlete serveru požadavek protokolem HTTP, např.:
+      \item Pomocí programu \texttt{openssl} dále v rámci navázaného spojení
+        zašlete serveru požadavek protokolem HTTP, např.:
         \verb|GET / HTTP/1.0|, dotaz ukončete prázdným řádkem. V terminálu pozorujte
         odpověď.
 
-      \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP s využitím
-        TLS. {\bf Je možné přečíst obsah komunikace? Proč?}
+      \item Zobrazte si tuto komunikaci programu Wireshark.
+      Do~protokolu uveďte, zda a~proč je/není možné \textbf{přečíst obsah komunikace}.
+
+      \item Z výstupu aplikace \texttt{openssl} určete, jaká \textbf{šifrovací sada (cipher suite)} se používá.
+      Její identifikátor zapište do protokolu.
+
+      \item Navštivte stránku \url{https://ciphersuite.info/}. Najděte si detaily k dané
+      šifrovací sadě. V protokolu \textbf{vyplňte do tabulky požadované informace}.
+      (Pozn. Můžete také využít informací z nástroje Wireshark
 
     \end{enumerate}
 
@@ -249,21 +264,22 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
     \begin{enumerate}
 
-      \item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
+      %\item Spusťte program Wireshark, zachytávejte komunikaci na portu 443.
 
       \item Spusťte prohlížeč Firefox a otevřete v něm stránku
         \verb|wis.fit.vutbr.cz|.
 
-      \item Kliknutím na informace o certifikátu (vlevo od URL) zobrazte
-        informace o použitém certifikátu.
+      \item Klikněte na ikonku zámku nalevo od URL a~najděte, jaká \textbf{šifrovací
+      sada} je použita zde. Zobrazte si také \textbf{informace o použitém certifikátu}.
+      Požadované údaje vyplňte do protokolu.
 
-      \item V menu \emph{Edit » Preferences » Privacy \& Security} v sekci
-        \emph{Certificates} zobrazte důvěryhodné certifikáty. Prohlédněte si
-        seznam a odhadněte jejich počet.
+      \item V menu \emph{Edit » Settings » Privacy \& Security} v sekci
+        \emph{Certificates} zobrazte certifikáty autorit, kterým důvěřujete.
+        Odhadněte, kolik jich zhruba je. \textbf{Názvy několika} (2-3) z nich zapište do protokolu.
 
-      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. {\bf Jaké
-        informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
-        Nalezené jméno serveru na konci úkolu ukažte cvičícímu}.
+      %\item V programu Wireshark pozorujte navázání spojení TCP a TLS. {\bf Jaké
+      %  informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
+      %  Nalezené jméno serveru na konci úkolu ukažte cvičícímu}.
 
     \end{enumerate}
 
@@ -276,29 +292,26 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
       \item V prohlížeči se připojte na stránku
         \url{https://certstream.calidog.io/}, klikněte na tlačítko \emph{Open
-        Fire Hose} a pozorujte nově vydávané certifikáty. {\bf K čemu si myslíte, že
-        můžou být tato data dobrá? Myslíte si, že je možné tato data zneužít?}
+        Fire Hose}. Pozorujte, \textbf{jaké informace} se zde zobrazují.
+        Zamyslete se, k čemu mohou být tyto informace \textbf{dobré} a jestli jich není
+        možné nějak \textbf{zneužít}. Odpovězte v protokolu.
 
       \item V prohlížeči se připojte na stránku \url{https://crt.sh}.
 
       \item Nalezněte certifikáty vydané pro servery v rámci domény
-        \emph{fit.vutbr.cz}.
+        \emph{kralovopole.brno.cz}.
 
-      \item Najděte na stránce ikonu směřují k souboru Atom odkazující na soubor
-        obsahující vystavené certifikáty. {\bf Zamyslete se k čemu byste tento soubor
-        využili a ukažte tento soubor cvičícímu}.
-
+      \item Najděte na stránce ikonu směřují k souboru \textbf{Atom}.
+      Podívejte se, co soubor obsahuje a zodpovězte otázku v protokolu.
+      Zamyslete se, k čemu by se takový obsah dal použít.
     \end{enumerate}
 
-  \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (1e, 2e, 3e, 4b,
-    4e)}.
 \end{enumerate}
-
 
 
 \section{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Počítač vypněte dávkou {\tt /root/isa2/clean}.
+  \item Jako uživatel \texttt{root} vypněte počítač dávkou {\tt /root/isa2/clean}.
 \end{itemize}
 
 \end{document}

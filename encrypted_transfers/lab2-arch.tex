@@ -1,0 +1,150 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+
+\title{Základní konfigurace síťových zařízení a analýza síťového provozu programem Wireshark\\
+{\bf\large ISA - Laboratorní cvičení č.2}\\
+{\bf\large Odpovědní arch}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/encrypted_transfers}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+Jméno:\\
+Login:\\
+Skupina cvičení:\\
+Dnešní datum:
+
+\section{Network Time Protocol (NTP)}
+NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}}
+
+\section{Vzdálený termínál - Secure Shell (SSH)}
+\textbf{2.} Co můžeme ze zachycené komunikace vyčíst?\\
+
+\underline{\hspace{10cm}}
+~\\~\\
+Jsou v této komunikaci vidět zadávané příkazy a jejich výstup? \underline{\hspace{1cm}}\\
+~\\
+\textbf{3.} Vyplňte požadované informace o veřejném a privátním klíči:
+~\\
+\begin{tabular}{|r|c|c|c|}
+\hline
+~ & Význam & Název souboru & Oprávnění souboru \\
+\hline
+Veřejný klíč: & \hspace{7cm} \begin{tabular}{@{}c@{}}~\\~\end{tabular} & & \\
+\hline
+Privátní klíč: & \hspace{7cm} \begin{tabular}{@{}c@{}}~\\~\end{tabular} & & \\
+\hline
+\end{tabular}
+\vspace{1em}
+
+
+
+\textbf{4.} Do tabulky vyplňte, jaká hesla byla vyžadována při obou přihlášeních:
+~\\
+\begin{tabular}{|r|c|c|}
+\hline
+~ & user & root \\
+\hline
+vyžadované heslo při distribuci klíčů: & \hspace{3cm} & \hspace{3cm} \\
+\hline
+vyžadované heslo při druhém přihlášení: & \hspace{3cm} & \hspace{3cm} \\
+\hline
+\end{tabular}
+\vspace{1em}
+
+~\\
+K čemu slouží soubor \texttt{.ssh/authorized\_keys}?~~~~~Co se stalo při opakovaném zadání špatného hesla?
+~\\
+~\\
+~\\
+\underline{\hspace{7.8cm}}~\hspace{0.5cm}~\underline{\hspace{8.4cm}}
+
+\newpage % =================================================
+
+\textbf{5.} Aplikovalo se omezené využití klíče? \underline{\hspace{1cm}} ~~~Pokud ano, uveďte, jak se projevilo:
+~\\
+~\\
+~\\
+\underline{\hspace{16.5cm}}
+~\\
+
+
+\textbf{6.} Bylo při opakovaném přihlášení nutné znovu zadávat heslo? \underline{\hspace{1cm}}
+
+
+\section{Transport Layer Security (TLS)}
+
+\textbf{1. Nezabezpečený přenos dat}\\
+Je možné přečíst obsah komunikace? \underline{\hspace{1cm}}~~~Proč?~\underline{\hspace{8cm}}
+
+~\\
+\textbf{2. Přenos dat zabezpečený TLS} \\
+Lze z komunikace zjistit jméno serveru? \underline{\hspace{1cm}}\\
+~\\
+Je možné přečíst obsah komunikace? \underline{\hspace{1cm}}~~~Proč?~\underline{\hspace{8cm}}\\
+~\\
+Jak se jmenuje použitá šifrovací sada? \underline{\hspace{7cm}}\\
+~\\
+Vyplňte informace o použité šifrovací sadě:\\
+\renewcommand\arraystretch{1.3}
+\begin{tabular}{|r|r|}
+%\hline
+%\textbf{Šifrovací sada (Cipher suite)}: & \hspace{25em} \\ \hline
+\hline
+Algoritmus pro výměnu klíčů: & \hspace{25.2em} \\ \hline
+Algoritmus pro zajištění autentizace: & \\ \hline
+Algoritmus pro šifrování přenosu: & \\ \hline
+Délka šifrovacího klíče: & \\ \hline
+Hešovací algoritmus: & \\ \hline
+\end{tabular}
+\renewcommand\arraystretch{1}
+\vspace{0.5cm}
+
+\textbf{3. Zabezpečený přenos dat TLS v prohlížeči} \\
+~\\
+Jak se jmenuje použitá šifrovací sada? \underline{\hspace{7cm}}\\
+~\\
+Vyplňte informace o certifikátu:\\
+\renewcommand\arraystretch{1.3}
+\begin{tabular}{|r|r|}
+\hline
+Vydavatel certifikátu: & \hspace{15em} \\ \hline
+Doba platnosti: & \\ \hline
+\end{tabular}
+\renewcommand\arraystretch{1}
+\vspace{0.5cm}
+~\\
+Příklady důvěryhodných CA: \underline{\hspace{11,7cm}}\\
+
+
+\textbf{4. Certificate transparency} \\
+~\\
+Jaké informace se zde zobrazují: \underline{\hspace{8cm}}\\
+~\\
+K čemu jsou tyto informace dobré?~\hspace{2cm}~Lze jich nějak zneužít?
+~\\
+~\\
+~\\
+\underline{\hspace{7.5cm}}~~~~~~\underline{\hspace{8.5cm}}\\
+~\\
+~\\
+Co obsahuje soubor \texttt{Atom}?~\underline{\hspace{12.2cm}}
+%\section{Ukončení práce v laboratoři}
+%\textbf{Nezapomeňte na závěr jako root spustit:} \texttt{/root/isa2/clean} \textbf{(!)}
+
+\thispagestyle{empty}
+
+\end{document}
+%% END OF FILE
