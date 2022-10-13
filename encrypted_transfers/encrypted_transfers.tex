@@ -71,6 +71,9 @@ označujícím platnost a neplatnost klíčů, certifikátů, podpisů apod.
 
 \section{Vzdálený terminál -- SSH, Secure Shell}
 
+\noindent {\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
+  Na konci úkolu je sdělíte cvičícímu.}
+~\\~\\
 Namísto řetězce {\tt <login>} používejte své studentské přihlašovací jméno.
 
 \begin{enumerate}
@@ -89,9 +92,6 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
   Pokud budete otevírat v průběhu řešení úkolu nové terminály, nezapomeňte
   v nich také vypnout podporu agenta SSH.
 
-  {\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
-  Na konci úkolu je sdělíte cvičícímu.}
-
   \item {\bf Bezpečné připojení na vzdálený počítač bez autentizačních klíčů.}
 
     \begin{enumerate}
@@ -99,7 +99,7 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
       \item Spusťte program wireshark a zachytávejte komunikaci na portu 22
         (rozhraní enp2s0).
 
-      \item Přihlaste se příkazem {\tt ssh user@hYY.netlab.fit.vutbr.cz.} a zadejte heslo \textbf{user4lab}.
+      \item Přihlaste se na počítač souseda hYY příkazem {\tt ssh user@hYY.netlab.fit.vutbr.cz.} a zadejte heslo \textbf{user4lab}.
 
       \item Na serveru zadejte libovolný příkaz, který znáte (např. zobrazte
         obsah manuálové stránky ssh příkazem {\tt man ssh}, vypište
@@ -109,11 +109,12 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
       \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl-D} spojení ukončete.
 
       \item V programu Wireshark zobrazte obsah komunikace (follow TCP stream) a
-        zjistěte informace o spojení --- verze programu {\tt ssh} na serveru i
+        {\bf zjistěte informace o spojení} --- verze programu {\tt ssh} na serveru i
         klientovi, podporované šifry, autentizační mechanismus HMAC, mechanismus
-        pro výměnu klíčů. Ověřte, že pomocí Wiresharku nevidíte příkazy zadané v
-        předchozích bodech a jejich výstup. Můžete na základě zachycené
-        komunikace říct něco o jejím obsahu? {\bf Svá zjištění sdělte cvičícímu}.
+        pro výměnu klíčů.
+        {\bf Byly ve Wiresharku vidět příkazy zadané v předchozích bodech a jejich výstup? Proč?}
+	{\bf Můžete na základě zachycené
+        komunikace říct něco o jejím obsahu? Svá zjištění na konci úkolu sdělíte cvičícímu}.
 
     \end{enumerate}
 
@@ -131,7 +132,7 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele, ověřte, 
         implicitní klíč pro uživatele {\tt root} bez hesla.
 
       \item Ověřte obsah a přístupová práva u nově vzniklých souborů (\verb|ls -l ~/.ssh|). {\bf Jak
-se liší práva mezi souborem s privátním a veřejným klíčem?}
+se liší práva mezi souborem s privátním a veřejným klíčem? Proč se liší? Jaký je rozdíl v jejich významu?}
 
     \end{enumerate}
 
@@ -147,7 +148,6 @@ se liší práva mezi souborem s privátním a veřejným klíčem?}
         {\verb&ssh user@hXX "chmod g-w .ssh/authorized_keys"&} \\
         pro klíč uživatele {\tt root} např.: \\
         {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}. \\
-
       {\bf Jaká hesla bylo nutné zadat?}
 
       \item Zkuste se znovu přihlásit na stejný vzdálený počítač hYY. {\bf Jaké heslo bylo nyní nutné zadat? Zkuste
@@ -163,7 +163,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
     \begin{enumerate}
 
-      \item Přihlaste se jako uživatel {\tt root} na počítač hYY, kam jste nakopírovali své veřejné klíče a
+      \item Přihlaste se jako uživatel {\tt root} na počítač souseda hYY, kam jste nakopírovali své veřejné klíče. Na počítači souseda upravte
         upravte soubor s autorizovanými veřejnými klíči tak, že na začátek
         řádku s klíčem uživatele {\tt root} (řádek poznáte tak, že končí řetězcem
         {\tt <login>@root}) napíšete
@@ -171,9 +171,9 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         obsahem řádku).
         Odhlaste se ze vzdáleného počítače.
 
-      \item Znovu se přihlaste na počítač hYY z
+      \item Znovu se přihlaste na počítač souseda hYY z
         účtu {\tt root} jako {\tt root}.  {\bf Aplikovalo se
-        omezené využití klíče?}
+        omezené využití klíče? Pokud ano, jak se projevilo?}
 
     \end{enumerate}
 
@@ -186,7 +186,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         příkazu \verb|env| ověřte, že je nastavená proměnná
         \verb|SSH_AUTH_SOCK|.
 
-      \item Přihlaste se k serveru hYY. {\bf Museli jste zadávat znovu heslo?}
+      \item Přihlaste se znovu k počítači hYY. {\bf Museli jste zadávat znovu heslo?}
 
     \end{enumerate}
   \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (3c, 4a, 4b,
@@ -195,6 +195,9 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 \end{enumerate}
 
 \section{Zabezpečení transportní vrsvy -- TLS, Transport Layer Security}
+
+{\bf V průběhu řešení jsou tučně vyznačené otázky, na které si připravte odpovědi.
+  Na konci úkolu je sdělíte cvičícímu.}
 
 \begin{enumerate}
 
@@ -215,7 +218,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         odpověď.
 
       \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP. {\bf Je možné
-        přečíst obsah komunikace?}
+        přečíst obsah komunikace? Proč?}
 
     \end{enumerate}
 
@@ -238,7 +241,7 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         odpověď.
 
       \item Zobrazte si v programu Wireshark komunikaci pomocí HTTP s využitím
-        TLS. {\bf Je možné přečíst obsah komunikace?}
+        TLS. {\bf Je možné přečíst obsah komunikace? Proč?}
 
     \end{enumerate}
 
@@ -258,9 +261,9 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
         \emph{Certificates} zobrazte důvěryhodné certifikáty. Prohlédněte si
         seznam a odhadněte jejich počet.
 
-      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jaké
+      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. {\bf Jaké
         informace lze vyčíst z~handshaku TLS? Je možné zjistit jméno serveru?
-        {\bf Nalezené jméno serveru ukažte cvičícímu}.
+        Nalezené jméno serveru na konci úkolu ukažte cvičícímu}.
 
     \end{enumerate}
 
@@ -273,8 +276,8 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
       \item V prohlížeči se připojte na stránku
         \url{https://certstream.calidog.io/}, klikněte na tlačítko \emph{Open
-        Fire Hose} a pozorujte nově vydávané certifikáty. K čemu si myslíte, že
-        můžou být tato data dobrá? Myslíte si, že je možné data zneužít?
+        Fire Hose} a pozorujte nově vydávané certifikáty. {\bf K čemu si myslíte, že
+        můžou být tato data dobrá? Myslíte si, že je možné tato data zneužít?}
 
       \item V prohlížeči se připojte na stránku \url{https://crt.sh}.
 
@@ -287,7 +290,10 @@ využít tzv. verbose režim ssh ({\tt ssh -v}).
 
     \end{enumerate}
 
+  \item {\bf Reportujte cvičícímu odpovědi na výše uvedené otázky (1e, 2e, 3e, 4b,
+    4e)}.
 \end{enumerate}
+
 
 
 \section{Ukončení práce v laboratoři}
