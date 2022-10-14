@@ -7,7 +7,7 @@
 \usepackage{listings}
 \usepackage{url}
 
-\title{Základní konfigurace síťových zařízení a analýza síťového provozu programem Wireshark\\
+\title{Zabezpečený přenos dat\\
 {\bf\large ISA - Laboratorní cvičení č.2}\\
 {\bf\large Odpovědní arch}}
 
@@ -24,19 +24,19 @@
 Jméno:\\
 Login:\\
 Skupina cvičení:\\
-Dnešní datum:
+Datum:
 
 \section{Network Time Protocol (NTP)}
 NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}}
 
-\section{Vzdálený termínál - Secure Shell (SSH)}
+\section{Vzdálený terminál - Secure Shell (SSH)}
 \textbf{2.} Co můžeme ze zachycené komunikace vyčíst?\\
 
 \underline{\hspace{10cm}}
 ~\\~\\
 Jsou v této komunikaci vidět zadávané příkazy a jejich výstup? \underline{\hspace{1cm}}\\
 ~\\
-\textbf{3.} Vyplňte požadované informace o veřejném a privátním klíči:
+\textbf{3.} Vyplňte požadované informace o veřejném a privátním klíči:\\
 ~\\
 \begin{tabular}{|r|c|c|c|}
 \hline
@@ -49,11 +49,9 @@ Privátní klíč: & \hspace{7cm} \begin{tabular}{@{}c@{}}~\\~\end{tabular} & & 
 \end{tabular}
 \vspace{1em}
 
-
-
-\textbf{4.} Do tabulky vyplňte, jaká hesla byla vyžadována při obou přihlášeních:
+\textbf{4.} Do tabulky vyplňte hesla požadovaná při obou přihlášeních:\\
 ~\\
-\begin{tabular}{|r|c|c|}
+\begin{tabular}{|l|c|c|}
 \hline
 ~ & user & root \\
 \hline
@@ -62,9 +60,8 @@ vyžadované heslo při distribuci klíčů: & \hspace{3cm} & \hspace{3cm} \\
 vyžadované heslo při druhém přihlášení: & \hspace{3cm} & \hspace{3cm} \\
 \hline
 \end{tabular}
-\vspace{1em}
 
-~\\
+\bigskip
 K čemu slouží soubor \texttt{.ssh/authorized\_keys}?~~~~~Co se stalo při opakovaném zadání špatného hesla?
 ~\\
 ~\\
@@ -98,8 +95,9 @@ Je možné přečíst obsah komunikace? \underline{\hspace{1cm}}~~~Proč?~\under
 Jak se jmenuje použitá šifrovací sada? \underline{\hspace{7cm}}\\
 ~\\
 Vyplňte informace o použité šifrovací sadě:\\
+
 \renewcommand\arraystretch{1.3}
-\begin{tabular}{|r|r|}
+\begin{tabular}{|l|r|}
 %\hline
 %\textbf{Šifrovací sada (Cipher suite)}: & \hspace{25em} \\ \hline
 \hline
@@ -117,16 +115,17 @@ Hešovací algoritmus: & \\ \hline
 Jak se jmenuje použitá šifrovací sada? \underline{\hspace{7cm}}\\
 ~\\
 Vyplňte informace o certifikátu:\\
+
 \renewcommand\arraystretch{1.3}
-\begin{tabular}{|r|r|}
+\begin{tabular}{|l|r|}
 \hline
-Vydavatel certifikátu: & \hspace{15em} \\ \hline
+Vydavatel certifikátu: & \hspace{30em} \\ \hline
 Doba platnosti: & \\ \hline
 \end{tabular}
 \renewcommand\arraystretch{1}
 \vspace{0.5cm}
 ~\\
-Příklady důvěryhodných CA: \underline{\hspace{11,7cm}}\\
+Příklady důvěryhodných CA: \underline{\hspace{11cm}}\\
 
 
 \textbf{4. Certificate transparency} \\
@@ -138,9 +137,9 @@ K čemu jsou tyto informace dobré?~\hspace{2cm}~Lze jich nějak zneužít?
 ~\\
 ~\\
 \underline{\hspace{7.5cm}}~~~~~~\underline{\hspace{8.5cm}}\\
-~\\
-~\\
-Co obsahuje soubor \texttt{Atom}?~\underline{\hspace{12.2cm}}
+%~\\
+%~\\
+%Co obsahuje soubor \texttt{Atom}?~\underline{\hspace{12.2cm}}
 %\section{Ukončení práce v laboratoři}
 %\textbf{Nezapomeňte na závěr jako root spustit:} \texttt{/root/isa2/clean} \textbf{(!)}
 
