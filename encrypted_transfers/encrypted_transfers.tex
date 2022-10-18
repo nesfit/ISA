@@ -137,11 +137,11 @@ Pomocí příkazu {\tt whoami} vypište jméno aktivního uživatele.
         souboru \verb|.ssh/authorized_keys|. Můžete využít následující postup. 
         \begin{itemize}
           \item Klíč uživatele {\tt user} zkopírujte následujícím příkazem: \\
-            {\verb&cat ~user/.ssh/*.pub | ssh user@hXX "cat >> .ssh/authorized_keys"&}
+            {\verb&cat ~user/.ssh/*.pub | ssh user@hYY "cat >> .ssh/authorized_keys"&}
           \item Na vzdáleném počítači nastavte správně přístupová práva k souboru:\\
-            {\verb&ssh user@hXX "chmod g-w .ssh/authorized_keys"&} 
+            {\verb&ssh user@hYY "chmod g-w .ssh/authorized_keys"&} 
           \item Zkopírujte na vzdálený počítač také veřejný klíč uživatele {\tt root}: \\
-            {\verb&cat /root/.ssh/*.pub | ssh root@hXX "cat >> .ssh/authorized_keys"&}
+            {\verb&cat /root/.ssh/*.pub | ssh root@hYY "cat >> .ssh/authorized_keys"&}
         \end{itemize}
 
       \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na daný vzdálený počítač hYY.
