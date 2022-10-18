@@ -54,7 +54,9 @@ omezujícím platnost klíčů, certifikátů či podpisů.
 
 \begin{enumerate}
   \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda běží služba
-    \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP.
+    \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Pomocí {\tt
+    chronyc -n sources} zkontrolujte seznam serverů, které váš počítač používá
+    pro synchronizaci času.
 
   \item Do protokolu vyplňte adresu nakonfigurovaného \textbf{NTP serveru} a jeho \textbf{hodnotu stratum}.
 
