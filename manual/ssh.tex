@@ -104,8 +104,9 @@ ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/nopass -C nopass
 
 Po vytvoření klíčů vzniknou dva soubory. Ten který je bez přípony {\tt .pub} je soukromý klíč,
  který by měl zůstat tajný a uživatel, který jej vytvořil by jej neměl dále distribuovat.
- Soubor s~příponou {\tt .pub} je určen pro další distribuci, protože data zašifrovaná tímto
- klíčem dešifruje pouze tajný soukromý klíč.
+ Soubor s~příponou {\tt .pub} je určen pro volnou distribuci.
+
+Podrobný popis použití klíčů během přihlašování najdete např. na \url{https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process}.
 
 \subsection{Konfigurace použití klíčů}
 
