@@ -1,44 +1,95 @@
 Jméno:\\
 Login:\\
+Skupina cvičení:\\
+Datum:\\
 
 \section{Seznámení s DNS}
-\textbf{2.} IPv4 adresa, na kterou se překládá doménové jméno {\tt www.vutbr.cz}:\\
+\textbf{2.} IPv4 adresa, na kterou se překládá doménové jméno {\tt www.vutbr.cz}: \underline{\hspace{4.5cm}}
+~\\
+~\\
+\textbf{7.} 
+Autoritativní DNS servery domény \texttt{vutbr.cz}:
 \\
 \\
-\textbf{7.} Typ DNS záznamů, které ukazují na autoritativní servery domény:\\
 \\
 \\
-\textbf{10.} Počet zachycených paketů jedné DNS rezoluce: \\
+\hspace*{0.5cm}Typ DNS záznamů, které ukazují na autoritativní servery domény:
+\underline{\hspace{2cm}}
+~\\
+~\\
+\textbf{10.} Byl proveden rekurzivní nebo iterativní DNS dotaz?
+\underline{\hspace{4cm}}
 \\
 \\
-\textbf{11.} Byl proveden rekurzivní nebo iterativní DNS dotaz?\\
+\textbf{11.} Cílová IP adresa paketu s DNS dotazem:
+\underline{\hspace{4cm}}
 \\
 \\
-\textbf{12.} Cílová IP adresa paketu s DNS dotazem:\\
-\\
-\\
-Kde je počítač s~touto IP adresou umístěný?\\
-\\
-\\
-\textbf{13.} Primární e-mailový server pro doménu fit.vutbr.cz:\\
-\\
-
+\textbf{12.} Primární e-mailový server pro doménu \texttt{fit.vutbr.cz}:
+\underline{\hspace{4cm}}
 
 \section{Seznámení s Whois}
-\textbf{2.} Od jakého roku je registrována doména {\tt vutbr.cz}?\\
+\textbf{1.} Od jakého roku je registrována doména {\tt vutbr.cz}?
+\underline{\hspace{2cm}}
 \\
 \\
-\textbf{4.} Do jakého rozsahu patří Vaše veřejná IP adresa?\\
+\textbf{2.} Nakonfigurovaná IPv4 adresa na rozhraní \texttt{enp2s0}: 
+\underline{\hspace{3.8cm}}
 \\
 \\
-Kdo má tento rozsah přidělen?\\
+\hspace*{0.5cm} Zjištěná veřejná IPv4 adresa: \underline{\hspace{3.8cm}}
 \\
 \\
-\\
-\\
-\\
-\\
+\hspace*{0.5cm} Proč se veřejná adresa neshoduje s žádnou adresou nakonfigurovanou na vašem počítači?
 \\
 \\
 \\
-
+\textbf{3.} Do jakého rozsahu patří Vaše veřejná IP adresa?
+\underline{\hspace{3.8cm}} -- \underline{\hspace{3.8cm}}
+\\
+\\
+\hspace*{0.5cm}Kdo má tento rozsah přidělen?\hspace*{0.2cm}\underline{\hspace{3.8cm}}
+\newpage
+\section{Konfigurace vlastního DNS}
+\textbf{14.} Výstup příkazu \texttt{nslookup 10.10.10.1}:
+\\
+\\
+\\
+\hspace*{0.7cm} Výstup příkazu \texttt{dig PCUC.xlogin00}:
+\\
+\\
+\hspace*{0.8cm}ANSWER SECTION:
+\\
+\\
+\\
+\hspace*{0.8cm}AUTHORITY SECTION:
+\\
+\\
+\\
+\hspace*{0.8cm}ADDITIONAL SECTION:
+\\
+\\
+\\
+\hspace*{0.7cm} Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde xx je číslo vašeho počítače:
+\\
+\\
+\hspace*{0.8cm}ANSWER SECTION:
+\\
+\\
+\\
+\hspace*{0.8cm}AUTHORITY SECTION:
+\\
+\\
+\\
+\hspace*{0.8cm}ADDITIONAL SECTION:
+\\
+\\
+\\
+\textbf{17.} Doplňte sekvenční diagram modelující posloupnost DNS dotazů zachycených na rozhraních \texttt{loopback: lo0} a \texttt{enp2s0}.
+\\
+\\
+\hspace*{0.8cm}Zadaný příkaz: \texttt{dig }\underline{\hspace{4.5cm}}
+\begin{figure}[h]
+	\centering
+	\includegraphics[bb=0 365 550 130, clip=true]{dia.eps}
+\end{figure}
