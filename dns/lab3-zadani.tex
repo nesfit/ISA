@@ -109,6 +109,11 @@
     {\tt dig xlogin00.cz NS}. 
   \item Do protokolu zapište výstup příkazu {\tt nslookup 10.10.10.1}.
   \item Dále zapište do protokolu výstup příkazů {\tt dig PCUC.xlogin00.cz} a {\tt dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače.
+  \item Demonstrujte funkčnost vašeho řešení cvičícímu. Ukažte výstupy z následujících dotazů: \\
+    {\tt nslookup PCUC.xlogin00.cz}, \\
+    {\tt nslookup -type=SOA xlogin.cz}, \\
+    {\tt nslookup -type=NS xlogin.cz} a \\
+    {\tt nslookup 10.10.10.1xx}. 
   \item Ve dvou instancích Wiresharku začněte zachytávat DNS komunikaci na rozhraních {\tt enp2s0} a {\tt Loopback: lo}. Případně můžete použít jedinou instanci Wiresharku, ale musíte zachytávat na obou rozhraních zároveň. (\texttt{Ctrl + left\_click} k výběru více rozhraní). V takovém případě nezapomeňte zachycený provoz seřadit podle časových razítek.
   
   \item V~terminálu zadejte {\tt dig www.google.com} či zvolte jiné doménové jméno, které váš server DNS nezná. Pozor na záznamy uložené DNS cache!
