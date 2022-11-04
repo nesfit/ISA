@@ -1,0 +1,83 @@
+Jméno: \hspace{4cm} Login: \hspace{4cm} Skupina cvičení:\\
+Datum:
+
+\section{Komunikace VoIP type peer-to-peer}
+\begin{multicols}{2}
+  \begin{center}
+    \includegraphics[width=70mm]{peer-to-peer.eps}
+  \end{center}
+  \columnbreak
+  \subsection*{Klient A}      
+  \begin{enumerate}
+    \item Signalizace SIP
+    
+    \begin{tabular}{lp{2cm}}
+      IP adresa a port stanice A: &\\
+      IP adresa a port stanice B: &\\
+    \end{tabular}               
+   
+    \item Transport hlasových dat RTP
+    
+    \begin{tabular}{lp{2cm}}
+      IP adresa a port stanice A: &\\
+      IP adresa a port stanice B: &\\
+      Seznam podporovaných kodeků (pouze čísla):&\\
+      &\\
+      Použitý kodek: &\\
+    \end{tabular}               
+  \end{enumerate}      
+\end{multicols}
+
+\section{Registrace klient VoIP na ústředně}
+\begin{multicols}{2}
+  \begin{center}
+    \includegraphics[width=70mm]{registrace.eps}
+  \end{center}
+    Čím se liší obsah paketu REGISTER při odhlášení od paketu při přihlášení?
+  \columnbreak
+  
+  \begin{tabular}{lp{2cm}}
+    &\\
+    IP adresa a port serveru: &\\
+    Název a verze sw serveru: &\\
+    &\\
+    &\\
+    User URI klienta: &\\
+    Device URI klienta: &\\
+    &\\
+    Název a verze sw klienta: &\\
+    &\\
+    Max. doba přihlášení: &\\
+  \end{tabular}               
+\end{multicols}
+
+\section{Komunikace VoIP přes ústřednu}
+  \begin{center}    
+    \includegraphics[width=120mm]{pres-ustrednu.eps}
+  \end{center}
+
+  \subsection*{1. Signalizace}
+  \begin{tabular}{lp{2cm}}
+    IP adresa a port lokální stanice: &\\
+    IP adresa a port vzdálené stanice: &\\
+    &\\
+    &\\
+    User URI volajícího: &\\
+    Device URI volajícího: &\\
+    &\\
+    User URI volaného: &\\
+    Device URI volaného: &\\
+  \end{tabular}               
+
+  \subsection*{1. Transport hlasových dat}
+  \begin{tabular}{lp{2cm}}
+    Lokální IP adresa a port RTP: &\\
+    &\\
+    Vzdálená IP adresa a port RTP : &\\
+    &\\
+    Vybraný kodek (název a číslo): &\\
+    &\\
+    Počet přenesených paketů a bytů RTP (A $\rightarrow$ B): &\\
+    &\\
+    Počet přenesených paketů a bytů RTP (B $\rightarrow$ A): &\\
+\end{tabular}               
