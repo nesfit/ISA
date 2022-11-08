@@ -8,36 +8,40 @@
 \section*{Základní instrukce}
 \begin{itemize}
   \item Zkontrolujte připojení sluchátek s mikrofonem k počítači. 
-  \item Přihlašte se do CentOS (F3) jako uživatel {\tt user} s heslem {\tt user4lab}.
-  \item V pravé horní části obrazovky {\bf zkontrolujte nastavení zvuku}. Ověřte funkčnost sluchátek a mikrofonu, nastavte optimální hlasitost. 
-  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
-  \item Otevřete si příkazovou řádku pro uživatele {\tt root} (příkazem {\tt su}).
-  \item V případě potřeby si otevřete další terminál v novém okně.
-  \item Vyčistěte si pravidla ve firewall pomocí příkazu {\tt iptables --flush}.
+  \item Přihlašte se do Windows (F3) jako uživatel {\tt user} s heslem {\tt user4lab}.
+%  \item V pravé horní části obrazovky {\bf zkontrolujte nastavení zvuku}. Ověřte funkčnost sluchátek a mikrofonu, nastavte optimální hlasitost. 
+%  \item Otevřete si příkazovou řádku pro uživatele {\tt user}.
+%  \item Otevřete si příkazovou řádku pro uživatele {\tt root} (příkazem {\tt su}).
+%  \item V případě potřeby si otevřete další terminál v novém okně.
+%  \item Vyčistěte si pravidla ve firewall pomocí příkazu {\tt iptables --flush}.
 \end{itemize}
 
 \section{Komunikace VoIP typu peer-to-peer: práce ve dvojicích}
 V této části laboratoře nastavíte a analyzujete VoIP komunikaci se svým sousedem bez použití ústředny (spojení typu peer-to-peer).
 
 \begin{enumerate}
-    \item V terminálu uživatele {\bf user} zapněte klienta VoIP se jménem Jitsi (příkaz {\tt jitsi \&}).
+  %    \item V terminálu uživatele {\bf user} zapněte klienta VoIP se jménem Jitsi (příkaz {\tt jitsi \&}).
+    \item Spustťe aplikaci Jitsi. Pokud aplikace není na počítači nainstalovaná, stáhněte ji z \url{https://desktop.jitsi.org/Main/Downloads.html} a nainstalujte na lokálním počítači. 
     \item V menu {\bf Tools} $\rightarrow$ {\bf Options} $\rightarrow$ {\bf Accounts} přidejte nový účet. V poli {\bf Network} zvolte možnost {\tt SIP}. Jako {\bf SIP id} použijte Váš {\tt xlogin}, heslo nezadávejte.
-    Vytvoření účtu potvrďte tlačítkem {\bf Add}. Zkontrolujte, že se vytvořil {\it RegistrarLess SIP} účet.
-    \begin{figure}[h!]
+    \begin{figure}[h]
     	\centering
     	\includegraphics[scale=0.5]{img/account_p2p.png}
     	\caption{Nastavení účtu SIP.}
     	\label{fig:sip_account}
     \end{figure}
-    \item V terminálu uživatele {\tt root} spusťte síťový analyzátor Wireshark (příkaz {\tt wireshark \&}). Začněte zachytávat pakety na rozhraní {\tt enp2s0}.
-    \item Nastavte display filtr tak, aby zobrazoval pouze protokol SIP.
+
+    \item Stiskněte tlačítko {\bf Advanced} a v záložce {\bf Security} vypněte u daného účtu podporu šifrovaného provozu.
+    \item Tlačítkem {\bf Next} a {\bf Sign in} vytvoříte účet. V seznamu účtu uvidíte účet s vaším jménem a typem {\it RegistrarLess SIP}.
+    \item Spusťte síťový analyzátor Wireshark a začněte odchytávat pakety na aktivním síťovém rozhraní.
+    \item Nastavte display filtr tak, aby zobrazoval protokoly SIP a RTP.
     \item V hlavním okně programu Jitsi zadejte do pole {\it Enter name or number} IP adresu Vašeho souseda: {\bf 10.10.10.xxx}.
-    \item Zavolejte sousedovi stisknutím zeleného telefonu. Vyzkoušejte, zda se navzájem slyšíte, po chvíli hovor ukončete.
-      (V případě problémů se zvukem zkontrolujte, zda není v operačním systému ztlumen mikrofon či audio výstup, případně zkontrolujte nastavení zvukových zařízení v aplikaci Jitsi, menu Tools $\rightarrow$ Options $\rightarrow$ Audio.) 
+    \item Zavolejte sousedovi stisknutím sluchátka. Vyzkoušejte, zda se navzájem slyšíte, po chvíli hovor ukončete.
+      (V případě problémů se zvukem zkontrolujte, zda není v operačním systému ztlumen mikrofon či audio výstup, případně zkontrolujte nastavení zvukových zařízení v aplikaci Jitsi, menu Tools $\rightarrow$ Options $\rightarrow$ Audio. Zvolený audio systém by měl být WASAPI a Audio In nastavené na hodnotu Microphone.) 
     \item Proveďte analýzu navázaného spojení v analyzátoru Wiresharku. Využijte menu {\bf Telephony $\rightarrow$ VoIP Calls}, kde uvidíte jednotlivé zaznamenané hovory. Vyberte příslušný hovor a zobrazte jeho průběh volbou {\bf Flow}.
-    \item Zakreslete spojení do protokolu. Uveďte použité přenosové protokoly, IP adresy, porty a kodeky.
-\end{enumerate}
-Názvy a čísla podporovaných kodeků si strany vymění protokolem SDP, který je zapouzdřen v těle příkazů {\bf INVITE} a {\bf OK}:
+    \item Do protokolu zakreslete příkazy SIP mezi oběma klienty. Doplňte adresy a porty použité pro signalizaci a transport hlasových dat. Analýzou příkazu INVITE zjistěte seznam podporovaných kodeků na strané volajícího. Zapište je do protokolu a uveďte, který kodek byl vybrán pro komunikaci. 
+
+
+      Názvy a čísla podporovaných kodeků si strany vymění protokolem SDP, který je zapouzdřen v těle příkazů {\bf INVITE} a {\bf OK}:
 \begin{figure}[h!]
   \centering
   \includegraphics[scale=0.65]{img/3a.png}
@@ -49,9 +53,12 @@ Názvy a čísla podporovaných kodeků si strany vymění protokolem SDP, kter�
   \includegraphics[scale=0.65]{img/3b.png}
 \end{figure}
 
+  \item Po ukončení analýzy zrušte v aplikaci Jitsi vytvořený účet: menu {\bf Tools} $\rightarrow$ {\bf Accounts} $\rightarrow$ {\bf Delete}. 
+\end{enumerate}
+
 
 \section{Komunikace VoIP přes ústřednu SIP: práce ve dvojicích}
-Nakonfigurujte si nový účet v aplikaci Jitsi, který bude komunikovat přes ústřednu SIP s VoIP doménou {\tt isa-lab.cz}. Jméno účtu bude {\tt userXX@isa-lab.cz}, heslo {\tt hesloXX} a vaše telefonní číslo {\tt 10XX}, kde {\it XX} je číslo Vašeho počítače. 
+V další části budete pracovat v aplikaci Jitsi s novým účtem v doméně VoIP {\tt isa-lab.cz}. Jméno účtu bude {\tt userXX@isa-lab.cz}, heslo {\tt hesloXX} a vaše telefonní číslo {\tt 10XX}, kde {\it XX} je číslo Vašeho počítače. Konfiguraci proveďte následujícími kroky. 
 
 \subsection{Registrace VoIP klienta na ústředně}
 \begin{enumerate}
@@ -74,18 +81,15 @@ Nakonfigurujte si nový účet v aplikaci Jitsi, který bude komunikovat přes �
       \end{figure}
     \item Tlačítkem {\bf Next} a {\bf Sign in} provedete registraci na ústředně.
     \item  Pokud jste vše nastavili správně, v seznamu účtů v menu {\bf Tools} $\rightarrow$ {\bf Options} uvidíte účet ve stavu {\bf SIP Online}. {\it V případě neúspěchu účet odeberte a znovu přidejte. Pokud ani toto nepomohlo, ukončete Jitsi a postupujte znovu od kroku 1, případně konzultujte problém se cvičícím.}
-    \item Odhlašte se od ústředny v okně pro správu účtů pomocí kliknutí na
-      zaškrtávací tlačítko účtu.
-    \item V programu Wiresharku analyzujte průběh přihlášení k ústředně a
-      odhlášení od ústředny. Zaměřte se na příkazy {\bf REGISTER} a jejich
-      odpovědi. Jiné zprávy, jako je PUBLISH, SUBSCRIBE, OPTIONS neslouží k
-      přihlášení klienta k ústředně. Do protokolu zakreslete průběh registrace. Z hlavičky SIP (položky From, To, Contact, User-Agent, Server, Expires) určete logickou adresu uživatele (User URI), adresu připojení (Device URI), jméno a verzi VoIP klienta, jméno a verzi SIP serveru, maximální dobu přihlášení. Čím se liší obsah paketu {\bf REGISTER} při přihlášení a odhlášení uživatele?
+    \item Odhlašte se od ústředny nastavením stavu na hodnotu {\bf Offline}. 
+    \item V programu Wiresharku analyzujte průběh přihlášení k ústředně a odhlášení od ústředny. Zaměřte se na příkazy {\bf REGISTER} a jejich odpovědi. Ostatní zprávy typu PUBLISH, SUBSCRIBE, OPTIONS slouží k přenosu dodatečných informací a my je nebudeme v této laboratoři používat.
+    \item Do protokolu zakreslete průběh registrace. Z hlavičky SIP (položky From, To, Contact, User-Agent, Server, Expires) určete logickou adresu uživatele (User URI), adresu připojení (Device URI), jméno a verzi VoIP klienta, jméno a verzi serveru SIP, maximální dobu přihlášení. Čím se liší obsah paketu {\bf REGISTER} při přihlášení a odhlášení uživatele?
 \end{enumerate}
 
 \subsection{Analýza hovoru přes ústřednu}
 \begin{enumerate}
   \item Znovu se zaregistrujte k ústředně, viz předchozí část 2.1.
-  \item Otestujte spojení voláním na linku {\tt 123}. V případě správného nastavení vám systém přehraje automatickou kontrolní hlášku. 
+  \item Otestujte spojení voláním na linku {\tt 123}. V případě správného nastavení vám systém přehraje automatickou kontrolní hlášení. 
     \item Obnovte zachytávání paketů v aplikaci Wireshark.
     \item Zavolejte svému sousedovi. V hlavním okně Jitsi zadejte telefonní číslo Vašeho souseda ve formátu {\tt 10xx}, kde {\it xx} je číslo počítače.
     \item Proveďte analýzu odchycených paketů v programu Wireshark. Zaměřte se na příkazy {\bf INVITE}, {\bf OK} a {\bf ACK}. Z hlaviček {\it From} a {\it Contact} určete User URI a Device URI volající i volaného.
@@ -102,5 +106,7 @@ Nakonfigurujte si nový účet v aplikaci Jitsi, který bude komunikovat přes �
 
 \section{Ukončení práce v laboratoři}
 \begin{itemize}
-  \item Počítač vypněte spuštěním skriptu {\tt /root/isa4/clean} (jako uživatel {\bf root}).
+  %  \item Počítač vypněte spuštěním skriptu {\tt /root/isa4/clean} (jako uživatel {\bf root}).
+  \item Smažte vytvořené účtu v aplikaci Jitsi. Ukončete aplikaci pomocí menu {\bf File} $\rightarrow$ {\bf Quit}.
+  \item Vypněte počítač. Stočená sluchátka uložte na skříň vašeho počítače.
 \end{itemize}
