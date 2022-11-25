@@ -1,0 +1,82 @@
+Jméno:\\
+Login:\\
+Skupina cvičení:\\
+Datum:\\
+
+\section{Syslog}
+
+\begin{itemize}
+    \item Jaký využívá protokol Syslog transportní protokol a porty?
+    \begin{itemize}
+        \item Server: IP a port:
+        \item Klient: IP a port:
+    \end{itemize}
+    \item Vypište typ a hodnotu FACILITY/SEVERITY u zpráv informující o přihlášení uživatele.
+    \vspace{2cm}
+\end{itemize}
+
+\section{Netflow}
+
+\begin{itemize} 
+\item Vypište top 3 porty podle přenesených bajtů: 
+
+\begin{tabular}{|p{2cm}|c|c|}
+\hline
+Port  & Přeneseno bajtů  & \% provozu \\ \hline
+      &                  &        \\   \hline
+      &                  &         \\  \hline
+      &                  &        \\   \hline
+\end{tabular}
+
+\item Vypište top 3 porty podle počtu toků: 
+
+\begin{tabular}{|p{2cm}|c|c|}
+\hline
+Port  & Počet toků  & \% provozu \\ \hline
+      &                  &        \\   \hline
+      &                  &         \\  \hline
+      &                  &         \\  \hline
+\end{tabular}
+\end{itemize}
+
+\section{SNMP}
+\begin{itemize}
+    \item Základní informace o systému:
+    \begin{itemize}
+        \item Jméno systému:
+         \vspace{1cm}
+        \item Název a verze OS:
+         \vspace{1cm}
+        \item Uptime:
+         \vspace{1cm}
+    \end{itemize}
+    \item Vypište IP a MAC souseda:
+    
+\begin{tabular}{|p{4cm}|p{4cm}|}
+\hline
+IP  & MAC   \\ \hline
+      &     \\   \hline
+\end{tabular}
+    \item Název síťového rozhraní na serveru isa pro IP/MAC:
+     \vspace{1cm}
+\end{itemize}
+
+\section{ICMP}
+\begin{itemize}
+    \item Průměrná odezva serveru \texttt{google.com}:
+    \item Vypište velikost hlaviček IP, ICMP a maximální velikost obsahu paketů (v bajtech):
+    
+    \begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|l|l|}  \hline
+     Protokol  & L3  & ICMP  & Payload & Součet (L3+ICMP+Payload) \\ \hline
+     IPv4      &     &       &         &   \\   \hline
+     IPv6      &     &       &         &     \\  \hline
+\end{tabular}
+    
+    \item AS-Path:
+        \begin{itemize}
+            \item \texttt{google.com}:
+            \vspace{3cm}
+            \item \texttt{idnes.cz}:
+            \vspace{3cm}
+        \end{itemize}
+\end{itemize}
