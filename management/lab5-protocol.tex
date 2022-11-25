@@ -6,12 +6,13 @@ Datum:\\
 \section{Syslog}
 
 \begin{itemize}
-    \item Jaký využívá protokol Syslog transportní protokol a porty?
+    \item Vypište IP adresy a porty klienta a serveru Syslog. Jaký transportní protokol služba Syslog používá?
     \begin{itemize}
-        \item Server: IP a port:
-        \item Klient: IP a port:
+        \item IP adresa a port serveru:
+        \item IP adresa a port klienta:
+        \item Transportní protokol: 
     \end{itemize}
-    \item Vypište typ a hodnotu FACILITY/SEVERITY u zpráv informující o přihlášení uživatele.
+    \item Vypište typ a hodnotu políček FACILITY a SEVERITY v paketech Syslogu u zpráv informujících o přihlášení uživatele.
     \vspace{2cm}
 \end{itemize}
 
@@ -20,7 +21,7 @@ Datum:\\
 \begin{itemize} 
 \item Vypište top 3 porty podle přenesených bajtů: 
 
-\begin{tabular}{|p{2cm}|c|c|}
+\begin{tabular}{|p{2cm}|p{3cm}|p{3cm}|}
 \hline
 Port  & Přeneseno bajtů  & \% provozu \\ \hline
       &                  &        \\   \hline
@@ -28,9 +29,9 @@ Port  & Přeneseno bajtů  & \% provozu \\ \hline
       &                  &        \\   \hline
 \end{tabular}
 
-\item Vypište top 3 porty podle počtu toků: 
+\item Vypište Top 3 porty podle počtu toků: 
 
-\begin{tabular}{|p{2cm}|c|c|}
+\begin{tabular}{|p{2cm}|p{3cm}|p{3cm}|}
 \hline
 Port  & Počet toků  & \% provozu \\ \hline
       &                  &        \\   \hline
@@ -47,24 +48,24 @@ Port  & Počet toků  & \% provozu \\ \hline
          \vspace{1cm}
         \item Název a verze OS:
          \vspace{1cm}
-        \item Uptime:
+        \item Doba běhu systému (uptime):
          \vspace{1cm}
     \end{itemize}
-    \item Vypište IP a MAC souseda:
+    \item Vypište IP adresu a MAC adresu svého souseda získané ze SNMP:
     
-\begin{tabular}{|p{4cm}|p{4cm}|}
+\begin{tabular}{|p{5cm}|p{5cm}|}
 \hline
-IP  & MAC   \\ \hline
+IP adresa  & MAC adresa   \\ \hline
       &     \\   \hline
 \end{tabular}
-    \item Název síťového rozhraní na serveru isa pro IP/MAC:
+    \item Název síťového rozhraní na serveru {\tt isa2} obsahující mapování IP adresy na MAC adresu:
      \vspace{1cm}
 \end{itemize}
 
 \section{ICMP}
 \begin{itemize}
-    \item Průměrná odezva serveru \texttt{google.com}:
-    \item Vypište velikost hlaviček IP, ICMP a maximální velikost obsahu paketů (v bajtech):
+    \item Zapište průměrnou odezvu serveru \texttt{google.com}:
+    \item Vypište velikost hlaviček IP, ICMP a maximální velikost obsahu paketů (v bajtech) ze zachycených paketů:
     
     \begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|l|l|}  \hline
      Protokol  & L3  & ICMP  & Payload & Součet (L3+ICMP+Payload) \\ \hline
@@ -72,7 +73,7 @@ IP  & MAC   \\ \hline
      IPv6      &     &       &         &     \\  \hline
 \end{tabular}
     
-    \item AS-Path:
+    \item Zapište posloupnost ISP a čísel jejich AS na trase z vašeho PC do zadané destinace (AS-Path):
         \begin{itemize}
             \item \texttt{google.com}:
             \vspace{3cm}
