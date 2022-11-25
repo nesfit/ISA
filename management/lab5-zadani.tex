@@ -1,27 +1,20 @@
 %\include{macro_lecture}
 \section*{Cíl laboratorního cvičení}
 \begin{itemize}
-  \item seznámit se s nástroji pro správu sítě
-  \item seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení NetFlow {\bf nfdump}
-  \item naučit se pracovat s protokolem Syslog a nástrojem {\bf rsyslog}
-  \item konfiguraci nástrojů pro monitoring {\bf Icinga2}
+  \item Seznámit se s nástroji pro správu sítě a protokolem ICMP.
+  \item Seznámit se s formátem Cisco Netflow pro ukládání statistických dat a nástrojem pro čtení NetFlow {\bf nfdump}.
+  \item Naučit se pracovat s protokolem Syslog a nástrojem {\bf rsyslog}.
 \end{itemize}
 
 \section*{Pokyny}
 \begin{itemize}
   \item Do zadání nepište, slouží pro další skupiny. PDF verzi zadání
-  i šablony konfiguračních souborů lze najít v IS u předmětu ISA.
+  i šablony konfiguračních souborů lze najít v Moodle VUT.
   
   \item Na konci laboratorního cvičení nezapomeňte na poslední bod,
   tj. na {\bf Ukončení práce v laboratoři}!
   
-  \item Zapněte si počítače s operačním systémem GNU/Linux a přihlaste se jako uživatel {\bf user} s heslem {\bf user4lab}
-  \item Pro skrolování v konzoli (nejen) ve vituálních počítačích používejte
-    \texttt{Shift} + \texttt{PgUp}/\texttt{PgDn}.
-  
-  \item Smažte pravidla ve firewallu příkazem {\tt iptables --flush}
-  
-  \item Volitelně můžete použít k přístupu na virt. počítače SSH (adresy 192.168.56.10, 192.168.56.20)
+  \item Zapněte si počítače s operačním systémem GNU/Linux a přihlaste se jako uživatel {\bf user} s heslem {\bf user4lab}.
 \end{itemize}
 
 \newpage
@@ -51,28 +44,31 @@
        \begin{enumerate}
             \item {\bf Na serveru} povolte naslouchání na síťovém soketu. Do souboru {\tt /etc/rsyslog.conf} přidejte nebo odkomentujte:
 \begin{verbatim}
-  $ModLoad imudp
-  $UDPServerRun 514
+  module(load="imudp")
+  input(type="imudp" port="514)
 \end{verbatim}
-
+            \item Na serveru povolte port 514 na firewallu.
+            \begin{verbatim}
+                firewall-cmd --add-port=514/udp
+            \end{verbatim}
             \item {\bf Na klientovi} nakonfigurujte rsyslog démona tak, aby odesílal veškeré zprávy
-         z klienta na serveru pomocí UDP. Jako oddělovač použijte výhradně tabulátor nikoliv mezery.
-         Do souboru {\tt /etc/rsyslog.conf} přidejte následující pravidlo:
+         z klienta na serveru pomocí UDP.
+         Do souboru {\tt /etc/rsyslog.conf} přidejte na konec konfiguračního souboru následující pravidlo:
 \begin{verbatim} 
- *.*<TAB>@<doménové_jméno_serveru>:<číslo_portu>
+ *.*  @<doménové_jméno_serveru>:<číslo_portu>
 \end{verbatim}
-
+            \item Doménové jméno serveru je ve formátu: \texttt{hXX.netlab.fit.vutbr.cz}, kde \texttt{XX} je číslo PC. Tedy např. \texttt{h10.netlab.fit.vutbr.cz}
             \item {\bf Na serveru i klientovi} restartujte Syslog démona: 
 \begin{verbatim}
   systemctl restart rsyslog
 \end{verbatim} 
-
-            \item {\bf Z klienta} ověřte správnou konfiguraci vygenerováním testovací Syslog 
-         zprávy pomocí nástroje {\tt logger}:
+            \item Na serveru ověřte, zda-li proces naslouchá na daném portu (\verb|netstat -ulnp|) 
+            \item {\bf Z klienta} ověřte správnou konfiguraci vygenerováním testovací Syslog zprávy pomocí nástroje {\tt logger}:
+            
 \begin{verbatim} 
   logger -d <obsah_zprávy>
 \end{verbatim} 
-        
+
             \item Zpráva byla přeposlána na server, kde ji lze najít na konci souboru
          {\tt /var/log/messages}.
 
@@ -80,164 +76,80 @@
   tail -f /var/log/messages | grep <doménové_jméno_klienta>
 \end{verbatim} 
 
-            \item  Na klientovi pokračujte v generování Syslog zpráv a 
-         na serveru sledujte příchozí Syslog zprávy pomocí {\tt wireshark}. Na jakém
-         portu a jakým protokolem jsou Syslog zprávy zasílány.      
-
-            \item Otevřete si manuálovou stránku {\tt rsyslog.conf} a zjistěte, jaké zařízení a priority
-         zpráv Syslog poskytuje (kapitola {\bf SELECTORS}). 
-\begin{verbatim} 
-  man rsyslog.conf
-\end{verbatim} 
-        
-         \item Nakonfigurujte klienta, aby posílal na server zprávy související s autentizací na úrovni info (je potřeba použít facility
-         {\tt authpriv} místo {\tt auth}), tj. upravte již existující pravidlo pro přeposílání veškerých zpráv na server v souboru 
-         {\tt /etc/rsyslog.conf}. Nezapomeňte restartovat Syslog démona.
-         
-\begin{verbatim} 
-  Syntax pravidel: <facility>.<priority><TAB><action>
-\end{verbatim} 
-         \item Pokuste se o neúspěšné ssh připojení na klienta a podívejte se ve wiresharku, jakou zprávu zaslal klient serveru. Následně odešlete z klienta zprávu příkazem {\tt logger}. Při správné konfiguraci by se tato zpráva neměla odeslat. {\bf Ukažte cvičícímu pakety s odeslanou autentizační zprávou a záznam v souboru {\tt /var/log/secure}}.
-
+            \item Na serveru/klientovi sledujte Syslog zprávy pomocí nástroje {\tt wireshark}. Zjistěte, na jakém portu a jakým protokolem jsou Syslog zprávy zasílány. Na klientovi se v novém terminálu odhlaste a přihlaste, čímž vygenerujete Syslog zprávy, které jsou zaslány na server. Výsledky zapište do protokolu.
        \end{enumerate}
    \end{itemize}
 
 %NETFLOW
 \section{NetFlow}
-\begin{itemize}
-	\item Úkol:
-	\begin{itemize}
-		\item Seznámit se možnostmi měření provozu pomocí NetFlow. NetFlow slouží pro
-		přenos statistik o jednotlivých tocích dat vznikajících při komunikaci po síti.
-		Záznamy NetFlow, s~nimiž budete během cvičení pracovat, jsou
-		pořízeny ze sítě VUT a~anonymizovány. V~druhé části úkolu
-		budete pracovat s~daty pořízenými sondou FlowMon.
-	\end{itemize}
-	\item Příkazy:
-	\begin{itemize}
-		\item {\tt nfdump}
-	\end{itemize}
-	\item Postup:
+
+Seznamte se možnostmi měření provozu pomocí NetFlow. NetFlow slouží pro
+přenos statistik o jednotlivých tocích dat vznikajících při komunikaci po síti. Záznamy NetFlow, s~nimiž budete během cvičení pracovat, jsou
+pořízeny ze sítě VUT a~anonymizovány.
+
+\subsection*{Postup}
 	\begin{enumerate}
-		\item Na Vašem počítači se v adresáři {\tt /home/user/isa5/netflow} nachází
-		anonymizovaná kolekce NetFlow dat. Tento adresář bude vstupem programu
-		{\tt
-nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
+		\item Na Vašem počítači se v adresáři {\tt /root/isa5/} nachází
+		anonymizovaný soubor s NetFlow daty (\texttt{nfcapd.202211242155.anon}). Tento soubor bude    vstupem pro program  {\tt nfdump}, který využijte ke kladení dotazů nad NetFlow daty.
 		\item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
+  		\begin{itemize}
+			\item V manuálové stránce si najděte, co dělají přepínače {\tt -r, -s, -n, -O, -A}.
+                \item Prostudujte si v manuálové stránce příklady v sekci EXAMPLES 
+		\end{itemize}
 		\item Dotažte se na TOP 20 IP adres podle počtu přenesených bajtů. 
-		\begin{itemize}
-			\item V manuálové stránce si najděte, co dělají přepínače {\tt -R, -s, -n, -O}.
-			\item Nezapomeňte, že zpracovávaná data jsou relativně objemná. Dosažení výsledku tedy chvíli potrvá.
-		\end{itemize}
-		\item Zjistěte, jak velké datové přenosy připadají na jednotlivé protokoly. (Statistika protokolů)
-		\begin{itemize}
-			\item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů.
-		\end{itemize}
-		\item Vyfiltrujte si toky se zdrojovou IP {\em 162.35.0.190}. Zaměřte se na čísla portů.
-		Je aktivita zdroje něčím podezřelá?
+		\begin{verbatim}nfdump -r /root/isa5/nfcapd.202211242155.anon -s srcip/bytes -n 20
+            \end{verbatim}
 		
-		\item {\bf Výstupy NFdump předveďte cvičícímu}.
+		\item Zjistěte, kolik dat je přeneseno pomocí na portech 80 (HTTP) a 443 (HTTPS). Jaký je jejich  poměr?
+            \begin{verbatim}nfdump -r /root/isa5/nfcapd.202211242155.anon -s port/bytes 
+            \end{verbatim}
+		\begin{itemize}
+			\item Všimněte si rozdílů v podílech podle toků a podle přenesených bajtů. Vypište a porovnejte statistiku portů řazenou podle počtu toků.
+		\end{itemize}
 	\end{enumerate}
 \end{itemize}
 
-%ICINGA2
-\section{Icinga2}
-  \begin{itemize}
-    \item Úkol: 
+
+%SNMP
+\section{SNMP}
+Pomocí protokolu SNMP získejte informace o zvoleném serveru. Informace lze získat pomocí klienta \texttt{snmpwalk}, viz \texttt{man snmpwalk}. Příklad syntaxe:
+
+\begin{verbatim}
+snmpwalk -v<protokol> -c <community string> <host> <object>
+\end{verbatim}
+
+\subsection*{Postup}
+\begin{itemize}
+    \item Vyhledejte základní informace o serveru isa2.netlab.fit.vutbr.cz.  Použijte příkaz snmpwalk a OID objekt \texttt{system}. Pokud příkaz snmpwalk není dostupný, doinstalujte balíček \texttt{net-snmp-utils}. (\texttt{yum install net-snmp-utils}). Pro připojení použijte privátní IP serveru (\texttt{10.10.10.1})
+      \begin{verbatim}snmpwalk -v2c -c public isa2.netlab.fit.vutbr.cz system\end{verbatim}
+    \item Vypište pomocí protokolu SNMP ARP tabulku (mapování mezi IP a MAC) na serveru isa2. Z dané tabulky nalezněte mapování mezi IP a MAC adresou u PC vašeho souseda. Pro zjištění mapování použijte OID objekt \texttt{ipNetToMedia}. Pro přehlednější výpis můžete použít příkaz \texttt{snmptable} se stejnou syntaxí jako \texttt{snmpwalk}.
+    \begin{verbatim}snmptable -v2c -c public isa2.netlab.fit.vutbr.cz ipNetToMedia
+    \end{verbatim}
+    \item Zjistěte \textbf{název} síťového rozhraní serveru isa, na kterém je naučené mapování mezi IP a MAC adresami vašeho souseda. Nápověda: použijte OID objekt \texttt{interface} a příkaz \texttt{snmpwalk}.
+\end{itemize}
+
+\section{ICMP}
+Protokol ICMP slouží pro základní dohledávání problémů v počítačových sítích. Standardně se využívají nástroje \texttt{ping} a \texttt{traceroute}, nebo pokročilejší nástroje, např. \texttt{mtr}. Pomocí těchto nástrojů zjistěte základní informace o cestě mezi vaším počítačem a vybraným serverem.
+
+\begin{itemize}
+    \item Zjistěte pomocí nástroje \texttt{ping} dobu odezvy serveru \texttt{google.com}.
+    \item Jaká je maximální velikost obsahu (payload) paketu na cestě k serveru \texttt{www.fit.vutbr.cz}? Jak se tato velikost liší u IPv4 a IPv6?
     \begin{itemize}
-      \item Seznámit se s nástrojem Icinga2 pro monitorováni zařízení a služeb.
-      \item Na klientské stanici nakonfigurovat kontroly služeb a živosti stanic.  
+        \item Použijte nástroj ping a argumenty \texttt{-s} pro velikost obsahu paketu a \texttt{-M do} pro zakázání fragmentace (nastavení bitu \texttt{Don't Fragment} v hlavičce IP.
+        \begin{verbatim}ping -s 1500 -M do www.fit.vutbr.cz
+        \end{verbatim}
+        \item Pro IPv6 test se přihlašte pomocí protokolu SSH a svého studentského loginu/hesla na server merlin.fit.vutbr.cz a otestujte cestu k serveru \texttt{www.fit.vutbr.cz}.
+        \item Zachyťte ICMP provoz nástrojem wireshark a zjistěte zapouzdření a velikost jednotlivých vrstev.
     \end{itemize}
-    \item Poznámka:
-        \begin{itemize}
-	        \item Zapněte si VirtualBox (Applications $\rightarrow$ System Tools), kde se nacházejí 2 virtuální počítače, {\bf isa-icinga-master} a {\bf isa-icinga-provider}. Přepněte se do panelu se snapshoty pomocí Machine $\rightarrow$ Tools $\rightarrow$ Snapshots a~zkontrolujte zda jsou počítače v předdefinovaném stavu {\bf Clean} (obr. \ref{fig:revert}). Pokud ne, proveďte obnovení tlačítkem {\bf Restore} do tohoto stavu. Volbu {\bf Create snapshot of the current machine state} vypněte.
-            
-            \begin{figure}[!ht]
-            	\caption{Uvedení virt. počítače do snapshotu Clean}
-            	\centering
-            	\includegraphics[width=0.67\linewidth]{files/vbox-revert.png}
-            	\label{fig:revert}
-            \end{figure}
-            
-            \item Všechny virtuální počítače mají root účet s údaji shodnými s laboratorním účtem
-            \begin{itemize}
-            	\item {\bf root/root4lab}
-            \end{itemize}
-        \end{itemize}
-		\begin{figure}[!ht]
-			\caption{Ilustrace zapojení virt. prostředí}
-			\centering
-	    	\includegraphics*[width=0.5\linewidth]{files/vbox-network.pdf}
-		\end{figure}
-    \item Postup:
-       \begin{enumerate}
-       		\item Spusťte virt. počítače isa-icinga-master a isa-icinga-provider. Příkazem ping ověřte, že
-       		jsou tyto počítače dostupné.
-            \item Otevřete si webový prohlížeč a zadejte adresu 
-            {\it http://192.168.56.10/icingaweb2}. Dostanete se na webové rozhraní Icingy2,
-            která běží na počítači {\bf isa-icinga-master}. Přihlaste se pod uživatelem {\bf isa} a heslem {\bf user4lab}.
-            \item Na virt. počítači isa-icinga-master ve složce {\it /etc/icinga2/conf.d} najdete soubor {\bf hosts.conf}. Odkomentujte a doplňte potřebnou konfiguraci, aby systém Icinga2 
-            monitoroval virt. počítač {\bf isa-icinga-provider} a~služby {\bf http} a~{\bf snmp-free-memory}. Pole {\tt host\_name}
-            se musí shodovat s názvem Host objektu.
-            
-\begin{verbatim}
-object Host "Provider" {
-    address = "<Provider IP ADDRESS>"
-    check_command = "hostalive"
-}
-
-object Service "http" {
-    max_check_attempts = 4
-    check_interval = 10m
-    retry_interval = 10m
-    host_name = "<HOST NAME OF OBJECT>"
-    check_command = "http"
-}
-
-object Service "snmp-free-memory" {
-    host_name = "<HOST NAME OF OBJECT>"
-    check_command = "snmp"
-    
-    vars.snmp_oid = "1.3.6.1.4.1.2021.4.6.0"
-}
-
-\end{verbatim} 
-            \item Restartujte službu. V~případě chyby nahlédněte do souboru {\tt /var/log/messages} na virt. počítači isa-icinga-master.
-\begin{verbatim}
-  rc-service icinga2 restart
-\end{verbatim} 
-          \item Podívejte se na webové rozhraní Icingy2. Co se tam změnilo? 
-          Když je nějaká služba ve stavu {\bf DOWN}, proč tomu tak je?
-
-          \item Na klientském počítači {\bf isa-icinga-provider} zapněte webový server.
-\begin{verbatim}
-  python -m SimpleHTTPServer 80 > /dev/null 2> /dev/null &
-\end{verbatim}
-
-          \item Na virt. počítači {\bf isa-icinga-master} upravte soubor {\tt /etc/snmp/snmpd.conf} tak, aby naslouchal na adrese rozhraní 192.168.56.20 a doplňte SNMP komunitu, aby se shodovala s isa-icinga-master. Komunita bude read-only
-          a přístup bude povolen pro subnet 192.168.56.0/24.
-          
-          \item Restartujte SNMPD na {\bf isa-icinga-provider}.
-\begin{verbatim}
-  rc-service snmpd restart
-\end{verbatim}
-          \item Ve Webovém rozhraní Icingy2 v menu Overview $\rightarrow$
-            Services si vyhledejte předešlou kontrolu služby snmp-free-memory a
-            klikněte na odkaz {\bf Check Now}. Pokud jste službu nakonfigurovali správně, měli byste dostat informaci o dostupné paměti. {\bf Informaci předveďte cvičícímu}.
-          
-\end{enumerate}
+    \item Pomocí nástroje \texttt{traceroute} zjistěte skrz jaké \textbf{autonomní systémy} je směrován provoz na servery \texttt{google.com} a \texttt{idnes.cz}.
+    \begin{verbatim}
+        traceroute -A google.com
+        traceroute -A idnes.cz
+    \end{verbatim}
+    \item Jací operátoři provozují dané autonomní systémy? Nápověda: využijte nástroj whois, nebo stránky \texttt{stat.ripe.net} případně \texttt{bgp.he.net}.
 \end{itemize}
 
 \section*{Ukončení práce v laboratoři}
 \begin{itemize}
-
-  \item Vypněte všechny virtuální počítače. Pro vypnutí můžete použít příkaz File $\rightarrow$ Close ... a volbu {\bf Power off the machine}. Volbu {\bf Restore current snapshot 'Clean'} ponechte zatrhnutou (obr. \ref{fig:shutdown}).
   \item Počítač vypněte skriptem {\tt /root/isa5/clean}
 \end{itemize}
-
-\begin{figure}[!ht]
-	\caption{Vypnutí virt. počítače}
-	\centering
-	\includegraphics[width=0.67\linewidth]{files/vbox-shutdown.png}
-	\label{fig:shutdown}
-\end{figure}
