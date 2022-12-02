@@ -43,7 +43,7 @@
       \item {\bf Na serveru} povolte komunikaci Syslog na daném portu. Do souboru {\tt /etc/rsyslog.conf} přidejte následující řádky, případně je odkomentujte:
 \begin{verbatim}
   module(load="imudp")
-  input(type="imudp" port="514)
+  input(type="imudp" port="514")
 \end{verbatim}
       \item Na serveru otevřete port 514 ve firewallu pro přijímání komunikace Syslog.
 \begin{verbatim}
@@ -128,7 +128,7 @@ Protokol ICMP slouží pro dohledávání problémů v počítačové síti na v
 
 \begin{enumerate}
   \item Zjistěte pomocí nástroje \texttt{ping} průměrnou dobu odezvy serveru \texttt{google.com}.
-  \item Jaká maximální velikost obsahu (payload) IP datagramu je povolena na cestě k serveru\\ \texttt{www.fit.vutbr.cz}? Jak se tato velikost liší pro IPv4 a IPv6?
+  \item Jaká je maximální velikost IP datagramu povolena na cestě k serveru\\ \texttt{www.fit.vutbr.cz}? Jak se tato velikost liší pro IPv4 a IPv6?
   \begin{itemize}
     \item Použijte nástroj {\tt ping} s parametrem \texttt{-s} + testovaná velikost datagramu, a s parametrem \texttt{-M do}, který zakáže fragmentaci IP datagramu, tj. nastaví bit \texttt{Don't Fragment}.
 \begin{verbatim}
