@@ -67,7 +67,8 @@
 \begin{verbatim} 
   logger -d <obsah_zprávy>
 \end{verbatim} 
-      \item Na serveru lze zprávu najít na konci souboru {\tt /var/log/messages}, který obsahuje systémové události.
+      \item Na serveru lze zprávu najít na konci souboru {\tt /var/log/messages}, který obsahuje
+        systémové události (jméno klienta zadávejte ve tvaru hXX).
 \begin{verbatim} 
   tail -f /var/log/messages | grep <doménové_jméno_klienta>
 \end{verbatim} 
