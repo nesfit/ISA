@@ -1,0 +1,146 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+
+\title{Zabezpečený přenos dat\\
+{\bf\large ISA - Laboratorní cvičení č.2}\\
+{\bf\large Prokotol ke cvičení}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/lab2-zabezpeceni}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+Jméno a příjmení:\\
+Login:\\
+Skupina (číslo nebo čas):\\
+Datum:
+
+\section{Synchronizace času pomocí NTP}
+{\bf 1.2} Nakonfigurované servery NTP\\
+        
+NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
+NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
+NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
+NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
+
+\section{Zabezpečený vzdálený přístup pomocí SSH}
+\textbf{2.4 e)} Uveďte, jaké zajímavé informace lze vyčíst z odchycené komunikace SSH:
+
+\vskip 6em
+%\underline{\hspace{16cm}}
+%~\\
+
+\textbf{2.5 d)} Vyplňte informace o vygenerovaných klíčích SSH:\\
+
+\begin{tabular}{|r|c|c|c|}
+\hline
+~ & Název souboru & Přístupová práva \\
+\hline
+Veřejný klíč: & & \\
+\hline
+Privátní klíč: & & \\
+\hline
+\end{tabular}
+\vspace{1em}
+
+\textbf{2.6 c)-d)} Vyplňte hesla požadovaná při přihlášení na vzdálený počítač:\\
+~\\
+\begin{tabular}{|l|c|c|}
+\hline
+~ & user & root \\
+\hline
+Heslo vyžadované při distribuci klíčů: & \hspace{4cm} & \hspace{4cm} \\
+\hline
+Heslo vyžadované při druhém přihlášení: & & \\
+\hline
+\end{tabular}
+
+\bigskip
+K čemu slouží soubor \texttt{.ssh/authorized\_keys}?\\
+
+\vskip 3em
+Jak je možné přihlásit se na vzdálený počítač po neúspěšné autentizaci klíčem SSH?\\
+
+\vskip 3em
+
+\textbf{2.7 d)} Vypište výstup na terminálu při přihlášení z účtu {\tt root}:\\
+
+\vskip 3em
+
+\textbf{2.8 c)} Jak proběhlo opakované přihlášený na vzdálený počítač pomocí SSH? \\
+
+\vskip 3em
+
+\section{Zabezpečení transportní vrstvy pomocí TLS}
+
+\textbf{3.1 e)} Uveďte, zda je možné vidět obsah odchycené komunikace HTTP a proč ano/ne?\\
+
+\vskip 2em
+
+{\bf 3.2 c)} Jak lze zjistit z odchycené komunikace TLS jméno cílového serveru?\\
+
+\vskip 2em
+
+{\bf 3.2 e)} Je možné přečíst obsah komunikace a proč ano/ne?\\
+
+\vskip 2em
+
+{\bf 3.2 f)-g)} Vyplňte informace o použité šifrovací sadě (cipher suite):\\
+
+\renewcommand\arraystretch{1.3}
+\begin{tabular}{|l|r|}
+%\hline
+\hline
+Šifrovací sada (ID, název): & \hspace{25em} \\ \hline
+Algoritmus pro výměnu klíčů: &  \\ \hline
+Algoritmus pro zajištění autentizace: & \\ \hline
+Algoritmus pro šifrování přenosu: & \\ \hline
+Délka šifrovacího klíče: & \\ \hline
+Hešovací algoritmus: & \\ \hline
+\end{tabular}
+\renewcommand\arraystretch{1}
+\vspace{0.5cm}
+
+\textbf{3.3 b)} Použitá šifrovací sada v prohlížeči (id, name): \\
+
+\vskip 1em
+Informace o certifikátu:\\
+
+\renewcommand\arraystretch{1.3}
+\begin{tabular}{|l|r|}
+\hline
+Vydavatel certifikátu: & \hspace{30em} \\ \hline
+Doba platnosti: & \\ \hline
+\end{tabular}
+\renewcommand\arraystretch{1}
+\vspace{0.5cm}\\
+
+{\bf 3.3 c)} Příklady důvěryhodných CA:\\
+
+
+%%\textbf{4. Certificate transparency} \\
+%%~\\
+%%K čemu certificate transparency log slouží? Jak informace z logu může využít správce?
+%%~\\
+%%~\\
+%%~\\
+%%\underline{\hspace{16cm}}
+%%%~\\
+%%%~\\
+%%%Co obsahuje soubor \texttt{Atom}?~\underline{\hspace{12.2cm}}
+%%%\section{Ukončení práce v laboratoři}
+%%%\textbf{Nezapomeňte na závěr jako root spustit:} \texttt{/root/isa2/clean} \textbf{(!)}
+
+\end{document}
+%% END OF FILE

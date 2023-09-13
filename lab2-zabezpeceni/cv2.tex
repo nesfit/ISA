@@ -1,0 +1,197 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{xr}
+%\graphicspath{ {./images/} }
+\externaldocument{../manual/manual}
+
+\title{Zabezpečený přenos dat\\
+{\bf\large ISA - Laboratorní cvičení č.2}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/lab2-zabezpeceni}}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+\section*{Cíl cvičení}
+\begin{itemize}
+  \item Seznámit se se synchronizací času a protokolem NTP (Network Time Protocol).
+  \item Nakonfigurovat zabezpečený vzdálený přístup pomocí nástroje SSH (Secure Shell).
+  \item Analyzovat komunikaci zabezpečenou protokolem TLS (Transport Layer Security).
+\end{itemize}
+
+\section*{Obecné pokyny}
+\begin{itemize}
+  \item Přihlaste se v OS Linux (F3) jako uživatel {\tt user} s heslem {\tt user4lab}.
+  \item V případě potřeby se přepněte na uživatele {\tt root} příkazem {\tt su}
+  (switch user), heslo {\tt root4lab}.
+  \item Pro editaci konfiguračních souborů můžete použít libovolný editor (nano, mcedit, vim, gedit).
+  \item Při práci budete používat jméno počítače ve formátu hXX, kde XX je číslo vašeho počítače.
+\end{itemize}
+
+%\newpage
+%\section{Laboratorní úlohy}
+\section{Synchronizace času pomocí protokolu NTP}
+Pro automatizovanou synchronizaci hodin na síťových zařízeních se využívá protokol NTP (Network Time Protocol), viz kapitola \ref{ntp} v laboratorním manuálu. Správná synchronizace  času je nezbytná pro zajištění bezpečnosti zejména kvůli časovým razítkům omezujícím platnost klíčů, certifikátů či elektronických podpisů.
+
+\begin{enumerate}
+  \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda na počítači běží služba \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Příkazem {\tt chronyc -n sources} zkontrolujte seznam serverů, které váš počítač používá
+    pro synchronizaci času.
+
+  \item Do protokolu vyplňte IP adresy nakonfigurovaných serverů NTP a hodnotu {\em stratum}  serverů.
+
+  \item Jako uživatel \texttt{root} otevřete konfiguračního soubor {\tt /etc/chrony.conf}. V souboru
+    nahraďte implicitní server NTP Cent OS ({\tt *.centos.pool.ntp.org}) za server na FIT ({\tt ntp.fit.vutbr.cz}). 
+  \item Restartujte démona NTP příkazem {\tt systemctl restart chronyd.service}
+  \item  Ověřte pomocí příkazu {\tt systemctl status chronyd.service}, zda služba běží. Pokud neběží, zjistěte chybu příkazem {\tt journalctl -u chronyd}. Případnou chybu opravte v konfiguraci a službu {\tt chronyd} znovu restartujte.
+  \item Pomocí příkazu {\tt chronyc -n sources} ověřte, zda je čas správně synchronizován se serverem NTP na FIT.
+
+\end{enumerate}
+
+\section{Zabezpečený vzdálený přístup pomocí SSH (práce ve dvojicích)}
+% Poznámka: namísto řetězce {\tt <login>} používejte v této úloze své studentské přihlašovací jméno, například {\tt xstudent00}.
+Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálený počítač. Více podrobností ke službě SSH najdete v kapitole \ref{ssh} laboratorního manuálu.
+\begin{enumerate}
+  \item Otevřete si dvě terminálová okna: příkazovou řádku pro uživatele {\tt user} a další
+    příkazovou řádku pro uživatele {\tt root} příkazem {\tt su} (switch user).
+  \item Pomocí příkazu {\tt whoami} ověřte jméno aktivního uživatele. 
+  \item V~obou terminálových oknech dočasně vypněte podporu pro SSH agenta příkazem {\tt unset}:
+  \begin{lstlisting}
+  [user@hXX]$ unset SSH_AUTH_SOCK
+  [root@hXX]# unset SSH_AUTH_SOCK
+  \end{lstlisting}
+
+  Pokud budete otevírat v průběhu řešení nové terminály, nezapomeňte v nich vypnout podporu agenta SSH.
+
+  \item Bezpečné připojení na vzdálený počítač bez autentizačních klíčů:
+    \begin{enumerate}
+      \item Spusťte program Wireshark a zachytávejte komunikaci na portu 22 (rozhraní enp2s0).
+      \item Přihlaste se pomocí {\tt ssh} na počítač svého souseda hYY (např. h01): příkaz
+        {\tt ssh user@hYY. netlab.fit.vutbr.cz}. Zadejte heslo uživatele {\tt user} v OS {\tt user4lab}.
+      \item Na vzdáleném počítači zadejte libovolný příkaz, např. výpis manuálové stránky ssh ({\tt man ssh}), obsahu adresáře ({\tt ls}) či login aktuálně uživatele ({\tt whoami}).
+      \item Příkazem {\tt exit} nebo stiskem {\tt Ctrl-D} ukončete spojení SSH.
+      \item V programu Wireshark zobrazte obsah komunikace SSH pomocí {\tt Follow TCP stream}.
+        Podívejte se, co lze z uvedené komunikace vyčíst. Výsledek zapište do protokolu.
+    \end{enumerate}
+
+  \item Vytvoření veřejného a privátního klíče pro službu SSH:
+    \begin{enumerate}
+      \item Jako uživatel {\tt user} vygenerujte příkazem \verb|$ ssh-keygen -C <login>@user|\footnote{Řetězec {\tt <login>} nahraďte svým loginem, např. xstudent00.} implicitní klíč pro uživatele {\tt user}. Ponechte implicitní názvy souborů pro uložení klíčů. Zvolte heslo o délce alespoň osmi znaků, například \texttt{fitvutisa}. Heslo se používá pro přístup k soukromému klíči.
+      \item Jako uživatel {\tt root} vygenerujte příkazem \verb|# ssh-keygen -N "" -C <login>@root|
+        implicitní klíč pro uživatele {\tt root} bez hesla.
+      \item Ověřte obsah a přístupová práva nově vzniklých souborů (\verb|ls -l ~/.ssh|).
+      \item Do protokolu uveďte, jaký je význam obou klíčů, v jakých souborech jsou uloženy a jak je nastaven přístup k těmto souborům (unixová práva).
+    \end{enumerate}
+
+  \item Distribuce klíčů:
+    \begin{enumerate}
+      \item Oba  veřejné klíče zkopírujte na vzdálený počítač hYY do souboru \verb|.ssh/authorized_keys|. Můžete využít následující postup:
+        \begin{itemize}
+          \item Klíč uživatele {\tt user} zkopírujte příkazem: \\
+            {\verb&cat ~user/.ssh/*.pub | ssh user@hYY "cat >> .ssh/authorized_keys"&}
+          \item Na vzdáleném počítači nastavte správně přístupová práva k souboru:\\
+            {\verb&ssh user@hYY "chmod g-w .ssh/authorized_keys"&} 
+          \item Zkopírujte na vzdálený počítač také veřejný klíč uživatele {\tt root}: \\
+            {\verb&cat /root/.ssh/*.pub | ssh root@hYY "cat >> .ssh/authorized_keys"&}
+        \end{itemize}
+      \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na vzdálený počítač hYY.
+
+      \item Do protokolu uveďte, jaká hesla bylo nutné zadat při přihlášení. Vysvětlete význam souboru \texttt{authorized\_keys}.
+      \item Zkuste opakovaně zadat špatné heslo pro přístup ke klíči. Do protokolu napište, jaké heslo bude po vás požadovat SSH k připojení na vzdálený počítač. Při experimentu použijte režim verbose (\texttt{ssh -v}).
+    \end{enumerate}
+
+  \item Použití služby SSH pro vzdálené spuštění příkazu:
+    
+    Nyní omezíme použití klíče uživatele {\tt root} pouze na spuštění konkrétního příkazu na vzdáleném počítači.
+    \begin{enumerate}
+    \item Přihlaste se jako uživatel {\tt root} na sousední počítač hYY, kam jste nakopírovali své veřejné klíče.
+    \item Na vzdáleném počítači upravte soubor s autorizovanými veřejnými klíči tak, že na začátek řádku s klíčem uživatele {\tt root}\footnote{Řádek poznáte tak, že končí řetězcem {\tt <login>@root}.} napíšete příkaz 
+        \verb|command="chronyc -n sources"| následova\-ný mezerou a původním obsahem řádku. Tento příkaz se spustí místo vzdáleného příhlášení. 
+      \item Odhlaste se ze vzdáleného počítače.
+      \item Znovu se přihlaste na sousední počítač hYY pomocí SSH z účtu {\tt root}. Výstup z terminálu po přihlášení zapište do protokolu.
+    \end{enumerate}
+  \item Opakované použití klíče zabezpečeného heslem pomocí agenta SSH.
+    \begin{enumerate}
+      \item Otevřete si nový unixový terminál pod uživatelem {\tt user}. Pomocí příkazu \verb|env| ověřte, jak je nastavená proměnná \verb|SSH_AUTH_SOCK|.
+      \item Přihlaste se znovu k sousednímu počítači hYY.
+      \item Odhlaste se a znovu přihlašte na sousední počítač. Jak proběhlo přihlášení? Výsledek zapište do protokolu.
+    \end{enumerate}
+\end{enumerate}
+
+\section{Zabezpečení transportní vrstvy pomocí TLS}
+V této budeme analyzovat zabezpečený přenos pomocí TLS (Transport Layer Security). Více podrobností k TLS najdete v laboratorním manuálu, kapitole \ref{tls}. 
+\begin{enumerate}
+  \item Nezabezpečený přenos dat.
+    \begin{enumerate}
+      \item Spusťte program Wireshark a zachytávejte komunikaci na portu 80.
+      \item Pomocí programu {\tt telnet} se připojte k fakultnímu webovému
+        serveru: \\ \verb|telnet nes.fit.vutbr.cz 80|.
+      \item V programu Wireshark pozorujte navázání spojení pomocí trojcestné synchronizace TCP.
+      \item Zašlete serveru požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem. V terminálu pozorujte odpověď.
+      \item Zobrazte komunikace HTTP v programu Wireshark.  Do~protokolu uveďte, zda je možné vidět obsah odchycené komunikace.
+    \end{enumerate}
+
+  \item Přenos dat zabezpečený protokolem TLS.
+    \begin{enumerate}
+      \item Spusťte program Wireshark a odchytávejte komunikaci na portu 443.
+      \item Pomocí programu {\tt openssl} se připojte k fakultnímu webovému  serveru: \\ \verb|openssl s_client -connect www.fit.vutbr.cz:443 -tls1_2|. Všimněte si řádku \emph{Verify return code}. Co říká o certifikátu?
+
+      \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jak je možné z odchycené komunikace zjistit jméno serveru? Zapište odpověď do protokolu.
+
+      \item Pomocí programu \texttt{openssl} zašlete webovému serveru FIT požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem. V terminálu pozorujte odpověď.
+
+      \item Zobrazte tuto odchycenou komunikaci ve Wiresharku.  Do~protokolu uveďte, zda je možné přečíst obsah komunikace. 
+
+      \item Z výstupu aplikace \texttt{openssl} určete, jaká šifrovací sada (cipher suite) se používá. Identifikátor šifrovací sady zapište do protokolu.
+
+      \item Na stránce \url{https://ciphersuite.info/} vyhledejte detaily k dané šifrovací sadě. Do protokolu vyplňte názvy použitých algoritmů pro zabezpečení komunikace TLS.
+    \end{enumerate}
+
+  \item {\bf Zabezpečený přenos dat TLS ve webovém prohlížeči}
+
+    \begin{enumerate}
+      \item V prohlížeči Firefox otevřete stránku  \verb|wis.fit.vutbr.cz|.
+      \item Klikněte na ikonku zámku nalevo od URL a~zjistěte, jaká šifrovací sada je použita pro dané zabezpečené připojení na. Zobrazte informace o použitém certifikátu.
+      Požadované údaje vyplňte do protokolu.
+      \item V menu \emph{Edit » Settings » Privacy \& Security} v sekci
+        \emph{Certificates} zobrazte certifikáty autorit, kterým důvěřujete. Do protokolu vypište názvy alespoň tří z nich.
+    \end{enumerate}
+
+%%  \item {\bf Certificate Transparency}
+%%
+%%    \begin{enumerate}
+%%
+%%      \item Příkazem \verb|host -t CAA fit.vutbr.cz| si zobrazte certifikační
+%%        autority oprávněné vydávat certifikáty pro doménu \url{fit.vutbr.cz}.
+%%
+%%      \item V prohlížeči se připojte na stránku
+%%        \url{https://certstream.calidog.io/}, klikněte na tlačítko \emph{Open
+%%        Fire Hose}. Pozorujte, \textbf{jaké informace} se zde zobrazují.
+%%        Zamyslete se, k čemu mohou tyto informace sloužit, případně jak se dají zneužít. {\bf Zapište výsledek do protokolu.}
+%%      \item V prohlížeči se připojte na stránku \url{https://crt.sh}.
+%%
+%%      \item Zobrazte certifikáty vydané pro servery v  doméně \emph{kralovopole.brno.cz}. Podívejte se na jejich obsah, vydavatele a platnost. 
+%%
+%      \item Najděte na stránce ikonu směřují k souboru \textbf{Atom}.
+%      Podívejte se, co soubor obsahuje a zodpovězte otázku v protokolu.
+%      Zamyslete se, k čemu by se takový obsah dal použít.
+%%   \end{enumerate}
+\end{enumerate}
+
+
+\section{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item Odevzdejte vyplněný protokol vyučujícímu. 
+  \item Jako uživatel \texttt{root} spusťte dávku {\tt /root/isa2/clean}, která odstraní vaši konfiguraci a vypne počítač.
+\end{itemize}
+
+\end{document}
+%% END OF FILE
