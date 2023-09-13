@@ -1,0 +1,128 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+
+\title{Základní konfigurace síťových zařízení a analýza síťového provozu programem Wireshark\\
+{\bf\large ISA - Laboratorní cvičení č.1}\\
+{\bf\large Protokol ke cvičení}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/lab1-konfigurace}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle}
+
+%\input{lab1-arch}
+
+%\thispagestyle{empty}
+
+Jméno a příjmení:\\
+Login:\\
+Skupina (číslo nebo čas):\\
+Datum:\\
+
+\section{Zjišťování konfigurace}
+\textbf{1.1}
+Konfigurace rozhraní \texttt{enp2s0}\\
+\\
+\begin{tabular}{|l|r|}
+\hline
+MAC adresa: & \hspace{20em} \\
+\hline
+IPv4 adresa: & \\
+\hline
+Délka prefixu (v bitech): & \\
+\hline
+Adresa sítě: & \\
+\hline
+Broadcastová adresa: & \\
+\hline
+\end{tabular}
+\vspace{1em}
+\\
+\textbf{1.2} Výchozí brána (default gateway)
+\medskip
+
+IPv4 adresa:\\
+MAC adresa:\\
+\\
+\textbf{1.4} Implicitní DNS servery:\\
+\vskip 2em
+
+\textbf{1.5} Přidaný záznam v {\tt /etc/hosts}:\\
+\vskip 2em
+
+\textbf{1.6} Příklad aktivního spojení + vysvětlení položek:\\
+\vskip 8em
+
+\textbf{1.9} Vyhledání chybové zprávy v systémovém logu
+\medskip
+
+Použitý příkaz:\\
+
+Chybová zpráva:
+
+\section{Wireshark}
+\textbf{2.1} Capture filter:\\
+\vskip 1em
+
+\textbf{2.5} Analýza komunikace HTTP\\
+
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+& \multicolumn{2}{|c|}{\textbf{Požadavek HTTP}} & \multicolumn{2}{|c|}{\textbf{Odpověď HTTP}}\\
+\hline
+\textbf{Hodnota} & \textbf{Adresa} & \textbf{Typ zařízení} & \textbf{Adresa} & \textbf{Typ zařízení}\\
+\hline
+Zdrojová MAC adresa & & & & \\
+\hline
+Zdrojová IPv4 adresa & & & & \\
+\hline
+Cílová MAC adresa & \hspace{8em} & \hspace{6em} & \hspace{8em} & \hspace{6em} \\
+\hline
+Cílová IPv4 adresa & & & & \\
+\hline
+\end{tabular}
+
+\bigskip
+U typu zařízení popište, k jakému zařízení je daná adresa přiřazena, např. webový klient, klientský počítač, brána apod. 
+
+\bigskip
+
+\textbf{2.6} Popište formát výstupu funkcí {\em Follow TCP stream} a {\em Follow HTTP stream}. \\
+\medskip
+
+\emph{Follow TCP stream:}\\
+\vskip 2em
+
+\emph{Follow HTTP stream:}\\
+\vskip 2em 
+
+\textbf{2.10} Nastavení filtru pro zobrazení (display filter) v programu Wireshark:\\
+\medskip
+
+\textbf{2.11} Popište souvislost a návaznost odchycených paketů DNS a HTTP(S):\\
+\vskip 5em
+
+\section{Konfigurace IPv4 a IPv6}
+
+\begin{tabular}{|l|r|}
+\hline
+Zvolená maska podsítě pro IPv4: & \hspace{20em} \\ \hline
+Použitá adresa IPv4: & \\ \hline
+Maximální počet zařízení v podsíti: & \\ \hline \hline
+Zvolený prefix IPv6 sítě: & \\ \hline
+Použitá adresa IPv6: & \\ \hline
+Maximální počet zařízení v podsíti: & \\ \hline
+\end{tabular}
+
+\end{document}
