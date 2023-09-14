@@ -1,0 +1,112 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+
+\title{Správa a monitorování sítě\\
+{\bf\large ISA - Laboratorní cvičení č.5}\\
+{\bf\large Protokol ke cvičení}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/lab5-management}}
+
+\setlength\parindent{0pt}
+
+\begin{document} 
+
+{\let\newpage\relax\maketitle}
+
+Jméno a příjmení:\\
+Login:\\
+Skupina (číslo nebo čas):\\
+Datum:\\
+
+\section{Logování událostí v systému Syslog}
+
+\begin{itemize}
+    \item [1.10] Vypište IP adresy a porty klienta a serveru Syslog. Uveďte transportní protokol služby Syslog.
+    \begin{itemize}
+        \item IP adresa a port serveru:
+        \item IP adresa a port klienta:
+        \item Transportní protokol: 
+    \end{itemize}
+    \item [1.11] Vypište hodnoty políček {\tt FACILITY} a {\tt SEVERITY} ve vámi vybraném paketu Syslog.
+    \vspace{15mm}
+\end{itemize}
+
+\section{Monitorování toků NetFlow}
+
+\begin{itemize} 
+\item[2.3-2.4] Vypište tři stanice s největším počtem odeslaných a přijatých bytů.  
+
+\begin{tabular}{|p{2cm}|p{3cm}|c||p{2cm}|p{3cm}|c|}
+  \hline
+  \multicolumn{3}{|c||}{Top 3 IPs by sent bytes} & \multicolumn{3}{|c|}{Top 3 IPs received bytes} \\\hline
+IP adresa  & Přeneseno bytů  & \% provozu & IP adresa  & Přeneseno bytů  & \% provozu \\ \hline
+      &                 &           &&&   \\   \hline
+      &                 &           &&&   \\  \hline
+      &                 &           &&&   \\   \hline
+\end{tabular}
+
+\item[2.6] Vypište tři nejvytíženější porty podle počtu přenesených toků a bytů: 
+
+\begin{tabular}{|p{2cm}|p{3cm}|c||p{2cm}|p{3cm}|c|}
+\hline
+  \multicolumn{3}{|c||}{Top 3 ports by flows} & \multicolumn{3}{|c|}{Top 3 ports by bytes} \\\hline
+Port  & Počet toků  & \% provozu & Port & Počet bytů & \% provozu \\ \hline
+      &                  &       &&& \\  \hline
+      &                  &       &&& \\  \hline
+      &                  &       &&& \\  \hline
+\end{tabular}
+\end{itemize}
+
+\section{Monitorování sítě pomocí SNMP}
+\begin{itemize}
+    \item [3.1] Základní informace o systému:
+    \begin{itemize}
+        \item Jméno systému:
+         \vspace{3mm}
+        \item Název a verze OS:
+         \vspace{3mm}
+        \item Doba běhu systému (ve dnech, hodinách, min a sec):
+         \vspace{3mm}
+    \end{itemize}
+    \item [3.2] Vypište IP adresu a MAC adresu tří sousedních počítačů získané ze SNMP:
+    
+\begin{tabular}{|p{5cm}|p{7cm}|}
+\hline
+IP adresa  & MAC adresa   \\ \hline
+      &     \\   \hline
+      &     \\   \hline
+      &     \\   \hline
+\end{tabular}
+    \item[3.3] Název síťového rozhraní na serveru {\tt isa2} připojeného do internetu: 
+\end{itemize}
+
+\section{Monitorování sítě pomocí ICMP}
+\begin{itemize}
+  \item [4.1] Zapište průměrnou odezvu serveru \texttt{google.com} (v ms):
+  \item [4.2] Vypište velikost hlaviček IP, ICMP a maximální velikost obsahu zachycených ICMP paketů:
+
+    \vspace{2mm}
+    \begin{tabular}{|c|c|c|c|p{3cm}|}  \hline
+     Protokol  & Hlavička IP (B)  & Hlavička ICMP (B)  & Obsah ICMP (B) & Součet (B) \\ \hline
+     IPv4      &     &       &         &   \\   \hline
+     IPv6      &     &       &         &     \\  \hline
+\end{tabular}
+
+    \vspace{2mm}
+    \item [4.4] Zapište posloupnost ISP a čísel jejich AS na trase z vašeho PC do zadané destinace (AS-Path):
+        \begin{itemize}
+            \item \texttt{google.com}:
+            \vspace{3cm}
+            \item \texttt{idnes.cz}:
+            \vspace{3cm}
+        \end{itemize}
+\end{itemize}
+\end{document}

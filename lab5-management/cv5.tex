@@ -1,0 +1,154 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{xr}
+\externaldocument{../manual/manual}
+
+\title{Správa a monitorování sítě\\
+{\bf\large ISA - Laboratorní cvičení č.5}}
+
+\author{Vysoké učení technické v Brně}
+
+\date{\url{https://github.com/nesfit/ISA/tree/master/lab5-management}}
+
+\begin{document}
+
+{\let\newpage\relax\maketitle} 
+
+\section*{Cíl laboratorního cvičení}
+\begin{itemize}
+  \item Seznámit se s logováním událostí v systému Syslog a nástrojem {\tt rsyslog}.
+  \item Seznámit se s monitorování toků NetFlow a nástrojem {\tt nfdump}.
+  \item Seznámit se s nástroji pro správu sítě SNMP.
+  \item Vyzkoušet si monitorování sítě pomocí protokolu ICMP.
+\end{itemize}
+
+\section*{Obecné pokyny}
+\begin{itemize}
+  \item Zapněte si počítač s OS Linux (F3) a přihlaste se jako uživatel {\tt user} s heslem {\tt user4lab}.
+  \item Otevřete si terminálové okno pro uživatele {\tt user}.
+  \item Otevřete si terminálové okno pro uživatel {\tt root} (příkaz {\tt su}).
+  \item Zadání cvičení a šablony konfiguračních souborů lze najít v systému Moodle u předmětu ISA.
+\end{itemize}
+
+\section{Logování událostí v systému Syslog (práce ve dvojicích)}
+V první úloze se seznámím se systémem Syslog pro logování systémových událostí a jejich přenos protokolem Syslog na server.
+Pro práci budeme využívat nástroj {\tt rsyslogd}, který bude sloužit jako serverová i klientská aplikace. K vygenerování událostí budeme využívat nástroj {\tt logger}.
+
+Obecné informace o systému Syslog můžete najít v laboratorním manuálu, kapitola \ref{syslog}. Konkrétní použití nástrojů je popsáno v manuálových stránkách příkazů  {\tt rsyslogd(8)}, {\tt rsyslog.conf(5)} a  {\tt logger(1)}. Pro spuštění a konfiguraci služeb Syslog musíte mít práva uživatele {\tt root}.
+
+\begin{enumerate}
+  \item Při práci ve dvojicích bude jedna stanice fungovat v roli klienta a druhá v roli serveru služby Syslog, kdy klient Syslog posílá systémové události serveru Syslog.
+  \item Na straně serveru povolte komunikaci Syslog na standardním portu 514. Do konfiguračního souboru {\tt /etc/rsyslog.conf} přidejte následující řádky, případně je odkomentujte:
+    \vspace{-2mm}
+\begin{verbatim}
+  module(load="imudp")              # načte plugin pro vstup dat syslog nad UDP
+  input(type="imudp" port="514")    # nastavení portu
+\end{verbatim}
+  \item Na straně serveru otevřete port 514 ve firewallu pro přijímání komunikace Syslog.
+\begin{verbatim}
+  # firewall-cmd --add-port=514/udp
+\end{verbatim}
+  \item  Na klientovi nakonfigurujte démona {\tt rsyslog} tak, aby odesílal veškeré zprávy z klienta na serveru pomocí UDP.
+    Do souboru {\tt /etc/rsyslog.conf} přidejte na konec konfiguračního souboru následující pravidlo:
+\begin{verbatim} 
+  *.*  @<doménové_jméno_serveru>:<číslo_portu>
+\end{verbatim}
+    {\small Doménové jméno serveru zadejte ve formátu \texttt{hXX.netlab.fit.vutbr.cz}, kde \texttt{XX} je číslo vašeho počítače, např. \texttt{h10.netlab.fit.vutbr.cz}.}
+  \item Na serveru i klientovi restartujte proces {\tt rsyslog}: 
+\begin{verbatim}
+  systemctl restart rsyslog
+\end{verbatim} 
+  \item Ověřte na straně serveru, zda běží na daném portu proces {\tt rsyslog}, např. pomocí příkazu \verb|netstat -ulnp|.
+  \item Na serveru i klientovi spusťte záchyt paketů v nástroji Wireshark. 
+  \item Pro ověření funkčnosti vygenerujte na klientské stanici testovací zprávu nástrojem {\tt logger}:
+\begin{verbatim} 
+  logger -d <obsah_zprávy>
+\end{verbatim} 
+  \item Na serveru vyhledejte doručenou zprávu na konci souboru {\tt /var/log/messages}, který obsahuje
+        systémové události.
+\begin{verbatim} 
+  tail -f /var/log/messages | grep <doménové_jméno_klienta>    # např.  hXX
+\end{verbatim} 
+  \item Ze zachycených paketů zjistěte, na jakém portu a jakým protokolem jsou zprávy Syslog zasílány.
+  \item Na klientovi otevřete nový terminál, kde s přihlašte a odhlašte jako {\tt root}, což způsobí vygenerování událostí Syslog, které jsou pak zaslány na server. Do protokolu zapište hodnotu políček {\tt FACILITY} a {\tt SEVERITY (LEVEL)} vygenerovaných zpráv.
+\end{enumerate}
+
+\section{Monitorání toků NetFlow}
+Systém NetFlow slouží pro sběr a přenos statistik o jednotlivých tocích, které komunikují po síti. Záznamy NetFlow, s~nimiž budeme během cvičení pracovat, jsou pořízeny ze sítě VUT a~anonymizovány. Další informaci o NetFlow je možné najít v laboratorním manuálu, kapitole \ref{netflow}.
+\begin{enumerate}
+  \item Na počítači se v adresáři {\tt /root/isa5/} nachází anonymizovaný soubor s daty NetFlow, viz soubor \texttt{nfcapd.202211242155.anon}. Tento soubor bude vstupem pro program  {\tt nfdump}, který využijeme pro prohledávání záznamů NetFlow.
+  \item Prostudujte manuálovou stránku nástroje {\tt nfdump}.
+    \begin{itemize}
+      \item Zjistěte v manuálové stránce, k čemu slouží přepínače {\tt -r, -s, -n, -O, -A}.
+      \item V části {\tt EXAMPLES} manuálové stránky se podívejte na příklady použití nástroje {\tt nfdump}.
+    \end{itemize}
+  \item Vyhledejte deset nejvíce komunikujících uzlů podle počtu odeslaných bajtů. První tři zapište do protokolu. 
+\begin{verbatim}
+  nfdump -r /root/isa5/nfcapd.202211242155.anon -s srcip/bytes -n 10
+\end{verbatim}
+  \item Vyhledejte tři uzly s největším počtem přijatých bytů. Výsledek zapište do protokolu.
+  \item Zjistěte, kolik dat bylo přeneseno na portech 80 (HTTP) a 443 (HTTPS). Jaký je poměr využití těchto portů na celkovém provozu?
+\begin{verbatim}
+  nfdump -r /root/isa5/nfcapd.202211242155.anon -s port/bytes 
+\end{verbatim}
+  \item Všimněte si rozdílů v přenosech podle přenesených toků a bajtů. Vypište statistiky použití nejvíce vytížených portů řazené podle počtu toků a bytů do protokolu.
+\end{enumerate}
+%\end{itemize}
+
+%SNMP
+\section{Monitorování síťových zařízení pomocí služby SNMP}
+Protokol SNMP slouží k získání informací či statistických údajů o zvolené stanici (tzv. objektů). Pro čtení dat z agenta SNMP budeme využívat nástroj \texttt{snmpwalk}, viz \texttt{man snmpwalk}. Formát použití:
+\begin{verbatim}
+snmpwalk -v<protokol> -c <community string> <host> <object>
+\end{verbatim}
+Další informace ke službě SNMP lze najít v laboratorním manuálu, kapitole \ref{snmp}. 
+
+\begin{enumerate}
+\item Vyhledejte základní informace o serveru {\tt isa2.netlab.fit.vutbr.cz}.  Použijte příkaz {\tt snmpwalk}\footnote{Pokud příkaz {\tt snmpwalk} není dostupný, doinstalujte balíček \texttt{net-snmp-utils} příkazem \texttt{yum install net-snmp-utils}.} pro vyhledání objektu \texttt{system}. % Pro připojení použijte privátní IP adresu serveru \texttt{10.10.10.1}.
+  Výsledek zapište do protokolu. 
+\begin{verbatim}
+  snmpwalk -v2c -c public isa2.netlab.fit.vutbr.cz system
+\end{verbatim}
+  \item Pomocí protokolu SNMP vypište tabulku ARP na serveru {\tt isa2}. Z dané tabulce zjistěte  hodnoty IP adres a MAC adres alespoň tří počítačů v laboratoři . Pro vyhledání použijte objekt SNMP \texttt{ipNetToMedia}. Přehlednější výpis dat získáte použitím příkazu \texttt{snmptable}, který má stejnou syntax jako \texttt{snmpwalk}. Nalezené informace zapište do protokolu. 
+\begin{verbatim}
+  snmptable -v2c -c public isa2.netlab.fit.vutbr.cz ipNetToMedia
+\end{verbatim}
+\item Pomocí nástroje {\tt snmpwalk} zjistěte název síťového rozhraní serveru {\tt isa2}, které je připojeno do internetu. 
+  % , které obsahuje mapování mezi IP adresou a MAC adresou vašeho souseda. 
+  Využijte objekt SNMP \texttt{interface}.
+\end{enumerate}
+
+\section{Monitorování sítě pomocí protokolu ICMP}
+Protokol ICMP slouží pro dohledávání problémů v počítačové síti na vrstvě IP. Standardně ho využívají nástroje \texttt{ping} a \texttt{traceroute}, nebo pokročilejší nástroje jako například \texttt{mtr}. Pomocí těchto nástrojů budeme zjišťovat informace o cestě mezi lokálním počítačem a vybraným serverem.
+
+\begin{enumerate}
+  \item Pomocí nástroje \texttt{ping} zjistěte průměrnou dobu odezvy serveru \texttt{google.com}.
+  \item V dalším úkolu budeme zjišťovat, jaká je maximální povolená velikost IP datagramu na cestě k serveru \texttt{www.fit.vutbr.cz} a jak se tato velikost liší pro IPv4 a IPv6.
+  \begin{enumerate}
+    \item Pro testování použijeme nástroj {\tt ping} s parametrem \texttt{-s}, který posílá datagram o zadané velikosti, a parametrem \texttt{-M do}, který zakáže fragmentaci IP (nastaví bit \texttt{Don't Fragment}).
+\begin{verbatim}
+  ping -s 1500 -M do www.fit.vutbr.cz    # příklad testu        
+\end{verbatim}
+    \item Pro testování maximální velikosti IPv6 datagramu se přihlašte pomocí {\tt ssh} na svůj studentský účet na serveru {\tt merlin.fit.vutbr.cz}. Pomocí nástroje {\tt ping6} určete maximální velikost IPv6 datagramu na cestě k serveru \texttt{www.fit.vutbr.cz}.
+    \item Odchytněte provoz ICMP pomocí Wiresharku a zjistěte zapouzdření zpráv ICMP a velikost jednotlivých vrstev.
+    \item Výsledné hodnoty zapište do protokolu. 
+  \end{enumerate}
+  \item Pomocí nástroje \texttt{traceroute} zjistěte, přes které {\em autonomní systémy} (AS) je směrován provoz z vašeho PC na servery \texttt{google.com} a \texttt{idnes.cz}.
+\begin{verbatim}
+  traceroute -A google.com
+  traceroute -A idnes.cz
+\end{verbatim}
+  \item Do protokolu uveďte sekvenci nalezených AS k cíli (jméno ISP, číslo AS). Pro vyhledání jmen poskytovatelů AS využijte nástroj {\tt whois} nebo stránky \texttt{stat.ripe.net}, případně \texttt{bgp.he.net}.
+\end{enumerate}
+
+\section*{Ukončení práce v laboratoři}
+\begin{itemize}
+  \item Jako uživatel {\tt root} spusťte ukončovací skript {\tt /root/isa5/clean}, který smaže vaši konfiguraci a vypne počítač. 
+\end{itemize}
+
+\end{document}
