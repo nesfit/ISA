@@ -30,26 +30,27 @@
 
 \section*{Obecné pokyny}
 \begin{itemize}
+  \item Vypněte si mobily a uschovejte do tašek. Není dovoleno používat mobily během výuky. 
   \item Zkontrolujte připojení sluchátek s mikrofonem k počítači. 
   \item Přihlašte se do operačního systému MS Windows (F1) jako uživatel {\tt user} s heslem {\tt user4lab}.
-  \item Další informace k IP telefonii a protokolu SIP najdete v laboratorním manuálu, kapitola \ref{sip}. 
+%  \item Další informace k IP telefonii a protokolu SIP najdete v laboratorním manuálu, kapitola \ref{sip}. 
 \end{itemize}
 
 \section{Komunikace VoIP typu peer-to-peer (práce ve dvojicích)}
-V této úloze budeme konfigurovat klienta SIP pro komunikaci se svým sousedem bez použití ústředny (spojení typu peer-to-peer). Součástí úlohy je také odchycení komunikace a její analýza. 
+V této úloze budeme konfigurovat klienta SIP pro komunikaci se svým sousedem bez použití ústředny (spojení typu peer-to-peer). Součástí úlohy je také odchycení komunikace a její analýza. Další informace k IP telefonii a protokolu SIP najdete v laboratorním manuálu, kapitola \ref{sip}. 
 
 \begin{enumerate}
     \item Spusťte aplikaci Jitsi.\footnote{Pokud aplikace není na počítači nainstalovaná, stáhněte ji z \url{https://desktop.jitsi.org/Main/Download.html} a nainstalujte na lokální počítači. Zvolte distribuci Jitsi Desktop Stable pro MS Windows.} 
     \item V menu {\tt Tools} $\rightarrow$ {\tt Options} $\rightarrow$ {\tt Accounts} vytvořte nový účet. V poli {\tt Network} zvolte možnost {\tt SIP}. Jako {\tt SIP id} použijte své přihlašovací jméno, {\tt např. xlogin00}, heslo nezadávejte.
     \begin{figure}[h]
     	\centering
-    	\includegraphics[scale=0.40]{img/account_p2p.png}
+    	\includegraphics[scale=0.37]{img/account_p2p.png}
     	\caption{Nastavení účtu SIP.}
     	\label{fig:sip_account}
     \end{figure}
 
     \item Stiskněte tlačítko {\tt Advanced} a v záložce {\tt Security} vypněte podporu šifrování.
-    \item Tlačítkem {\tt Next} a {\tt Sign in} vytvoříte nový účet. V seznamu účtů pak uvidíte účet s vaším jménem a typem {\it RegistrarLess SIP}, pomocí kterého budete komunikovat přímo s volaným bez registrace na serveru SIP.
+    \item Tlačítky {\tt Next} a {\tt Sign in} vytvoříte nový účet. V seznamu účtů  uvidíte účet s vaším jménem a typem {\it RegistrarLess SIP}, pomocí kterého budete komunikovat přímo s volaným bez registrace na serveru SIP.
     \item Spusťte síťový analyzátor Wireshark a začněte odchytávat pakety na aktivním síťovém rozhraní.
     \item Nastavte display filter tak, aby zobrazoval protokoly SIP a RTP.
     \item V hlavním okně programu Jitsi zadejte do pole {\it Enter name or number} IP adresu vašeho souseda, např. 10.10.10.123.
