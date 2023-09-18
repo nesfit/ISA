@@ -1,1 +1,1 @@
-# ISA -- výukové materiály k laboratorním cvičením
+# Výukové materiály k laboratorním cvičením předmětu ISA
