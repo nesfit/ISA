@@ -1,125 +1,208 @@
-\section{Adresy v~IPv4 síti}\label{adresy_ipv4}
-
-\subsection{Formát adresy}
-IPv4 adresa je délky 32 bitů a preferovaný zápis má formát {\tt X.X.X.X}, kde
-{\tt X} je decimální zápis 8 bitového čísla. Příklad:\\
+\section{Adresování v IP sítích}\label{ip_addressing}
+\subsection{Adresování v síti s protokolem IPv4}\label{adresy_ipv4}
+Pokud v síti provozujeme pouze komunikaci IPv4 \cite{rfc791}, používáme IPv4 adresy pro identifikaci síťových zařízení, směrování (směrovací protokoly RIP, OSPF, EIGRP) či filtrování dat (firewally). 
+\subsubsection{Formát IPv4 adresy}
+IPv4 adresa je jedinečný identifikátor síťového rozhraní, které se používá pro adresování na vrstvě IP. Délka IPv4 adresy je 32 bitů. Standardně se zapisuje v dekadickém tvaru ve formátu {\tt X.X.X.X}, kde {\tt X} je dekadický zápis jednotlivých bytů adresy oddělených tečkou. Příklad:
 \begin{verbatim}
-8.8.8.8
-127.0.0.1
+8.8.8.8   (dekadicky) -- 00001000 00001000 00001000 00001000 (binárně)
+127.0.0.1 (dekadicky) -- 01111111 00000000 00000000 00000001 (binárně)  
 \end{verbatim}
 
-Adresa dvě části:
+IPv4 adresa se skládá ze dvou částí:
 \begin{itemize}
-    \item adresa sítě ({\bf prefix}) a
-    \item adresa uzlu.
-\end{itemize}
-Délka prefixu se zapisuje v~desítkovém tvaru za lomítko. {\tt 192.168.0.1/24}
-
-V~síti s~daným prefixem existují 2 speciální adresy, které nelze použít pro
-adresování jednotlivých uzlů:
-\begin{itemize}
-    \item adresa sítě - adresa uzlu je nulová, např. 192.168.0.0/24
-    \item broadcastová adresa - nejvyšší možná adresa uzlu pro daný prefix,
-        např. 192.168.0.255/24
+    \item adresy sítě (prefix) a
+    \item adresy uzlu.
 \end{itemize}
 
-\section{Adresy v~IPv6 síti}\label{adresy_ipv6}
+Všechny počítače ve stejné podsíti mají stejný prefix a liší se pouze adresou uzlu. Například u sítě s prefixem 192.168.1.0/24 je možné přidělit adresy 192.168.1.1, 192.168.1.2 až 192.168.1.255. Délka prefixu 24 bitů, tj. prvních 24 bitů adres počítačů z této sítě je stejných. Protože délka prefixu může být variabilní, zadává se při konfiguraci IP adresu u počítače buď formou délky prefixu za lomítkem (např. 192.168.1.1/24) nebo formou síťové masky, kdy jedničkový bit znamená bit prefixu (např. 255.255.255.0). 
 
-\subsection{Formát adresy}
-IPv6 adresa je délky 128 bitů a zapsaných ve formátu {\tt X:X:X:X:X:X:X:X}, kde
-{\tt X} je hexadecimální zápis 16 bitového čísla.
-Příklad:\\
+\medskip
+\noindent
+Pro danou podsíť existují dvě speciální adresy, které nelze použít pro adresování koncových zařízení: 
+\begin{itemize}
+    \item adresa sítě - IP adresa, kde adresu uzlu tvoří samé nulové bity, např. 192.168.1.0/24
+    \item broadcastová adresa - IP adresa, kde adresu uzlu tvoří samé jedničkové bity, např. 10.10.10.255/24
+\end{itemize}
+
+\noindent
+Příklad adresování s maskou /22, kde 22 bitů tvoří prefix sítě a zbývajících 10 bitů adresu uzlu:
 \begin{verbatim}
-FEDC:BA98:7654:3210:fedc:ba98:7654:3210
-1080:0000:0000:0000:0008:0800:200C:417a
+                                              < ---  prefix sítě --- ><adresa uzlu> 
+  Adresa sítě:   147.229.12.0/22     binárně: 10010011 11100101 00001100 00000000
+  Broadcast:     147.229.15.255/22   binárně: 10010011 11100101 00001111 11111111
+  Příklad:       147.229.12.101/22   binárně: 10010011 11100101 00001100 01100100
+  Maximální počet stanic pro adresování: 2^10 - 2 = 1022
+
+  Rozsah IPv4 adres pro adresování koncových stanic:
+                 147.229.12.1/22     binárně: 10010011 11100101 00001100 00000001
+                 147.229.12.2/22     binárně: 10010011 11100101 00001100 00000010
+                 ...
+                 147.229.12.255/22   binárně: 10010011 11100101 00001100 11111111
+                 147.229.13.0/22     binárně: 10010011 11100101 00001101 00000000
+                 147.229.13.1/22     binárně: 10010011 11100101 00001101 00000001             
+                 ...
+                 147.229.14.1/22     binárně: 10010011 11100101 00001110 00000001
+                 ...
+                 147.229.15.1/22     binárně: 10010011 11100101 00001111 00000001
+                 ...
+                 147.229.15.254/22   binárně: 10010011 11100101 00001111 11111110
 \end{verbatim}
 
-Preferovaný formát je dále upraven v~RFC 5952\footnote{https://tools.ietf.org/html/rfc5952}, které definuje následující
-pravidla:
-\begin{itemize}
-    \item Nuly na začátku každého 16 bitového čísla je potřeba vynechat (např.
-        80 namísto 0080 a 0 namísto 0000).
-    \item Více nulových bloků lze nejvýše jednou nahradit znakem {\tt ::}, a
-        MUSÍ být nahrazena nejdelší možná posloupnost takových nulových bloků.
-        V~případě více shodně dlouhých posloupností, nahrazuje se ta nejvíce
-        vlevo.
-    \item Znak {\tt ::} nesmí nahrazovat samostatný nulový blok.
-    \item Znaky "a", "b", "c", "d", "e", "f" hexadecimální soustavy se vždy
-        píšou malými písmeny.
-\end{itemize}
-Adresy z~předchozího příkladu tedy budou vypadat následovně:\\
+\subsection{Adresování v síti s protokolem IPv6}\label{adresy_ipv6}
+Protokol IPv6 definuje pro adresování IPv6 adresy o délce 128 bitů \cite{rfc2460}. Podobně jako u komunikace IPv4, pokud je v síti nastaven protokol IPv6, tak pro identifikaci počítačů (přesněji řečeno síťových rozhraní počítačů) se používá adresa IPv6. Tyto adresy se pak používají pro směrování (protokoly RIPng, OSPFv3, EIGRP for IPv6), filtrování dat apod.
+
+Protože formát protokolů IPv4 a IPv6 je naprosto odlišný, není možné vytvořit spojení na IP vrstvě  mezi stanicí s adresou IPv4 a stanicí s adresou IPv6. Je ale možné nakonfigurovat na počítači (i na stejném síťovém rozhraní) obě adresy, tj. jak adresu IPv4 tak i adresu IPv6 (tzv. dual stack). V takovém případě počítač komunikuje IPv4 protokolem se stanicemi, které jsou adresovány IPv4 adresou, a protokolem IPv6 se stanicemi, které mají nakonfigurovánu adresu IPv6. Protože se jedná o vrstvu IP, tak pro přenos na transportní vrstvě (protokoly TCP a UDP) či na aplikační vrstvě (např. služba HTTP) se nic nemění.
+
+Protokoly IPv4 a IPv6 tedy komunikují v síti nezávisle na sobě, využívají odlišné směrovací protokoly i filtrovací pravidla. Zde je potřeba si uvědomit, že firewall konfigurovaný pro IPv4 se nebude aplikovat na pakety s IPv6 a naopak. 
+
+\subsubsection{Formátování adres IPv6}
+Adresa IPv6 se narozdíl od IPv4 adresy zapisuje v hexadecimální podobě. Jedna hexadecimální číslice reprezentuje čtyřbitové číslo, tj. k reprezentaci 128bitové adresy potřebujeme 32 hexadecimálních číslic. V adrese IPv6 se hexadecimální číslice rozdělují do skupin oddělených dvojtečkou (:). Adresu IPv6 tvoří osm čtveřic hexadecimálních číslic. Standardní formát adresy IPv6 je {\tt X:X:X:X:X:X:X:X}, kde {\tt X} je čtveřice hexidecimálních číslic reprezentující 16 bitů. 
 \begin{verbatim}
-fedc:ba98:7654:3210:fedc:ba98:7654:3210
-1080::8:800:200c:417a
+Příklady plného zápisu adresy IPv56: 2001:067c:1220:080e:00ad:6c49:759f:3267
+                                     fe80:0000:0000:0000:01cb:0238:26f4:359e
+                                     0000:0000:0000:0000:0000:0000:0000:0001
 \end{verbatim}
+V praxi se zapisují adresy IPv6 ve zjednodušeném formátu. Standard RFC 5952 \cite{rfc5952} definuje pro zápis adresy následující pravidla:
+\begin{enumerate}
+  \item Nuly na začátku skupin se nezapisují. 
+\begin{verbatim}
+  2001:067c:1220:080e:00ad:6c49:759f:3267 -> 2001:67c:1220:80e:ad:6c49:759f:3267
+  fe80:0000:0000:0000:01cb:0238:26f4:359e -> fe80:0:0:0:1cb:238:26f4:359
+  0000:0000:0000:0000:0000:0000:0000:0001 -> 0:0:0:0:0:0:0:1
+\end{verbatim}
+\item Posloupnost skupin se samými nulovými číslicemi se nahrazuje znakem {\tt ::}. Protože znak {\tt ::} lze použít v adrese pouze jednou, nahrazuje se vždy ta nejdelší posloupnost nulových číslic.  
+\begin{verbatim}
+  fe80:0:0:0:1cb:238:26f4:359 -> fe80::1cb:238:26f4:359  # link-local address
+  2001:0:0:1:0:0:0:1          -> 2001:0:0:1::1           # global address
+  0:0:0:0:0:0:0:1             -> ::1                     # loopback address   
+  0:0:0:0:0:0:0:0             -> ::                      # unspecified address 
+\end{verbatim}
+  \item V~případě více stejně dlouhých posloupností nulových číslic, nahrazuje se znakem {\tt ::} vždy ta nejlevější posloupnost.
+\begin{verbatim}
+  2001:db8:0:0:1:0:0:1 -> 2001:db8::1:0:0:1
+\end{verbatim}
+    \item Hexadecimální znaky "a" - "f" se v adrese IPv6 vždy zapisují malými písmeny.
+\end{enumerate}
 
-Stejně jako v~IPv4 má adresa dvě části: \emph{adresa sítě ({\bf prefix})} a
-\emph{adresa uzlu}. Délká prefixu se zapisuje v~desítkovém tvaru za lomítko
-(např. {\tt 1080::/60}).
+Stejně jako u~IPv4 má adresa IPv6 dvě části: \emph{adresu sítě} (IPv6 prefix) a
+\emph{adresu rozhraní} (interface ID). Délka prefixu se zapisuje jako číslo v~desítkové soustavě za lomítkem za adresou IPv6 (např. {\tt 2001:67c:1220:/46}).
 
-\subsection{Rozdělení adres}
-IPv6 adresy je možno rozdělit podle rozsahu. Typicky může jít o~tři
-možnosti -- adresy na lince (neprojdou za router), lokální adresy (ULA, nejsou
-routovatelné ve veřejné sítí) a veřejné adresy.
+\subsubsection{Rozdělení adres IPv6}
+Adresy IPv6 se rozdělují podle typu na adresy unicastové, multicastové a anycastové \cite{rfc4291}. Dále je možné unicastové adresy rozdělit podle dosahu na lokální či globální.
 
-\begin{table}[ht!]
-    \begin{center}
-        \begin{tabular}{l|l|l}
-            Význam & Prefix (bitově) & Prefix \\
-            \hline\hline
-            Veřejné  & {\tt 001} & {\tt 2000::/3} \\
-            \hline
-            Lokální  & {\tt 1111 110} & {\tt FC00::/7} \\
-            \hline
-            Linkové  & {\tt 1111 1110 10} & {\tt FE80::/10} \\
-            \hline
-            Multicast & {\tt 1111 1111} & {\tt FF00::/8} \\
-            \hline
+\begin{itemize}
+  \item {\em Unicastová adresa IPv6} slouží k identifikace konkrétního síťového rozhraní. Paket s cílovou unicastovou IPv6 adresou je směrován pomocí statické směrování nebo dynamické směrování (např. protokoly RIPng, OSPFv3, EIGRP for IPv6, MP-BGP).
+  \item {\em Multicastová adresa IPv6} identifikuje skupinu síťových rozhraní, které obvykle patří různým zařízením. Paket poslaný na multicastovou adresu IPv6 je doručen všem rozhraním s danou multicastovou adresou IPv6. Pro směrování multicastového paketu IPv6 se používají multicastové směrovací protokoly (např. PIM). Prefix multicastových adres je ff00::/8.
+
+    \begin{table}[h]
+      \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+          \multicolumn{4}{c}{IPv6 Multicast Address Format}\\
+          \hline
+          8 bits & 4 bits &  4 bits  &  112 bits \\
+          \hline
+          1111 1111 & Flag & Scope & Global ID \\
+          \hline
         \end{tabular}
+      \end{center}
+    \end{table}
+
+    %%IPv6 multicast address: prefix ff00::/3
+%%* Format: 1111 1111 <flag, 4b> <scope, 4b> <global ID, 112b>
+%%
+
+  \item {\em Anycastová adresa IPv6} identifikuje skupinu síťových rozhraní (uzlů). Paket poslaný na anycastovou adresu je doručen na jedno z rozhraní této skupiny, které je "nejblíže" k odesilateli vzhledem k metrice směrovacího protokolu.
+\end{itemize}
+
+Formát základních typů adres IPv6 je znázorněn v tabulce \ref{obr:IPv6_types}.
+\begin{table}[h]
+    \begin{center}
+      \begin{tabular}{|l|l|l|l|}
+        \hline
+        Typ adresy IPv6 & Prefix (bitově) & IPv6 prefix & Příklad\\
+        \hline\hline
+        linková adresa (LLA)  & {\tt 1111 1110 10} & {\tt fe80::/10} & fe80::225:90ff:fec8:3f1b\\
+        \hline
+        Lokální adresa (ULA)   & {\tt 1111 110} & {\tt fc00::/7} & fdd3:ce44:9703:0::1/64 \\
+        \hline
+        Globální adresa (GUA)  & {\tt 001} & {\tt 2000::/3} & 2001:67c:1220:8b0::93e5:b013\\
+        \hline
+        Multicastová adresa & {\tt 1111 1111} & {\tt ff00::/8}&  ff02::1\\
+        \hline
+      \end{tabular}
     \end{center}
+    \caption{Základní typy adres IPv6}\label{obr:IPv6_types}
 \end{table}
 
-\subsection{Lokální IPv6 (ULA) adresy}\label{ula}
-
-Tyto adresy jsou vhodné pro malé sítě zahrnující jedno místo, nebo organizaci.
-Adresy ULA nejsou globálně směrovatelné (ale nic nebrání jedné, či více
-organizacím své adresy mezi sebou směrovat). Jedním z využití adres ULA je
-získání celosvětově unikátního prefix bez formálních požadavků na registraci
-adres.
-
-Síťová část ULA adresy se stává ze 4 části:
-\begin{description}
-    \item [Prefix] {\tt fc00::/7}
-    \item [L] bit 1 pokud byl prefix přiřazen lokálně, 0 zatím nebyla
-        definována, začátek adresy je proto typicky {\tt fd00::/8}
-    \item [Global ID] identifikátor sítě, měl by být unikátní, standard
-        popisuje pseudonáhodný algoritmus pro generování. Unikátnost je
-        požadována, aby při spojení více lokálních sítí nebylo třeba žádnou
-        přečíslovat.
-    \item [Interface ID] Identifikátor rozhraní, existuje několik variant jak
-        jej získat. Původní standard (RFC
-        3513\footnote{https://tools.ietf.org/html/rfc3513} a RFC
-        4291\footnote{https://tools.ietf.org/html/rfc4291}) doporučoval použití
-        EUI-64. V~současnosti byla tato metoda nahrazena RFC
-        7217\footnote{https://tools.ietf.org/html/rfc7217}. Pro ochranu
-        soukromí jsou další specifika automatické generace identifikátorů
-        definovány v~RFC 4941\footnote{https://tools.ietf.org/html/rfc4941}.
-\end{description}
-
-\begin{table}[ht!]
-    \begin{center}
-        \begin{tabular}{c|c|c|c|c}
-            7 bits & 1 &  40 bits  &  16 bits  & 64 bits \\
-            \hline
-            1111 110 & L & Global ID & Subnet ID & Interface ID \\
-            \hline
-        \end{tabular}
-    \end{center}
+%V následujícím textu se podíváme na formáty nejběžnějších typů adres IPv6. 
+\subsubsection{Linková adresa IPv6 (LLA, link-local address)}
+Tato adresa se obvykle vytváří automaticky na rozhraní stanice. Používá se pro konfiguraci stanic. Prefix adres LLA je fe80::/10, za kterým následuje 54 nulových bitů a 64bitový identifikátor rozhraní (interface ID).
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \multicolumn{3}{c}{Link-Local Address (LLA)}\\
+        \hline
+        10 bits &  56 bits  & 64 bits \\
+        \hline
+        1111 1110 10 & 0 & Interface ID \\
+        \hline
+    \end{tabular}
+  \end{center}
 \end{table}
 
-Lokální síť je tedy složená ze tří části:
-\begin{itemize}
-    \item unikátní prefix délky 48 bitů,
-    \item 16 bitový identifikátor podsítě,
-    \item adresa uzlu o~délce 64 bitů.
-\end{itemize}
+\subsubsection{Lokální adresa IPv6 (ULA, unique local address)}\label{ula}
+  Tato adresa slouží k adresování stanic pouze v rámci podsítě (podobně jako privátní adresy IPv4). Adresy ULA nejsou globálně směrovatelné, lze je ale směrovat na lokálních směrovačích v rámci organizace. Mají definovaný prefix {\tt fc00::/7}.
+
+  Podle standardu RFC 4193 \cite{rfc4193} je osmý bit definován pouze pro hodnotu 1 (lokální adresa), v praxi se tedy setkáme s adresami ULA s prefixem {\tt fd00:/8}. Dalších 40 bitů adresy ULA tvoří globálně jedinečný identifikátor (global ID) a 16bitový identifikátor podsítě (subnet ID). Zbývajících 64 bitů adresy ULA tvoří identifikátor rozhraní (interface ID).
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+      \multicolumn{5}{c}{Unique Local Address (ULA)}\\
+      \hline
+      7 bits & 1 &  40 bits  &  16 bits  & 64 bits \\
+      \hline
+      1111 110 & L & Global ID & Subnet ID & Interface ID \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+Adresu ULA tedy tvoří unikátní prefix délky 48 bitů, 16bitový identifikátor podsítě a  adresa uzlu o~délce 64 bitů.
+
+  Podle standardu má být globální identifikátor celosvětově unikátní. Proto musí být generován pseudo náhodným algoritmem, který kombinuje aktuální čas (64bitovou časovou značku z protokolu NTP), 64bitový identifikátor EUI-64 odvozený z MAC adresy, hešovací algoritmus SHA-1 \cite{rfc4193}. Příklad implementace takového generátoru je na \url{https://cd34.com/rfc4193/}.
+
+  \subsubsection{Globální adresa IPv6 (GUA, global unicast address)}
+Adresy GUA jsou jsou směrovatelné v celé síti (veřejné adresy. Tvoří je n-bitový prefix pro směrování, identifikátor podsítě (subnet ID) a adresa rozhraní (interface ID). 
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \multicolumn{4}{c}{Global Unicast Address (GUA)}\\
+        \hline
+        3 bits & n-bits & m-bits & 64 bits \\
+        \hline
+        001 & global prefix & subnet ID & Interface ID \\
+        \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+%%\begin{verbatim}
+%%IPv6 Address Formats
+%%--------------------
+%%Link local IPv6 unicast address (LLA):   prefix fe80::/10
+%%* Format: 1111 1110 10  <zeros, 56b> <interface-ID, 64b>
+%%
+%%Unique local IPv6 unicast address (ULA): prefix: fc00::/7
+%%* Format: 1111 110 <local bit> <global ID, 40b> <subnet ID, 16b> <interface-ID, 64b>
+%%
+%%IPv6 global unicast address (GUA): prefix 2000::/3
+%%* Format: 001 <global prefix> <subnet ID> <interface ID, 64b >
+%%
+%%IPv6 multicast address: prefix ff00::/3
+%%* Format: 1111 1111 <flag, 4b> <scope, 4b> <global ID, 112b>
+%%
+%%\end{verbatim}
+
+% adresy na lince (neprojdou za router), lokální adresy (ULA, nejsou routovatelné ve veřejné sítí) a veřejné adresy.
+

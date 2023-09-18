@@ -18,30 +18,47 @@
 
 {\let\newpage\relax\maketitle}
 
-Tento laboratorní manuál slouží jako referenční příručka pro laboratorní cvičení
-předmětu ISA -- Síťové aplikace a správa sítí. Očekává se, že si studenti před
-účastí na jednotlivých cvičeních přečtou sekce potřebné pro dané cvičení.
+Tento laboratorní manuál slouží jako referenční příručka pro laboratorní cvičení předmětu Síťové aplikace a správa sítí (ISA).Shrnuje potřebné prerekvizity pro práci v laboratoři a přidává doplňující informace k jednotlivým cvičením. Doporučujeme, aby se studenti s tímto materiálem seznámili v rámci přípravy na laboratorní cvičení. 
 
-Sekce \ref{adresy_ipv4}, \ref{adresy_ipv6}, \ref{basics}, \ref{wireshark} a \ref{ipconfig} jsou
-potřebné pro všechny cvičení. Cvičení \emph{Zabezpečený přenos dat} navíc
-předpokládá znalosti ze sekce~\ref{ntp}, \ref{ssh} a~\ref{tls}. Ve cvičení \emph{DNS} se využívají sekce \ref{dns}, \ref{DoT} a \ref{DoH}. Cvičení
-\emph{Konfigurace a analýza přenosů VoIP} předpokládá znalosti uvedené v
-sekci~\ref{sip}. Cvičení \emph{Správa a monitorování sítě} staví na informacích
-uvedených v sekcích \ref{syslog}, \ref{snmp} a \ref{netflow}.
+\subsection*{Doporučené texty pro přípravu na cvičení}
+\begin{itemize}
+  \item Všeobecné prerekvizity: kapitoly \ref{ip_addressing}, \ref{basics}, \ref{wireshark} a \ref{ipconfig}.
+  \item Cvičení 1 (základy konfigurace sítě, analýza provozu): kapitoly \ref{basics}, \ref{wireshark}.
+  \item Cvičení 2 (zabezpečený přenos dat): kapitoly \ref{ntp}, \ref{ssh}, \ref{tls}.
+  \item Cvičení 3 (DNS): kapitola \ref{dns}.
+  \item Cvičení 4 (VoIP): kapitola \ref{sip}.
+  \item Cvičení 5 (správa sítě): kapitoly \ref{syslog}, \ref{snmp}, \ref{netflow}. 
+\end{itemize}
 
+%%Kapitoly \ref{adresy_ipv4}, \ref{adresy_ipv6}, \ref{basics}, \ref{wireshark} a \ref{ipconfig} obsahují základní znalosti potřebné pro všechna cvičení. Cvičení \emph{Zabezpečený přenos dat} navíc
+%%předpokládá znalosti ze sekce~\ref{ntp}, \ref{ssh} a~\ref{tls}. Ve cvičení \emph{DNS} se využívají sekce \ref{dns}, \ref{DoT} a \ref{DoH}. Cvičení
+%%\emph{Konfigurace a analýza přenosů VoIP} předpokládá znalosti uvedené v
+%%sekci~\ref{sip}. Cvičení \emph{Správa a monitorování sítě} staví na informacích
+%%uvedených v sekcích \ref{syslog}, \ref{snmp} a \ref{netflow}.
+%%
 \setcounter{tocdepth}{1}
 \tableofcontents
+\enlargethispage{3mm}
 \newpage
 
 \input{ipaddr}
+\newpage
 \input{basics}
+\newpage
 \input{wireshark}
+\newpage
 \input{ipconfig}
+\newpage
 \input{ntp}
+\newpage
 \input{ssh}
+\newpage
 \input{tls}
+\newpage
 \input{dns}
+\newpage
 \input{management}
+\newpage
 \input{voip}
 
 \newpage
