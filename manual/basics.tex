@@ -1,200 +1,171 @@
-\section{Základy konfigurace linuxového serveru}
-\label{basics}
-
-Detailní popis včetně možných voleb a příkladu použití k~jednotlivým níže zmíněným příkazům můžete nalézt v~manuálových stránkách (\texttt{man <příkaz>}).
+\section{Základy konfigurace linuxového serveru} \label{basics}
+Při práci s unixovými systémy doporučujeme využívat manuálové stránky pro zjištění významu daného příkazu (aplikace) a detailního popis parametrů spuštění, viz příkaz {\tt man <příkaz>}, např. {\tt man ifconfig}.
 \subsection{Základní orientace v~Linuxu}
-Většina práce v~OS Linux bude probíhat v~terminálu. Terminál na školních PC spustíte pomocí \texttt{Alt+F2}, zde zadáte "\texttt{gnome-terminal}". Případně můžete vybrat aplikaci terminálu z~postraní nabídky.
-\subsubsection{Hierarchie souborového systému}
-Všechny soubory jsou uloženy v~souborovém systému. Ten je organizován jako invertovaný strom adresářů,
-kde kořenovým adresářem je \texttt{root} adresář (označení \texttt{"/"}). Ten obsahuje podadresáře,
-kde každý má svůj standardizovaný účel pro zařazení různých souborů.
+Většina práce v~OS Linux bude probíhat v terminálovém okně. Terminál na školních PC spustíte pomocí \texttt{Alt+F2}, zde zadáte "\texttt{gnome-terminal}", případně můžete vybrat aplikaci terminálu v nabídce aplikací.
+
+\subsubsection{Unixový souborový systém}
+Všechny soubory v počítači jsou uloženy v~souborovém systému. Ten je organizován jako invertovaný strom souborů a adresářů, kde kořenový adresář \texttt{root} je označen jako lomítko  \texttt{"/"}. Kořenový adresář obvykle obsahuje standardizovaný seznam podadresářů, do kterých se ukládají systémové, aplikační i uživatelské soubory. 
 
 Některé podadresáře a jejich význam:
 \begin{itemize}
-				\item \textbf{/etc} - obsahuje konfigurační soubory systému,
-				\item \textbf{/var} - proměnlivá boot perzistentní data, dynamicky se mění, obsahuje databáze, cache adresáře, obsah www stránek (\texttt{/var/html/www}), logy (\texttt{/var/log}),
-				\item \textbf{/dev} - obsahuje speciální soubory pro přístup k~hardware zařízením.
+  \item {\tt /etc} - konfigurační soubory operačního systému,
+  \item {\tt /bin} - systémové aplikace a příkazy
+  \item {\tt /sbin} - systémové aplikace a příkazy pro správce systému (uživatel {\tt root})
+  \item {\tt /usr} - uživatelské aplikace a příkazy ({\tt /usr/bin, /usr/lib, /usr/local})
+  \item {\tt /home} - domovské adresáře uživatelů
+  \item {\tt /var} - soubory s proměnlivým obsahem, cache paměti, logy (\texttt{/var/log}),
+  \item {\tt /dev} - ovladače (drivers) k periferním zařízením počítače.
 \end{itemize}
 
-\subsubsection{Základní příkazy}
+\subsubsection{Základní příkazy pro práci se soubory, adresáři a procesy}
 Některé základní příkazy pro práci v~terminálu OS Linux:
 \begin{itemize}
-				\item \texttt{cd} - posun v~adresářové hierarchii,
-				\item \texttt{ls} - zobrazení obsahu adresáře,
-				\item \texttt{cp} - kopírování souborů,
-				\item \texttt{mv} - přesun souborů,
-				\item \texttt{mkdir} - vytvoření adresáře,
-				\item \texttt{touch} - vytvoření prázdného souboru,
-				\item \texttt{head} - zobrazení x řádků od začátku souboru,
-				\item \texttt{tail} - zobrazení x řádků z~konce souboru,
-				\item \texttt{cat} - zobrazení obsahu souboru,
-				\item \texttt{grep} - filtrování/hledání v~textu,
-				\item \texttt{sed} - editace textu v~příkazové řádce,
-				\item \texttt{awk} - skenování a zpracování textu,
-				\item \texttt{ps} - zobrazení informací o~běžících procesech.
+  \item \texttt{cd} - změna adresáře,
+  \item \texttt{ls} - zobrazení obsahu adresáře,
+  \item \texttt{cp} - kopírování souborů,
+  \item \texttt{mv} - přesun souborů,
+  \item \texttt{mkdir} - vytvoření adresáře,
+  \item \texttt{rmdir} - zrušení prázdného adresáře,
+  \item \texttt{touch} - vytvoření prázdného souboru,
+  \item \texttt{rm} - smazání souboru,
+  \item \texttt{head} - zobrazení začátku souboru,
+  \item \texttt{tail} - zobrazení konce souboru,
+  \item \texttt{cat} - zobrazení obsahu souboru,
+  \item \texttt{more} - výpis obsahu souboru po stránkách,
+  \item \texttt{grep} - hledání textu v souboru,
+  \item \texttt{chmod} - změna přístupových práv souboru,
+%  \item \texttt{sed} - editace textu v~příkazové řádce,
+%  \item \texttt{awk} - skenování a zpracování textu,
+  \item \texttt{ps} - výpis běžících procesů.
 \end{itemize}
 
-Mezi command line editory patří například \texttt{nano} nebo \texttt{vim}. Kromě nich můžete taktéž použít grafické editory, například \texttt{gedit}.
+Mezi textové editory patří například \texttt{nano}, {\tt vi} nebo \texttt{vim}. Tyto editory je vhodné používat k editaci konfiguračních soborů v operačním systému. Kromě řádkových textových editorů lze použít použít i grafické editory, například \texttt{gedit}.
 
-\subsubsection{Uživatelé}
-Každý uživatel v~OS Linux má své jedinečné \texttt{uid}. Každý proces (program)
-v~systému je spuštěn pod nějakým uživatelem. Každý soubor je vlastněn uživatelem
-a omezen přístupovými právy. Tato přístupová práva se vztahují taktéž na procesy
-spuštěné daným uživatelem.
+\subsubsection{Role uživatele a správce v OS}
+Každý uživatel operačním systému Linux má svůj jedineční identifikátor \texttt{uid} (user ID). Kromě uživatelů jsou v OS definovány i skupiny uživatelů definované identifikátor {\tt gid} (group ID). Každý soubor je vlastněn konkrétním uživatelem patřící do určité skupinou. Přístup k souboru je omezen přístupovými právy pro vlastníka souboru, skupinu či ostatní uživatele. 
 
+Každý proces (běžící aplikace) v~systému je spuštěn pod určitým uživatelem a je jednoznačně identifikován číslem procesu {\tt pid} (process ID).
+
+Základní role uživatelů v unixovém OS:
 \begin{itemize}
-				\item \texttt{root} - super uživatel, má veškerá práva a kontrolu nad systémem.
-				\item \texttt{user} - pouze základní správa, bez možnosti zasahovat do systémového nastavení.
-				\item \texttt{sudo} - delegace některých práv super uživatele na normálního uživatele (nastavení v~\texttt{/etc/sudoers}).
+  \item \texttt{root} - správce systému: má veškerá práva a kontrolu nad systémem.
+  \item \texttt{user} - běžný uživatel: má pouze základní správa bez možnosti zasahovat do systémového nastavení.
+%  \item \texttt{sudo} - delegace některých práv super uživatele na normálního uživatele (nastavení v~\texttt{/etc/sudoers}).
 \end{itemize}
 
-Při správě OS se pokud možno snažíme vyhnout používání systému jako \texttt{root}. K~tomuto slouží \texttt{sudo},
-kde má daný uživatel přesně specifikováno, které operace smí se systémem provádět, a je pak lépe dohledatelné,
-kdo co nastavil.
+Při práci v operačním systému se snažíme vyhnout používání úrovně  \texttt{root}. Pokud potřebujeme použít pro určité činnosti příkazy vyžadující úroveň práv {\tt root}, můžeme využít příkaz \texttt{sudo}, který deleguje práva správce systému danému uživateli bez nutnosti přihlásit se jako uživatel {\tt root}. Toto oprávnění je definováno v souboru {\tt /etc/sudoers}. Příkaz s privilegovaným přístupem pak můžeme spustit příkazem {\tt sudo command}. 
 
-Přepínání uživatele:
-\texttt{su [user]}
+V případě potřeby je možné změnit roli uživatele příkazem \texttt{su [user]}
 \begin{itemize}
-				\item \texttt{su} - přepnutí na uživatele \texttt{root}.
-				\item \texttt{su user} - přepnutí na uživatele \texttt{user}.
+  \item \texttt{su} - přepnutí na uživatele \texttt{root}.
+  \item \texttt{su user} - přepnutí na uživatele \texttt{user}.
 \end{itemize}
-
-Spouštění příkazů jako \texttt{sudo}:
-\texttt{sudo command...}
 
 \subsection{Správa systémových služeb}
 \label{sluzby}
+Operační systém Linux poskytuje řadu nástrojů pro správu systémových služeb. 
+%různých aplikací plnících roli systémových služeb, tyto mohou poskytovat užitečné funkce jiným aplikacím, uživatelům nebo spravovat konfiguraci subsystémů.
+Systémové služby obvykle běží autonomně, na pozadí systému bez přímého rozhraní pro uživatele. Operační systém proto poskytuje nástroje pro jejich manipulaci. Správu operačního systému a systémových služeb v linuxových distribucích provádí aplikace \texttt{systemd} (system demon). Pro spouštění a manipulaci systémových služeb se využívá nástroj {\tt systemctl} (system control).
 
-OS Linux poskytuje řadu různých aplikací plnících roli systémových služeb, tyto
-mohou poskytovat užitečné funkce jiným aplikacím, uživatelům nebo spravovat
-konfiguraci subsystémů. Systémové služby typicky běží autonomně, na pozadí
-systému bez přímého rozhraní pro uživatele. Naopak systém poskytuje speciální
-rozhraní pro jejich manipulaci. Pro Linuxové distribuce se \texttt{systemd} máme
-dostupnou aplikaci \texttt{systemctl}, která poskytuje několik základních
-příkazů pro manipulaci systémových služeb:
+Příklady použití: 
 \begin{itemize}
-    \item \texttt{systemctl start [služba]} spustí službu
-    \item \texttt{systemctl stop [služba]} zastaví službu
-    \item \texttt{systemctl restart [služba]} restartuje službu
-    \item \texttt{systemctl enable [služba]} povolí automatické spuštění služby
-        po startu systému
-    \item \texttt{systemctl disable [služba]} zakáže automatické spuštění
-        služby po startu systému
-    \item \texttt{systemctl status [služba]} vypíše informace aktuálního stavu
-        služby a několik posledních řádků systémových logů této služby. Tento
-        příkaz můžete použít i bez specifikace služby, dostanete tak informace
+  \item \texttt{systemctl start [služba]} -- spustí službu
+  \item \texttt{systemctl stop [služba]} -- zastaví službu
+  \item \texttt{systemctl restart [služba]} -- restartuje službu
+  \item \texttt{systemctl enable [služba]} -- povolí automatické spuštění služby po startu systému
+  \item \texttt{systemctl disable [služba]} -- zakáže automatické spuštění služby po startu systému
+  \item \texttt{systemctl status [služba]} -- vypíše informace aktuálního stavu služby a několik posledních řádků systémových logů této služby. Pokud spustíme příkaz bez parametrů, vypíš  informace
         o~všech aktuálně spuštěných službách.
 \end{itemize}
 
 Jméno služby má typicky tvar \texttt{<aplikace>.service}, například
-\texttt{sshd.service}.
+\texttt{sshd.service}. Pro zobrazení logů konkrétní systémové služby lze použít příkaz \texttt{journalctl -u [služba]}. Detailní popis příkazů a jejich parametrů naleznete v~manuálových stránkách.
 
-Pro zobrazení kompletních logů konkrétní systémové služby můžete použít příkaz
-\texttt{journalctl -u [služba]}.
-
-Detailní popis včetně možných voleb a příkladů použití můžete nalézt
-v~manuálových stránkách.
-
-
-
-\subsection{Konfigurace síťových zařízení}
-\label{basic_ipconfig}
-Ke zjišťování síťové konfigurace na daném zařízení můžeme použít několik nástrojů,
-které jsou na OS Linux k~dispozici.
+\subsection{Konfigurace síťových zařízení} \label{basic_ipconfig}
+V této kapitole si ukážeme několik nástrojů operačního systému Linux, které slouží pro zjišťování síťové konfigurace.
 
 \subsubsection{Zobrazení konfigurace}
-Jedním ze základních příkazů je \texttt{ip}. Pomocí tohoto příkazu můžeme zjistit
-konfiguraci všech síťových zařízení (fyzických i virtuálních), obsah směrovací tabulky aj. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{ip-<volba>}.
+Základním příkazem je příkaz \texttt{ip}. Pomocí tohoto příkazu můžeme zjistit konfiguraci všech síťových rozhraní počítače (fyzických i virtuálních), obsah směrovací tabulky a jiné. Manuálové stránky pro dané možnosti zobrazíte jako \texttt{man ip <volba>}, např. {\tt man ip link}.
 
 \begin{itemize}
-  \item \texttt{ip address} - zobrazí adresu na všech síťových zařízení (příkaz
-    \texttt{ifconfig} je dnes již zavržený\footnote{\url{https://www.root.cz/clanky/prikaz-ip-ovladnete-linuxova-sitova-rozhrani/}}).
-				\item \texttt{ip route} - zobrazí všechna pravidla v~směrovací tabulce.
-				\item \texttt{ip link} - vylistuje všechna síťová zařízení.
-        \item \texttt{ip neighbour} - zobrazí obsah ARP záznamů (případně můžete
-          využít starší příkaz \texttt{arp}).
+  \item \texttt{ip address} -- zobrazí adresu na všech síťových rozhraní (též příkaz {\tt ifconfig}). 
+  \item \texttt{ip route} -- zobrazí pravidla ve směrovací tabulce
+  \item \texttt{ip link} -- zobrazí konfiguraci síťových rozhraní
+  \item \texttt{ip neighbour} -- zobrazí obsah ARP záznamů (též příkaz \texttt{arp}).
 \end{itemize}
 
-Tento nástroj mimo jiné slouží také ke konfiguraci, ne jen k~jejímu zobrazení. \footnote{Obdobou tohoto nástroje je \texttt{ifconfig}.}
+Příkaz {\tt ip} neslouží jen k výpisu konfiguraci, ale je možné jím i nastavit parametry síťového rozhraní.
 
-%- nmcli
-
-Alternativou k~zobrazení obsahu směrovací a ARP tabulky jsou tyto příkazy:
+Další příkazy pro zobrazení síťové konfigurace:
 \begin{itemize}
-\item \texttt{netstat} - zobrazí mimo jiné obsah směrovací tabulky (volba \texttt{-rn})
+  \item \texttt{netstat -rn} -- zobrazí obsah směrovací tabulky
+  \item \texttt{ss} (\texttt{sockstat}) -- zobrazí čekajících spojení či navázaných síťových spojení včetně zobrazení typu transportního protokolu (parametry {\tt -t} pro TCP, {\tt -u} pro UDP), zdrojových a cílových adres a portů.
+  \item {\tt ss state ESTABLISHED -t} -- zobrazí navázaná spojení nad TCP (ve stavu ESTABLISHED)
 \end{itemize}
 
-Příkaz \texttt{ss} (\texttt{sockstat}) slouží
-k~zobrazení aktuálně běžících spojení včetně protokolu (parametry {\tt -t}, {\tt
--u}), portu, zdrojové a cílové
-adresy. Aktuálně existující spojení můžete filtrovat pomocí stavového filtru.
-Např. {\tt ss state ESTABLISHED -t}.
-
-\subsubsection{Konfigurační soubory a logy}
-Na OS Linux je veškeré nastavení systému a služeb uloženo v~adresáři \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s~příslušným názvem. Pro lepší přehlednost je možné vytvářet více konfiguračních souborů, pro tyto účely zde pak existují adresáře \texttt{"nazevsluzby.d/"} (například \texttt{/etc/rsyslog.d/}). Veškeré nastavení v~souborech v~těchto adresářích je pak aplikováno na danou službu.
-
-Některé ze základních podstatných konfiguračních souborů:
+\subsubsection{Testování konektivity a síťových služeb}
+Následující příkazy slouží k testování dostupnosti zařízení a konektivity. 
 \begin{itemize}
-				\item \texttt{/etc/hostname} - obsahuje hostname systému.
-				\item \texttt{/etc/hosts} - obsahuje mapování hostname na IP adresu (zde můžete libovolné adrese přiřadit hostname, následné použití tohoto hostname předchází samotnému vyhledání pomocí DNS resolveru).
-				\item \texttt{/etc/host.conf} - obsahuje konfiguraci specifickou pro resolver.
-				\item \texttt{/etc/resolv.conf} - obsahuje direktivy specifikující výchozí servery, na které je poslán dotaz pro překlad doménového jména na IP adresu.
-				\item \texttt{/etc/rsyslog.conf} - obsahuje nastavení syslogu, rozřazování jednotlivých zpráv do příslušných logovacích souborů.
+  \item \texttt{ping <ipv4> | <hostname>} -- zašle příkaz ICMP ECHO\_REQUEST na dané zařízení.
+  \item \texttt{ping6 <ipv6> | <hostname>} -- zašle příkaz ICMPv6 ECHO\_REQUEST na dané zařízení.
+  \item \texttt{traceroute <ipv4> | <hostname>} -- otestuje a zobrazí cestu IP datagramu  k cíli.
+  \item \texttt{traceroute6 <ipv6> | <hostname>} -- otestuje a zobrazí cestu IPv6 datagramu k cíli.
+  \item \texttt{tcptraceroute <ipv4> | <ipv6> | <hostname>} - otestuje a zobrazí cestu paketu TCP k cíli.
 \end{itemize}
 
-
-Veškeré podstatné události jsou zaznamenávány do logů. Všechny logovací soubory jsou uloženy v~adresáři \texttt{/var/log}. Tyto soubory (logy) jsou cyklicky promazávány po určitém čase či po dosažení určité velikosti. Dobu, po kterou jsou logy udržovány, lze nastavit v~konfiguračním souboru\\\texttt{/etc/logrotate.conf}.
-
-Některé významné logovací soubory:
+\noindent
+Pro přihlášení na vzdálený host můžeme použít dva nástroje:
 \begin{itemize}
-				\item \texttt{/var/log/messages} - obsahuje obecné zprávy systému (bez kritických a debugovacích).
-				\item \texttt{/var/log/auth.log} - zde jsou uloženy zprávy týkající se autentizace uživatelů.
-				\item \texttt{/var/log/kern.log} - ukládá zprávy týkající se jádra OS.
+  \item \texttt{telnet <host>} -- vzdálený přístup pomocí nešifrovaného spojení
+  \item \texttt{ssh <host>} -- vzdálený přístup pomocí šifrovaného přípojení
 \end{itemize}
 
-Tyto logovací soubory můžeme prohlížet přímo pomocí standardních zobrazovacích příkazů.
+\noindent
+Testování dostupných zařízení a služeb
+\begin{itemize}
+  \item \texttt{nmap} - skenování aktivních stanic v síti, otevřených portů apod. 
+  \item \texttt{telnet <host> <port>} -- testování dostupnosti služeb nad TCP
+\end{itemize}
 
-Systémové události můžeme také prohlížet pomocí nástroje \texttt{journalctl}, ten nám umožní procházet podrobnější informace daných zpráv, filtrovat a vyhledávat.
+\subsection{Konfigurační soubory}
+Konfigurační soubory operačního systému a služeb se většinou ukládají do adresáře \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s názvem dané služby. Konfigurace některých služeb je ulžena v adresářích  \texttt{"/etc/<sluzba>.d/"} (například \texttt{/etc/rsyslog.d/}). 
+
+Důležité  konfigurační soubory:
+\begin{itemize}
+  \item \texttt{/etc/hostname} -- obsahuje doménové jméno linuxového systému.
+  \item \texttt{/etc/hosts} -- obsahuje statické mapování doménového jména na IP adresu (nevyžaduje DNS)
+  \item \texttt{/etc/host.conf} -- obsahuje konfiguraci specifickou pro DNS resolver.
+  \item \texttt{/etc/resolv.conf} -- konfigurační soubor pro DNS resolver, který obsahuje zejména odkazy na lokální DNS servery (získané z DHCP)
+  \item \texttt{/etc/rsyslog.conf} - konfigurační soubor aplikace {\tt rsyslog} 
+\end{itemize}
+Podrobnosti o konfiguraci výše uvedených služeb lze získat z manuálových stránek, např. {\tt man resolv.conf}. 
+
+\subsection{Logování událostí}
+Systémové i aplikační události jsou zaznamenávány do logovacích souborů. Logovací soubory jsou obvykle uloženy v~adresáři \texttt{/var/log}. Tyto soubory jsou cyklicky rotovány po určitém čase či po dosažení určité velikosti. Dobu, po kterou jsou logy udržovány, lze nastavit v~konfiguračním souboru\\\texttt{/etc/logrotate.conf}.
+
+Důležité logovací soubory:
+\begin{itemize}
+  \item \texttt{/var/log/messages} -- obsahuje globální systémové zprávy a události.
+  \item \texttt{/var/log/auth.log} -- obsahuje zprávy týkající se autentizace uživatelů.
+  \item {\tt ./var/log/maillog} -- obsahuje logovací zprávy od mailového serveru. 
+%  \item \texttt{/var/log/kern.log} -- ukládá zprávy týkající se jádra OS.
+\end{itemize}
+
+Tyto logovací soubory můžeme prohlížet přímo pomocí standardních zobrazovacích příkazů ({\tt cat, more, tail -f, grep}). Zobrazení logů většinou vyžaduje přístupová práva správce systému. 
+
+Systémové události můžeme také prohlížet pomocí nástroje \texttt{journalctl}, který umožňuje podrobněji procházet seznam zpráv, filtrovat a vyhledávat.
 
 Příklad použití \texttt{journalctl}:
 \begin{itemize}
-				\item \texttt{journalctl -n <x>} - zobrazí posledních x záznamů.
-				\item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s~danou syslog prioritou.
-				\item \texttt{journalctl -u <unit|pattern>} - umožní vyfiltrovat pouze
-          záznamy s~předanou službou (spravovanou systemd), nebo záznamy
-          odpovídající předanému vzoru.
-        \item \texttt{journalctl -t <syslog\_id|pattern>} vyhledává v syslogovém záznamu
-          podle názvu služby (tzn. i služby, které nejsou spravovány systemd,
-          např. \emph{sudo}).
-				\item \texttt{journalctl -f} - zobrazí kontinuálně posledních 10 událostí.
-				\item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v~daném rozmezí.
+  \item \texttt{journalctl -n <x>} - zobrazí posledních x záznamů.
+  \item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s~danou prioritou Syslog.
+  \item \texttt{journalctl -u <unit> | <pattern>} - zobrazí pouze záznamy s danou službou nebo obsahující zadaný řetězec
+  \item \texttt{journalctl -t <syslog\_id> | <pattern>} -- vyhledává záznamy obsahující zadané ID syslogu nebo záznamy obsahující v ID syslogu zadaný řetězec.
+  \item \texttt{journalctl -f} - zobrazí posledních deset událostí.
+  \item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v~daném časovém rozmezí.
 \end{itemize}
 
 
-\subsubsection{Aktivní zjišťování}
-Zjišťování dostupnosti zařízení a konektivity. K~tomuto účelu poslouží příkazy:
-
-\begin{itemize}
-				\item \texttt{ping ipv4|domain} - zašle ICMP ECHO\_REQUEST k~danému hostu (pro ipv4).
-				\item \texttt{ping6 ipv6|domain} - zašle ICMP ECHO\_REQUEST k~danému hostu (pro ipv6).
-				\item \texttt{traceroute ipv4|domain} - zobrazí cestu, kudy packet prochází skrz síť k~danému hostu (pro ipv4).
-				\item \texttt{traceroute6 ipv6|domain} - zobrazí cestu, kudy packet prochází skrz síť k~danému hostu (pro ipv6).
-				\item \texttt{tcptraceroute ipv4/ipv6|domain} - \texttt{traceroute} používající TCP.
-\end{itemize}
-
-Mimo základní výše uvedené příkazy \texttt{ping} a \texttt{traceroute}
-existuje užitečný nástroj \texttt{nmap}.
-
-\begin{itemize}
-				\item \texttt{nmap} - umožňuje pomocí různých protokolů aktivně zjišťovat otevřené porty, aktivní hosty na dané síti apod.
-\end{itemize}
-
-
-Pro přihlášení na vzdálený host můžeme použít dva nástroje:
-\begin{itemize}
-				\item \texttt{telnet ip} - nešifrované přípojení
-				\item \texttt{ssh ip} - šifrované přípojení
-\end{itemize}
 
 
 
