@@ -1,76 +1,66 @@
 \section{Konfigurace síťování koncových zařízení}
 \label{ipconfig}
 
-\subsection{Manuální konfigurace IP Adres}\label{ip_manual}
-Pro dočasnou konfiguraci IP adres na OS Linux slouží příkaz {\tt ip}. Pro
-dnešní cvičení budeme potřebovat následující příkazy:
+\subsection{Manuální konfigurace IP adres}\label{ip_manual}
+Pro manuální konfiguraci IP adres v operačním systému Linux je možné využít příkaz {\tt ip}:
 \begin{itemize}
-    \item \verb_ip link set [rozhraní] up/down_ pro zapnutí/vypnutí rozhraní
-    \item \verb_ip addr add/del [IP adresa]/[prefix] dev [rozhraní]_ pro
-        přidání/odstranění adresy z~rozhraní
-    \item \verb_ip addr flush dev [rozhraní]_ pro odstranění všech adres
-z~rozhraní
-    \item \verb_ip route add default via [IP adresa]_ pro nastavení výchozí
-        brány
-    \item \verb_ip link_, \verb_ip addr_, \verb_ip route_ zobrazí aktuální
-        konfiguraci
+  \item \verb_ip link_, \verb_ip addr_ -- zobrazí aktuální konfiguraci síťových rozhraní
+  \item \verb_ip link set <rozhraní> up/down_ -- zapne/vypne síťového rozhraní
+  \item \verb_ip addr add/del <IP adresa>/<prefix> dev <rozhraní>_ -- přidá/odstraní IP adresy 
+  \item \verb_ip addr flush dev [rozhraní]_ -- odstraní všechny IP adresy z daného rozhraní
+  \item \verb_ip route_ -- zobrazí směrovací tabulku na počítači
+  \item \verb_ip route add default via [IP adresa]_ -- nastaví výchozí bránu (default gateway)
 \end{itemize}
 
-Pro trvalou konfiguraci použijeme grafické rozhraní NetworkManageru, dostupné přes aplikaci \textit{Settings} v sekci \textit{Network}; nebo v panelu vpravo nahoře.
+Manuální nastavení IP adres pomocí příkazu {\tt ip} platí do nejbližšího restartu systému. Pro trvalé nastavení IP adres je potřeba použít grafické rozhraní {\tt Network Manager}, které je dostupné přes menu \textit{Settings/Network}.
 
-\subsection{Dynamická konfigurace IPv4 - DHCP}\label{dhcp}
-Pro dynamickou konfiguraci IP adres je potřeba aby byl na síti přístupný
-nakonfigurovaný DHCP server a klienti, kteří si o~IP adresu požádají. Kromě
-přiřazení IP adres má DHCP server na starosti i šíření jiných informací
-důležitých pro bezproblémovou funkčnost sítě. Jednou takovou informací je IP
-adresa doporučeného DNS serveru pro klienty na síti.
+\subsection{Dynamická konfigurace IPv4 pomocí DHCP}\label{dhcp}
+Pro dynamickou konfiguraci IP adres je potřeba, aby byl na síti dostupný server DHCP. Pomocí protokolu DHCP provádí nejen konfiguraci IP adres, ale  nabízí klientům DHCP řadu dalších parametrů, které jsou potřeba ke konfiguraci daného zařízení, například adresy serverů DNS, WINS apod. 
 
-Na Vašich počítačích máte nainstalovanou serverovou aplikaci ISC DHCP, která
-poskytuje služby DHCP serveru. Aplikace se konfiguruje pomocí souboru
-\verb_/etc/dhcp/dhcpd.conf_. Systémová služba se jmenuje
-\texttt{isc-dhcp-server.service}.
+Na cvičeních budeme používat implementace DHCP serveru a klienta zvanou ICS DHCP (Internet Systems Consortium DHCP). Pro konfiguraci DHCP serveru se používá konfigurační soubor \verb_/etc/dhcp/dhcpd.conf_ a systémová služba \texttt{isc-dhcp-server.service}.
 
-Příklad obsahu konfiguračního souboru:
+Příklad nastavení rozsahu přidělovaných adres v konfiguračním souboru serveru DHCP:
 \begin{verbatim}
-option domain-name-servers [IP adresy DNS serverů];
-subnet [IP adresa sítě] netmask [maska] {
-    range [první přiřaditelná IP adresa] [poslední přiřaditelná IP adresa];
-}
+Formát:
+ option domain-name-servers < seznam IP adres DNS serverů>;
+ subnet <IP adresa sítě> netmask <maska> {
+    range <první IP adresa rozsahu> <poslední IP adresa rozsahu>;
+ }
+Příklad:
+  option domain-name-servers ns1.isc.org, ns2.isc.org; # lokální DNS servery
+  subnet 204.254.239.0 netmask 255.255.255.224 {       # podsíť 
+      option routers 204.254.239.1;                    # výchozí brána
+      option domain-name "test.isc.org";               # implicitní doména DNS 
+      default-lease-time 120;                          # doba platnosti IP adresy
+      range 204.254.239.10 204.254.239.30;             # rozsah přidělovaných IP adres
+  }
 \end{verbatim}
-Dodatečné informace o~konfiguračních možnostech najdete v~manuálových stránkách
-{\tt man dhcpd.conf} případně {\tt man dhcpd}.
+Podrobnější informace o~konfiguračních parametrech serveru DHCP lze najít v~manuálových stránkách {\tt man dhcpd.conf}, případně {\tt man dhcpd}.
 
-DHCP klient je implementován v~aplikaci \texttt{dhclient}. Může být spuštěn bez
-parametrů pro všechna aktivní síťová rozhraní nebo lépe s~jménem konkrétního
-síťového rozhraní, které má být konfigurováno:
+Jako klienta DHCP budeme používat aplikaci \texttt{dhclient}. Úkolem klienta DHCP je požádat protokolem DHCP o konfigurační parametry dané stanice (přesněji řečeno síťového rozhraní). Klient může být spuštěn pro konkrétní síťové rozhraní nebo na všech rozhraních. Přes rozhraní, na kterém je klient spuštěn, posílá dotazy serveru DHCP. Pokud nevíme, na kterém rozhraní server DHCP pracuje, je vhodné pustit klienta bez parametrů, kdy pošle dotaz s žádostí o konfiguraci na všechna aktivní síťová rozhraní. 
 \begin{verbatim}
 dhclient -v [rozhraní]
 \end{verbatim}
-Argument \texttt{-v} zajistí, že aplikace vypíše detailní informace.
-Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
+Argument \texttt{-v} vypíše detailní informace o průběhu konfigurace.
+%Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
 
-\subsection{Dynamická konfigurace IPv6}
-\label{dynipv6}
+\subsection{Dynamická konfigurace IPv6}\label{dynipv6}
+Dynamická konfiguace IPv6 probíhá zcela jiným způsobem, než konfigurace DHCP u sítí s protokolem IPv4. Dynamický konfigurace IPv6 probíhá třemi různými způsoby:
+\begin{itemize}
+  \item {\bf Autokonfigurace (SLAAC, Stateless Autoconfiguration)} \cite{rfc4862} -- autokonfigurace slouží ke konfiguraci síťových rozhraní IPv6 bez použití serveru DHCPv6. Při autokonfiguraci si připojený klient sám vytvoří adresu IPv6 z prefixu sítě (prvních 64 bitů) a identifikátoru rozhraní (spodních 64 bitů). Prefix sítě získá stanice zasláním zprávy ICMPv6 RS (Router Solicitation) na multicastovou adresu všech směrovačů v síti. Směrovač odpoví zprávou ICMPv6 RA (Router Advertisement), která obsahuje prefix sítě, L2 adresu směrovače, případně další parametry. Z adresy IPv6 odesilatele získa klientská stanice adresu výchozí brány, z odpovědi RA prefix sítě a adresu rozhraní (spodních 64 bitů adresy IPv6) si vygeneruje ze své MAC adresy mechanismem EUI-64 (rozšíření MAC adresy na 64 bitů) či si vygeneruje 64 bitů náhodně.
+  \item {\bf Bezstavový server DHCPv6 (Stateless DHCPv6)} \cite{rfc8415} -- v tomto případě získá klientská stanice prefix sítě a výchozí bránu ze zprávy Router Advertisement jako u autokonfigurace. Bezstavový server DHCPv6 v tomto případě neslouží k přidělení IP adresy, ale k zaslání dalších konfiguračních parametrů, např. seznamu serverů DNS, domény DNS a další. Klientská stanice tedy pošle na server DHCPv6 (s využitím multicastové adresy) dotaz typu {\tt Information-request}, ve kterém uvede požadované parametry pro konfiguraci. Pokud je v síti nainstalován bezstavový server DHCPv6, zprávou {\tt Reply} pošle požadované nastavení.
+  \item {\bf Stavový server DHCPv6 (Stateful DHCPv6)} \cite{rfc8415} -- klient posílá žádost {\tt Solicit} pro vyhledání serveru DHCPv6. Jakýkoliv server DHCPv6 odpoví zprávou {\tt Advertise}, ve které uvede nabízenou adresu IPv6, dobu platnosti a ostatní konfigurační parametry (servery DNS, doménu DNS). Klient odpoví žádostí {\tt Request}, ve které uvede identifikátor serveru, se kterým komunikuje, a konfigurační parametry, které požaduje. Server potvrdí přidělení parametrů zprávou {\tt Reply}. 
+\end{itemize}
 
-Dynamická konfigurace IPv6 se dělí na {\bf bezstavovou} a {\bf stavovou}
-konfiguraci. Na cvičeních se budeme zabývat jen bezstavovou. Bezstavová
-konfigurace byla navržena tak, aby stačilo připojit zařízení do sítě a
-automaticky si klient vygeneroval nějakou adresu a ihned mohl komunikovat se
-světem. K~tomu klient potřebuje znát prefix sítě do které byl připojen.
-K~tomuto účelu se používají zprávy označované jako Routing Advertisement (RA).
-Tyto a ještě další zprávy jsou součásti procesu Neighbor Discovery~\cite{rfc4861}.
-
-Na počítačích v~laboratoři je nainstalovaná systémová služba {\tt radvd.service},
-která je schopna vysílat zprávy RA. Aplikaci je možno nakonfigurovat pomocí
-souboru {\tt /etc/radvd.conf}.
+Na počítačích v~laboratoři lze využít službu {\tt radvd.service}, která vysílá zprávy Router Advertisement (RA). Aplikaci je možno nakonfigurovat v souboru {\tt /etc/radvd.conf}.
 
 Příklad konfigurace:
 \begin{verbatim}
-interface [rozhraní]
+interface <rozhraní>
 {
     AdvSendAdvert on;
-    MaxRtrAdvInterval [Max pocet sekund mezi zpravami RA, min 4];
-    prefix [prefix]/[delka prefixu]
+    MaxRtrAdvInterval <Max počet sekund mezi zprávami RA, min 4>;
+    prefix <prefix>/<délka prefixu>
     {
         AdvOnLink on;
         AdvAutonomous on;
@@ -78,14 +68,11 @@ interface [rozhraní]
     };
 };
 \end{verbatim}
-Přehled všech možností konfigurace poskytnou manualové stránky {\tt man radvd}
-a {\tt man radvd.conf}.
+Přehled všech možností konfigurace poskytnou manualové stránky {\tt man radvd} a {\tt man radvd.conf}.
 
-Pro správné šíření RA zpráv je potřebné povolit směrování IPv6 provozu:
+Pro zasílání zpráv RA je potřeba povolit směrování IPv6 provozu:
 \begin{verbatim}
 sysctl net.ipv6.conf.all.forwarding=1
 \end{verbatim}
 
-Součásti balíčku radvd je i aplikace {\tt radvdump}, kterou možno použít pro
-analýzu -- naslouchá na síťových rozhraních a tiskne na obrazovku obsah
-zachycených RA zpráv.
+Součásti balíčku radvd je i aplikace {\tt radvdump}, která slouží k analýze zpráva RA: naslouchá na síťových rozhraních a zobrazuje zachycené zprávy na standardní výstup.
