@@ -1,89 +1,46 @@
 %%%%%%%%%%%%%%%%%%%%
-\section{Transport Layer Security}
-\label{tls}
+\section{Zabezpečení TLS (Transport Layer Security)}\label{tls}
+Původní přenosové protokoly na počátky Internetu byly nešifrované. Požadavek na zabezpečení dat se objevil později v souvislosti se zveřejněním informací o masivním odposlechu internetových linek bezpečnostními službami na Wikileaks. S tím souvisí i následná snaha o ochranu dat a soukromí u veřejných služeb jako jsou DNS, Telnet, HTTP, SMTP, FTP, VoIP a další. Přestože standardy SSL (Secure Sockets Layer) vznikaly postupně od roku 1995  a standardy TLS od roku 1999 \cite{rfc2246}, jejich rozšíření spadá do let 2014-2018, kdy například šifrování webového provozu se z cca 50\% dostává na více jako 80\%\footnote{Viz \url{https://transparencyreport.google.com/https/overview?hl=en}}.
 
-Původní protokoly, na kterých vznikaly původní sítě a počátky Internetu byly
-nešifrované. Požadavek na zabezpečení dat se objevil až po vzniku
-nejdůležitějších protokolů jako je DNS, Telnet, HTTP, SMTP, FTP apod. Zatímco
-protokol SSH popisované v sekci~\ref{ssh} zavedlo nový protokol kompletně
-nahrazující protokol Telnet, většina ostatních protokolů založených na TCP
-(např. SMTP, HTTP, SIP) funguje v šifrované variantě stejně jako v nešifrované,
-jen mezi protokol aplikační vrstvy a TCP přidala mezi vrstvu Secure Sockets
-Layer (SSL) a Transport Layer Security (TLS), viz obr.~\ref{fig:tls},
-zajišťující šifrování. Výhodou tohoto přístupu je, že přidání podpory šifrované
-varianty do existující aplikace je v případě správného návrhu velice snadné a je
-potřeba upravit jen funkce zajišťující navazování spojení a zasílání zpráv;
-části programu vytvářející a zpracovávající zprávy aplikačního protokolu a
-samotný program není potřeba měnit.
+Protože velká část původních internetových protokolů šifrování nepodporovala (např. DNS, HTTP, SMTP, IMAP, FTP), začal se využívat koncept tunelování aplikačních protokolů přes protokoly SSL/TLS, která tak vytvářejí mezivrstvu mezi transportní a aplikační vrstvou, viz obrázek \ref{fig:tls}. Tato vrstva zajišťuje nejen šifrování, ale i autentizaci, integritu dat, bezpečnou výměnu klíčů a další funkce. Výhodou tohoto přístupu je, že přidání podpory SSL/TLS je pro existující aplikace transparentní, tzn. není nutné provádět jakoukoliv změnu stávajících protokolů.
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \centering
-    \includegraphics[width=0.3\textwidth]{fig/vrstvy-ssl}
-  \caption{Vrstvy TCP/IP modelu s využitím SSL/TLS.}
+%    \includegraphics[width=0.3\textwidth]{fig/vrstvy-ssl}
+    \includegraphics[width=0.3\textwidth]{fig/tls.pdf}
+  \caption{Rozšíření modelu TCP/IP o vrstvu SSL/TLS.}
  \label{fig:tls}
 \end{figure}
 
-Protokol TLS standardizuje IETF na základě původního protokolu SSL, který je
-dnes již zastaralý~\cite{RFC7568}. Poslední verze protokolu TLS je
-1.3~\cite{RFC8446}\footnote{Převyprávěná verze RFC 8446 je dostupná na \url{https://www.davidwong.fr/tls13/}}.
+Původní proprietární protokol SSL (navržený firmou Netscape Corporation) byl postupně nahrazen protokolem TLS \cite{RFC7568}. Aktuální doporučená verze protokolu TLS je 1.3~\cite{RFC8446}\footnote{Neformální popis popis standardu TLS je na \url{https://www.davidwong.fr/tls13/}.}.
 
-TLS vytváří obousměrný šifrovaný kanál mezi dvěma počítači, který zajišťuje:
-
+TLS pracuje na principu klient -- server a vytváří obousměrný zabezpečený kanál pro komunikaci na aplikační vrstvě mezi klientem a serverem. TLS  zajišťuje následující typy zabezpečení:
 \begin{itemize}
-
-  \item Autentizaci: vždy se ověřuje identita serveru, identita klienta může být
-  také ověřená. Pro ověřování se používají certifikáty X.509, které mohou být
-  podepsány certifikační autoritou.
-
-  \item Důvěrnost (utajení): po navázání spojení je obsah přenášené komunikace
-  známý pouze komunikujícím stranám. Délka zpráv může být pozorovateli
-  komunikace známá, TLS podporuje vycpávkový provoz.
-
-  \item Integritu: Obsah zprávy není možné bez odhalení při přenosu upravit.
-
+  \item {\em Autentizace} -- vždy ověřuje identitu serveru (tzv. jednostranná autentizace), která slouží k ochraně komunikace proti útokům typu MITM (Man In the Middle). Může implementovat i oboustrannou autentizaci, kdy klient poskytuje své autentizační údaje server. V praxi se tento přístup příliš nevyužívá. Pro ověřování identity se využívají veřejné klíče a certifikáty X.509, které jsou podepsány certifikační autoritou. 
+  \item {\em Důvěrnost (utajení)} -- po navázání spojení a výměně konfiguračních parametrů je obsah přenášené komunikace šifrován. 
+  \item {\em Integrita dat} -- TLS zajišťuje ochranu proti modifikaci, vložení či odebrání dat z přenášené komunikace pomocí tzv. kryptografického heše (např. MD4, SHA). 
 \end{itemize}
 
-Samotný protokol TLS se skládá ze dvou podprotokolů:
-
+Samotný protokol TLS se skládá ze dvou podprotokolů, které jsou součástí zprávy TLS:
 \begin{itemize}
-
-  \item \emph{Handshake protocol} se používá při navazování spojení a zajišťuje
-  autentizaci komunikujících stran, domluvu kryptografických parametrů a
-  sdílených klíčů.
-
-  \item \emph{Record protocol} přenáší data mezi komunikujícími stranami.
-
+  \item \emph{Handshake protocol} se používá při navazování spojení a zajišťuje autentizaci komunikujících stran, výběr kryptografických algoritmů, výměnu parametrů a sdílených klíčů.
+  \item \emph{Record protocol} zajišťuje bezpečný přenos mezi komunikujícími stranami.
 \end{itemize}
 
 \subsection{Certifikační autority}
+Certifikační autorita (CA) je v asymetrické kryptografii subjekt, který vydává digitální (elektronické) certifikáty a ověřuje jejich pravost. Certifikát je elektronický dokument (popsaný v notaci X.500)  potvrzující příslušnost veřejného klíče k dané entitě (službě, serveru, osobě). Certifikační autorita na základě požadavku vygeneruje pro danou entitu dvojici veřejný a soukromý klíč a veřejný klíč s identifikací žadatele vloží do dokumentu zvaného certifikát. Struktura certifikátu je definována standardem X.509 a obsahuje následující informace \cite{rfc5280}:
+\begin{itemize}
+  \item jméno žadatele (subject)
+  \item veřejný klíč žadatele (subject public key)
+  \item informace o certifikátu (verze, sériové číslo, doba platnosti)
+  \item informace o vydavateli (issuer)
+  \item podpis certifikátu (certificate signature), algoritmus a parametry podpisu
+\end{itemize}
 
+Pro validaci certifikátu se využívá podpisu certifikační autority, která pomocí svého soukromého klíče podepíše vydaný certifikát. Ověření probíhá pomocí veřejného klíče CA. Jak můžeme ale veřejnému klíči CA důvěřovat? Tento klíč opět musí být podepsán, tzn. musí existovat certifikát, který ověřuje pravost veřejného klíče dané CA. Toto ověření provádí CA vyšší úrovně a vytváří se struktura důvěryhodnosti veřejných klíčů PKI (Public Key Infrastructure). 
 
-Certifikační autorita (CA)\footnote{Text popisující CA je převzatý z~{\tt https://cs.wikipedia.org/wiki/Certifika\%C4\%8Dn\%C3\%AD\_autorita}.} je v asymetrické kryptografii subjekt, který vydává
-digitální certifikáty (elektronicky podepsané veřejné šifrovací klíče), čímž
-usnadňuje využívání Public Key Infrastructure (PKI) tak, že svojí autoritou
-potvrzuje pravdivost údajů, které jsou ve volně dostupném veřejném klíči
-uvedeny. Na základě principu přenosu důvěry tak můžeme důvěřovat
-údajům uvedeným v digitálním certifikátu za předpokladu, že důvěřujeme samotné
-certifikační autoritě.
-
-Na Internetu působí mnoho komerčních certifikačních autorit, které obvykle mají
-své veřejné klíče umístěny přímo ve webových prohlížečích a dalších programech,
-čímž mohou uživateli zjednodušit rozhodování o míře důvěry webových serverů, ke
-kterým se připojuje (ale též digitálně podepsaných e-mailů i jiných dat).
-Existují též bezplatné certifikační autority nebo takové, které se řídí zákony
-daného státu, vnitřními předpisy organizace a podobně.
-
-Hodnota digitálního certifikátu je úměrná míře důvěry, kterou máme k údajům
-v~něm uvedených. Proto je pro certifikační autoritu nejdůležitější důvěra, kterou
-vůči svému okolí vzbuzuje (tj. že nevydá digitální certifikát s nepravdivými
-údaji). Certifikační autorita proto musí adekvátním způsobem pečovat o svoji
-důvěryhodnost, jinak by nebylo možné využít principu přenosu důvěry.
+Pro ověřování certifikátů nejvyšší úrovně se používají národní a nadnárodní certifikační autority, jejichž veřejné klíče jsou obvykle umístěny přímo ve webových prohlížečích a dalších programech, čímž usnadní uživatelům ověřování důvěryhodnosti webových certifikátů či jiných elektronicky podepsaných dokumentů. 
 
 \subsection{Transparentnost certifikátů}
-
-Aby bylo možné ověřit, že CA vydávají certifikáty poctivě, byl experimentálně
-zaveden mechanismus transparentnosti certifikátů. Zapojené CA veřejně ohlašují
-každý vystavený certifikát (případně precertifikát). Vydané certifikáty se
-shromažďují v lozích (cerificate transparency log), kde je monitorovat nově
-přidávané certifikáty a auditovat přítomnost certifikátu nalezených při
-prohlížení webu.
+Aby bylo možné ověřit, že CA vydávají certifikáty poctivě, byl experimentálně zaveden mechanismus transparentnosti certifikátů. Zapojené CA veřejně ohlašují každý vystavený certifikát (případně precertifikát). Vydané certifikáty se shromažďují v logovacím souboru {\tt certificate transparency log}, kde může kdokoliv monitorovat nově
+přidávané certifikáty a auditovat přítomnost certifikátu nalezených při prohlížení webu.
