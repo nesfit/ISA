@@ -1,32 +1,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Systém DNS (Domain Name System)}\label{dns}
-Systém DNS slouží jako podpora internetové komunikace, kdy ukládá informace důležité ke správnému fungování počítačových sítí a služeb. Jednou z nejvíce využívaných služeb je překlad mezi doménovým jménem na IP adresu a naopak, tzn. vyhledávání záznamů typu A, AAAA a PTR \cite{rfc1035,rfc3596}.
+Systém DNS slouží jako podpora internetové komunikace, kdy ukládá informace důležité ke správnému fungování počítačových sítí a služeb. Jednou z nejvíce využívaných služeb je překlad doménového jméne na IP adresu a naopak, tzn. vyhledávání záznamů typu A, AAAA a PTR \cite{rfc1035,rfc3596}.
 
-Mezi další důležité záznamy patří záznam {\tt MX}, který obsahuje odkaz na adresu poštovního serveru pro danou doménu. Záznamy {\tt MX} jsou nezbytné pro správné fungování systému elektronické pošty nad SMTP. Pro vyhledávání serverů dalších služeb (např. SIP, XMPP a další) slouží záznamy typu typu {\tt SRV}, které lze v~současnosti využít pro služby SIP a XMPP \cite{rfc2782}.
+Mezi další důležité záznamy patří záznam {\tt MX}, který obsahuje adresu poštovního serveru pro danou doménu. Záznamy {\tt MX} jsou nezbytné pro správné fungování systému elektronické pošty nad SMTP. Pro vyhledávání serverů dalších služeb (např. SIP, XMPP a další) slouží záznamy typu typu {\tt SRV}, které lze v~současnosti využít pro služby SIP a XMPP \cite{rfc2782}.
 
 Některé záznamy během vývoje internetu rozšířili svou funkci. Například záznamy typu {\tt TXT} byly původně používány pro uložení textových informací o dané doméně. V současné době se převážně využívají pro zajištění bezpečnosti softwarových služeb či přenosu elektronické pošty, kde záznam {\tt TXT} například obsahuje veřejný klíč pro službu DKIM (DomainKeys Identified Mail) \cite{rfc6376}).
 
 Služba DNS pracuje na principu klient--server, kde klient (zvaný též resolver) posílá dotaz pro vyhledání informací v distribuované globálním systému DNS. Dotaz přijde na server DNS, který se snaží najít odpověď bud v lokální databázi (zónovém souboru) či paměti cache. Pokud odpověď nenajde lokálně, může se dotazovat dalších serverů (v případě rekurzivního dotazu). Proces vyhledání informací v systému DNS se nazývá {\em rezoluce}. 
 
 \subsection{Konfigurace klienta DNS}
-Co je klient DNS? Možná zvláštní otázka, nicméně definice klienta DNS není v počítačových sítích zcela jednoznačná. Za klientské programy lze považovat aplikace typu {\tt nslookup}, {\tt host} či {\tt dig}, což jsou programy, které se dotazují systému DNS. Všechny tyto programy pro svou činnost využívají soubor systémových rutin zvaný {\em resolver}, který je součástí operačního systému a implementuje zasílání dotazů na server DNS a zpracování odpovědí. Z uživatelského pohledu lze za klienty DNS považovat výše uvedené aplikace typu {\tt nslookup}, z implementačního pohledu je klientem DNS {\em resolver}. Protože však aplikační programy typu {\tt nslookup} umožňují uživateli přistupovat k systému DNS, tzn. komunikují se servery DNS, z formální pohledu je v pořádku, když je také budeme nazývat klienty DNS.
+Co je klient DNS? Možná zvláštní otázka, nicméně definice klienta DNS není zcela jednoznačná. Za klientské programy lze považovat aplikace typu {\tt nslookup}, {\tt host} či {\tt dig}, což jsou programy, které komunikují se servery DNS. Všechny tyto programy pro svou činnost využívají soubor systémových rutin zvaný {\em resolver}, který je součástí operačního systému a implementuje zasílání dotazů na server DNS a zpracování odpovědí. Z uživatelského pohledu lze tedy za klienty DNS považovat aplikace typu {\tt nslookup}, z implementačního pohledu je klientem DNS {\em resolver}. Protože však aplikační programy typu {\tt nslookup} umožňují uživateli přistupovat k systému DNS, budeme je také nazývat klienty DNS.
 
 Pro konfiguraci klienta DNS se využívají následující konfigurační soubory: {\tt /etc/hosts}, {\tt /etc/re\-solv.conf} a {\tt /etc/hosts.conf}. 
 \begin{itemize}
-  \item {\tt /etc/hosts} -- Tento soubor obsahuje statické mapování IP adres a doménových jmen. Vytváří se manuálně a využívá se například jako záloha v situaci, kdy server DNS není dostupný. Soubor {\tt /etc/hosts} obvykle obsahuje jen základní mapování lokální adresy {\tt localhost} na IP adresu. Do souboru ale můžeme vložit i další doménová jména a odpovídající IP adresy, viz následující ukázka. Formát souboru lze najít v manuálových stránkách {\tt man hosts}. 
+  \item {\tt /etc/hosts} -- Tento soubor obsahuje statické mapování IP adres a doménových jmen. Vytváří se manuálně a využívá se například jako záloha v situaci, kdy není server DNS dostupný. Soubor {\tt /etc/hosts} obvykle obsahuje jen základní mapování lokální adresy {\tt localhost} na IP adresu. Do souboru můžeme vložit i další doménová jména a odpovídající IP adresy, viz následující ukázka. Formát souboru lze najít v manuálových stránkách {\tt man hosts}. 
 \begin{verbatim}
 ::1         localhost localhost.my.domain
 127.0.0.1   localhost localhost.my.domain
 10.0.0.3    myfriend.my.domain myfriend
 \end{verbatim}
-  \item {\tt /etc/resolv.conf} -- Jedná se o konfigurační soubor resolveru DNS. Resolver DNS vytváří dynamické mapování (nejen) IP adres a doménových jmen zasíláním dotazovaných jmen na server DNS. Konfigurační soubor obsahuje například název implicitní domény, které se doplňují za doménová jména, která nejsou plně kvalifikovaná (klíčové slovo {\tt search}), např. doménové jméno {\tt merlin} se při dotazování DNS automaticky rozšíří na {\tt merlin.fit.vutbr.cz}. Dále obsahuje konfigurační soubor {\tt /etc/resolv.conf} seznam serverů DNS (klíčové slovo {\tt nameserver}), na které lokální počítač posílají dotazy DNS. Popiš všech dostupných voleb konfigurace lze najít na manuálových stránkách {\tt man resolv.conf}. Konfigurace souboru je buď manuální, tj. administrátor ručně nakonfiguruje IP adresy lokálních serverů DNS, implicitní doménu apod., nebo se konfigurace doplní z odpovědi DHCP při počáteční konfiguraci systému. Pokud je nastavena konfigurace DHCP, tak se manuálně vložené data přepíšou informacemi z DHCP při nejbližší aktualizaci dat DHCP. Následující ukázka obsahuje příklad konfigurace lokálního klienta DNS na FIT:
+  \item {\tt /etc/resolv.conf} -- Jedná se o konfigurační soubor resolveru DNS. Resolver DNS vytváří dynamické mapování (nejen) IP adres a doménových jmen zasíláním dotazů na server DNS. Konfigurační soubor obsahuje například název implicitní domény (parametr {\tt search}). Ta se doplňuje za doménová jména, která nejsou plně kvalifikovaná, např. doménové jméno {\tt merlin} se při dotazování DNS automaticky rozšíří o implicitní doménu na {\tt merlin.fit.vutbr.cz}. Dále obsahuje konfigurační soubor {\tt /etc/resolv.conf} seznam serverů DNS (parametr {\tt nameserver}), na které lokální počítač posílá dotazy DNS. Popis všech dostupných parametrů lze najít na manuálových stránkách {\tt man resolv.conf}. Konfigurace souboru je buď manuální, tj. administrátor ručně vloží IP adresy lokálních serverů DNS, implicitní doménu apod. do tohoto souboru, nebo se konfigurace vytvoří z DHCP. Pokud je nastavena možnost konfigurace DHCP, pak se manuálně vložené data přepíšou hodnotami z DHCP. Příklad konfigurace lokálního klienta DNS na FIT:
 \begin{verbatim}
 # Generated by resolvconf
-search fit.vutbr.cz
-nameserver 147.229.9.43
+search fit.vutbr.cz             # implicitní doména
+nameserver 147.229.9.43         # seznam serverů DNS
 nameserver 147.229.8.43
 \end{verbatim}
-  \item {\tt /etc/host.conf} -- U rezoluce doménových jmen je potřeba stanovit, zda má přednost statická konfigurace uložená v souboru {\tt /etc/hosts} nebo dynamická konfigurace přes {\tt resolver}. Pořadí rezoluce definuje konfigurační soubor {\tt /etc/host.conf}, který je automaticky generován z konfiguračního souboru {\tt nsswitch.conf}, viz {\tt man nsswitch.conf}. Soubor {\tt /etc/host.conf} udává pořadí zdrojů překladu DNS. Standardně se nejprve využívá statická konfigurace ze souboru {\tt /etc/hosts} a teprve když se dané doménové jméno nenajde, dotazuje se lokální resolver serveru DNS, viz následující ukázka konfigurace:
+  \item {\tt /etc/host.conf} -- U rezoluce doménových jmen je potřeba stanovit, zda má přednost statický překlad uložený v souboru {\tt /etc/hosts} nebo dynamické vyhledávání systému DNS přes {\tt resolver}. Pořadí rezoluce definuje konfigurační soubor {\tt /etc/host.conf}, který je automaticky generován z konfiguračního souboru {\tt nsswitch.conf}, viz {\tt man nsswitch.conf}. Soubor {\tt /etc/host .conf} udává pořadí zdrojů překladu DNS. Standardně se nejprve využívá statické mapování ze souboru {\tt /etc/hosts} a teprve když se dané doménové jméno nenajde, dotazuje se lokální resolver serveru DNS, viz následující ukázka konfigurace:
 \begin{verbatim}
 # Auto-generated from nsswitch.conf
 hosts
@@ -35,16 +35,16 @@ dns
 \end{itemize}
 
 \subsection{Konfigurace serveru DNS}
-Konfiguraci serveru DNS tvoří jednak konfigurace vlastního serveru DNS (např. program {\tt named}, což je implemetace serveru Bind) a dále zónové soubory, které obsahují seznam záznamů DNS pro domény, které server spravuje. Konfigurace serveru DNS je uložena v konfiguračním souboru {\tt /etc/named.conf}, zónové soubory se ukládají do podadresář {\tt /var/named/}. 
+Konfiguraci serveru DNS tvoří jednak konfigurace démona DNS (např. program {\tt named}, což je implemetace serveru Bind) a dále zónové soubory, které obsahují záznamy DNS pro domény, které server spravuje. Konfigurace serveru DNS je uložena v konfiguračním souboru {\tt /etc/named.conf}, zónové soubory se ukládají do podadresáře {\tt /var/named/}. 
 
 \subsubsection{Konfigurační soubor {\tt named.conf}}
-Jedná se o základní konfigurační soubor aplikace {\tt named}, viz {\tt man named.conf}. Tento soubor specifikuje, jak má lokální server DNS zpracovat přijatý dotaz DNS. DNS server se nejprve pokusí vyhledat dotazovanou doménu v konfiguračním souboru {\tt /etc/named.conf} v sekcích {\tt zone}. Potom začne prohledávat příslušný zónový soubor obsahující všechny platné záznamy v dané doméně. 
+Soubor {\tt named.conf} je základní konfigurační soubor aplikace {\tt named}, viz {\tt man named.conf}. Tento soubor specifikuje, jak má lokální server DNS zpracovat přijatý dotaz DNS. Server se nejprve pokusí najít hledané doménu v sekcích {\tt zone} v konfiguračním souboru {\tt /etc/named.conf}. Potom ji najde, začne prohledávat příslušný zónový soubor a v něm všechny platné záznamy dané domény. 
 
-Pokud se jedná o lokálně spravovanou doménu, odpověď se hledá v lokálních zónových souborech umístěných na daném serveru v adresáři {\tt /var/named/}. Pokud server nenajde hledanou doménu v sekci {\tt zone} konfiguračního souboru {\tt /etc/named.conf}, znamená to, že daná doména není lokální. V takovém případě se pokusí server poslat dotaz (v případě rekurzivního vyhledávání) na kořenový server DNS ležící ve speciální zóně ".". Tato zóna má typ {\tt hint} a je také obvykle uvedena v konfiguračním souboru DNS serveru.
+Pokud se jedná o lokálně spravovanou doménu, odpověď se hledá v lokálních zónových souborech umístěných na daném serveru v adresáři {\tt /var/named/}. Pokud server nenajde hledanou doménu v žádné sekci {\tt zone} konfiguračního souboru {\tt /etc/named.conf}, znamená to, že doména není lokální. V takovém případě se pokusí server (v případě rekurzivního vyhledávání) poslat dotaz  na kořenový server DNS ležící ve speciální zóně ".", která má typ {\tt hint}. Tato zóna je obvykle součástí konfigurače serveru DNS.
 
-Zónový soubor kořenové domény mívá standardizované jméno {\tt named.root} (někdy také {\tt root.zone}) a obsahuje záznamy typu A a AAAA všech třinácti kořenových serverů DNS. Pokud zóna "." v konfiguračním souboru chybí a dotazovaná doména není lokální, vrátí server negativní odpověď.
+Zónový soubor kořenové domény mívá standardizované jméno {\tt named.root} (někdy také {\tt root.zone}) a obsahuje záznamy typu A a AAAA všech třinácti kořenových serverů DNS. Pokud zóna "." v konfiguračním souboru chybí a hledaná doména není lokální, vrátí server negativní odpověď.
 
-Níže uvedený příklad obsahuje dvě lokální domény se jmény {\tt moje-domena.cz} a {\tt 10.10.10.in-addr .arpa}. U každé domény je odkaz na příslušný zónový soubor, kde jsou jednotlivé záznamy dané domény uloženy. Zároveň konfigurace server DNS obsahuje odkaz na kořenové servery (zóna typu {\tt hint}). 
+Níže uvedený příklad obsahuje dvě lokální domény se jmény {\tt moje-domena.cz} a {\tt 10.10.10.in-addr .arpa}. U každé domény je odkaz na příslušný zónový soubor, v němž jsou uloženy všechny záznamy dané domény. Zároveň níže uvedená konfigurace obsahuje odkaz na kořenové servery (zóna typu {\tt hint}). 
 {\footnotesize
 \begin{verbatim}
 ...
@@ -76,9 +76,9 @@ zone "10.10.10.in-addr.arpa" IN {    # lokální reverzní doména se jménem "1
 %\subsubsection{Zóna typu hint}
 %Asociuje se s~nejvyšší doménou v~rámci celé hierarchie. Pokud přijde na server požadavek, prohledá seznam spravovaných zón ostatních typů ({\em master}, {\em slave}, {\em forward}). Pokud záznam nenajde, vybere jeden z~kořenových serverů definovaný právě v~tomto typu zóny.
 %
-Soubor {\tt named.root}, který obsahuje záznamy A a AAAA kořenových serverů, bývá součastí instalace serveru DNS. Po instalaci dojde k aktualizaci tohoto seznamu podle veřejného seznamu InterNIC. Soubor {\tt named.root} lze také získat například programem dig:
+Soubor {\tt named.root}, který obsahuje záznamy A a AAAA kořenových serverů, bývá součastí instalace serveru DNS. Po instalaci dojde k aktualizaci tohoto seznamu podle veřejného seznamu zpravovaného službou InterNIC. Soubor {\tt named.root} lze také získat programem dig:
 \begin{verbatim}
- dig +norec NS . @a.root-servers.net > /var/named/db.root
+ dig +norec NS .  > db.root
 \end{verbatim}
 
 %% \subsubsection{Lokálně obsluhovane zóny}
@@ -91,10 +91,9 @@ Soubor {\tt named.root}, který obsahuje záznamy A a AAAA kořenových serverů
 %/etc/namedb/named.conf} souborem {\tt /root/isa1/named.conf}, který je zkrácen a obsahuje pouze nezbytné definice.
 
 \subsubsection{Vytvoření vlastní domény}\label{sec:vlastni_zona}
-Pro vytvoření vlastní domény je potřeba přidat do konfiguračního souboru {\tt /etc/named.conf} novou sekci {\tt zone} se jménem vlastní domény a typem {\tt master}. Dále je potřeba pro tuto doménu vytvořit zónový soubor, který bude obsahovat všechny potřebné záznamy DNS pro danou domény. Povinné záznamy jsou SOA a NS, volitelné pak A, AAAA, MX, CNAME a další. Pokud přidáváme  zónový soubor pro svou doménu, je vhodné vytvořit i reverzní zónový soubor pro zpětný překlad IP adres na doménová jména. Tento reverzní zónový soubor kromě povinných záznamů SOA a NS obsahuje dále jen záznamy typu PTR. Počet PTR záznamů by měl odpovídat počtu záznamů A a AAAA v přímém zónovém soub
-oru, tj. aby pro každou IP adresu bylo možné najít příslušné doménové jméno. 
+Pro každou nově vytvořenou doménu je potřeba přidat do konfiguračního souboru {\tt /etc/named.conf} sekci {\tt zone} se jménem nové domény a typem {\tt master}. Dále je potřeba pro tuto doménu vytvořit zónový soubor, který bude obsahovat všechny potřebné záznamy dané domény. Povinné záznamy jsou SOA a NS, volitelné pak A, AAAA, MX, CNAME a další. Pokud přidáváme  zónový soubor pro svou doménu, je vhodné vytvořit i reverzní zónový soubor pro zpětný překlad IP adres na doménová jména. Tento reverzní zónový soubor kromě povinných záznamů SOA a NS obsahuje jen záznamy typu PTR. Počet záznamů PTR by měl odpovídat počtu záznamů A a AAAA v přímém zónovém souboru, tj. aby pro každou IP adresu bylo možné najít příslušné doménové jméno. 
 
-Příklad konfiguračního souboru DNS pro nově vytvářenou doménu {\tt isa.cz}:
+Příklad konfigurace pro nově vytvářenou doménu {\tt isa.cz} v {\tt /etc/named.conf}:
 \begin{verbatim}
 zone "isa.cz" {
   type master;
@@ -102,9 +101,9 @@ zone "isa.cz" {
 };
 \end{verbatim}
 
-Jednotlivé záznamy v doméně {\tt isa.cz} budou uloženy v souboru {\tt /var/named/isa.cz}. Název souboru může být libovolný (např. {\tt isa.cz}, {\tt cz.isa}, {\tt db.isa.cz}, {\tt isa.cz.zone}), záleží na zvyklostech daném administrátora DNS. Název zónového souboru nemá vliv na jméno vytvářené domény. Podstatné je uvést správné jméno domény za klíčové slovo {\tt zone}. Zde budeme pro jméno přímého zónového souboru používat jméno domény, tj. doména {\tt isa.cz} bude uložena v souboru {\tt isa.cz}. 
+Jednotlivé záznamy v doméně {\tt isa.cz} budou uloženy v souboru {\tt /var/named/isa.cz}. Název souboru může být libovolný (např. {\tt isa.cz}, {\tt cz.isa}, {\tt db.isa.cz}, {\tt isa.cz.zone}), záleží na zvyklostech administrátora DNS. Název zónového souboru nemá vliv na jméno vytvářené domény. Podstatné je uvést jméno domény za klíčové slovo {\tt zone}. 
 
-Formát zónového souboru obvykle obsahuje na začátku implicitní dobu životnosti dané zóny (klíčové slovo {\tt TTL}) a dále pak seznam jednotlivých záznamů pro danou doménu. Při vytváření záznamů je potřeba mít na paměti několik zásad:
+Formát zónového souboru obvykle obsahuje na začátku implicitní dobu životnosti dané zóny (klíčové slovo {\tt \$TTL}) a dále seznam jednotlivých záznamů pro danou doménu. Pro vytváření zónového souboru platí několik pravidel:
 \begin{itemize}
   \item Bílé znaky (prázdné řádky, odsazení) nejsou v konfiguraci důležité.
   \item Znak "@" má speciální význam - nahrazuje jméno domény, které je uvedeno v konfiguračním souboru za klíčovým slovem {\tt zone}. Tj. v našem případě se každý výskyt znaku "@" v zónovém souboru nahradí řetězce "isa.cz".
@@ -114,20 +113,20 @@ Formát zónového souboru obvykle obsahuje na začátku implicitní dobu život
 např.   isa.cz.             IN      NS   ns.isa.cz.
 \end{verbatim}
   \begin{itemize}
-    \item \verb|<domain-name>| obsahuje doménové jméno, které se vyhledává. Toto jméno musí být tzv. plně kvalifikované (FQDN, Fully Qualified Domain Name), tedy musí obsahovat cestu v doménovém stromě až ke kořeni (včetně ukončení tečkou). Pokud doménové jméno není ukončení tečkou, automaticky se za ní přidá doména uvedená v názvu zóny. Pokud bychom například napsali pouze "isa.cz", pak DNS server doplní jména na "isa.cz.isa.cz.", což je asi něco jiného, než jsme požadovali. Naopak, pokud zapíše pouze název server "ns", pak server doplní název domény na "ns.isa.cz.", což je v pořádku.
+    \item \verb|<domain-name>| obsahuje doménové jméno, které se vyhledává. Toto jméno musí být tzv. plně kvalifikované (FQDN, Fully Qualified Domain Name), tedy musí obsahovat cestu v doménovém stromě až ke kořeni (včetně ukončení tečkou). Pokud doménové jméno není ukončení tečkou, automaticky se za něj doplní doména uvedená v názvu zóny. Pokud bychom například napsali pouze "isa.cz", pak DNS server doplní jména na "isa.cz.isa.cz.", což je asi něco jiného, než jsme požadovali. Naopak, pokud zapíše pouze název server "ns" (zkrácený zápis), pak server doplní název domény na "ns.isa.cz.", což je v pořádku.
     
     Pro záznamy typu {\tt SOA, NS, MX}, které popisují vlastnosti domény (tj. celého podstromu ve jmenném prostoru DNS), obsahuje toto políčko jméno dané domény, např. "isa.cz.". Pro záznamy záznamy typu {\tt A, AAA, CNAME}, které popisují vlastnosti konkrétního koncového uzlu jmenného prostoru DNS (například IP adresu, alias), obsahuje toto políčko doménové jméno (hostname) daného zařízení, např. "ns.isa.cz.", "pc1.isa.cz.", "www.isa.cz." apod. 
     
-    \item \verb|<TTL>| udává dobu platnosti záznamu. Pokud tato hodnota není v popisu záznamu uvedena (jako v našem případě), vezme se implicitní hodnota uvedená na začátku zónového souboru za klíčovým slovem {\tt TTL}.
-    \item \verb|<CLASS>| popisuje třídu záznamů DNS. Historicky existovalo více různých tříd záznamů DNS, v současné době se používá pouze jediná třída typu {\tt IN} (Internet). Tuto hodnotu je musí záznam DNS vždy obsahovat.
-    \item \verb|<TYPE>| obsahuje typ záznamu DNS, například {\tt SOA, NS, A, MX, CNAME, PTR} apod. Typ záznamu také určuje, jaká hodnota bude na pravé straně záznamu.
-    \item \verb|<rdata>| obsahuje data daného záznamu, jejichž formát je dán ve specifikace daného typu záznamu. Například záznam typu NS očekává na pravé straně doménové jméno serveru DNS pro danou doménu. Naopak záznam typu SOA obsahuje různé parametry dané zóny (např. jméno autoritativního serveru DNS, e-mailovou adresu správce, hodnoty TTL pro aktualizaci záznamů apod.
+    \item \verb|<TTL>| udává dobu platnosti záznamu. Pokud tato hodnota není v popisu záznamu uvedena (jako v našem případě), vezme se implicitní hodnota uvedená na začátku zónového souboru za klíčovým slovem {\tt \$TTL}.
+    \item \verb|<CLASS>| popisuje třídu záznamů DNS. Historicky existovalo více různých tříd záznamů DNS, v současné době se používá pouze jediná třída typu {\tt IN} (Internet). Tuto hodnotu musí záznam DNS vždy obsahovat.
+    \item \verb|<TYPE>| obsahuje typ záznamu DNS, například {\tt SOA, NS, A, MX, CNAME, PTR} apod. Typ záznamu určuje, jaký bude formát položky {\tt rdata} na pravé straně záznamu.
+    \item \verb|<rdata>| obsahuje vlastní data uložená v DNS pro dané doménové jméno. Obsah dat se liší podle typu záznamu. Například záznam typu NS očekává na pravé straně doménové jméno serveru DNS pro danou doménu. Naopak záznam typu SOA obsahuje základní nastavení dané zóny (jméno primárního serveru DNS, e-mailovou adresu správce, hodnoty TTL pro aktualizaci záznamů apod.).
   \end{itemize}
-  \item Znak ";" se používá jako oddělovač komentářů
+  \item Znak ";" se používá jako oddělovač komentářů.
 \end{itemize}
 
-\subsubsection{Příklady záznamů DNS v přímém zónovém souboru}
-Jak již bylo řečeno, každý zónový soubor obsahuje právě jeden záznam SOA s údaji o dané zóně a minimálně jeden záznam typu NS s adresou autoritativního serveru DNS pro danou doménu. Kromě těchto záznamů obvykle obsahuje zónový soubor záznamy typu A (překlad doménových jmen na IPv4 adresy), záznamy typu AAAA (překlad doménových jmen na adresa IPv6), záznamy typu MX (odkazujících na poštovní server pro danou doménu), záznamy typu CNAME (aliasy koncových zařízení) a další. 
+\subsubsection{Příklad záznamů DNS v přímém zónovém souboru}
+Jak již bylo řečeno, každý zónový soubor obsahuje právě jeden záznam SOA s údaji o dané zóně a minimálně jeden záznam typu NS s adresou autoritativního serveru DNS pro danou doménu. Kromě těchto záznamů obvykle obsahuje přímý zónový soubor záznamy typu A (překlad doménových jmen na IPv4 adresy), záznamy typu AAAA (překlad doménových jmen na adresy IPv6), záznamy typu MX (odkazujících na poštovní server pro danou doménu), záznamy typu CNAME (aliasy koncových zařízení) a další. 
 
 \begin{itemize}
   \item SOA -- základní informace o zóně
@@ -136,7 +135,7 @@ Jak již bylo řečeno, každý zónový soubor obsahuje právě jeden záznam S
           2023092501   ; seriové číslo - datum editace, pořadí 01
           1w  ; refresh: interval obnovy pro sekundární servery (1 týden)
           1d  ; retry: po jaké době se pokusí sekundární server kontaktovat
-              ; primární server, pokud se předchozi spojení nezdařilo (1 den)
+              ; primární server, pokud se předchozí spojení nezdařilo (1 den)
           1w  ; expire: po jaké době je záznam neplatný, pokud se nepodařila
               ; aktualizace
           1h  ; negative cache TTL: TTL pro chybové odpovědi (např. NXDOMAIN)
@@ -147,19 +146,19 @@ Jak již bylo řečeno, každý zónový soubor obsahuje právě jeden záznam S
 \begin{verbatim}
   @       IN NS ns1.isa.cz.  ; zápis využívající zástupný symbol "@"
   isa.cz. IN NS ns1.isa.cz.  ; ekvivalentní zápis s plným doménovým jménem
-  @     IN NS ns1            ; zkrácený ekvivalentní zápis
+  @       IN NS ns1          ; zkrácený  zápis
 \end{verbatim}        
   \item MX -- poštovní server pro danou doménu (s prioritou)
 \begin{verbatim}
   isa.cz. IN MX 10 mail.isa.cz. ; primární poštovní server 
   isa.cz. IN MX 20 mail2.isa.cz.; sekundární poštovní server
-  isa.cz. IN MX 20 mail2        ; zkrácený ekvivalentní zápis
-  @       IN MX 20 mail2        ; zkrácený ekvivalentní zápis
+  isa.cz. IN MX 20 mail2        ; zkrácený  zápis
+  @       IN MX 20 mail2        ; zkrácený  zápis
 \end{verbatim}        
   \item A -- překlad IPv4 adres na doménová jména
 \begin{verbatim}
   ns.isa.cz. IN A 192.168.1.1  ; plně kvalifikované doménové jméno
-  ns         IN A 192.168.1.1  ; zkrácený ekvivalentní zápis
+  ns         IN A 192.168.1.1  ; zkrácený zápis
   pc1        IN A 192.168.1.2  ; IP adresa pro pc1.isa.cz.
   pc2        IN A 192.168.1.3  ; IP adresa pro pc2.isa.cz.
 \end{verbatim}        
@@ -170,28 +169,27 @@ Jak již bylo řečeno, každý zónový soubor obsahuje právě jeden záznam S
   \item CNAME -- alias počítače
 \begin{verbatim}
   www.isa.cz.  IN CNAME pc1.isa.cz. ; alias www pro PC1
-  www          IN CNAME pc1         ; zkrácený ekvivalentní zápis
-  mail         IN CNAME pc1         ; alias pro server mail
-  mail2        IN CNAME pc2         ; alias pro server mail2   
+  www          IN CNAME pc1         ; zkrácený zápis
+  mail         IN CNAME pc1         ; alias pro server mail.isa.cz.
+  mail2        IN CNAME pc2         ; alias pro server mail2.isa.cz.   
 \end{verbatim}        
 \end{itemize}
 
 \subsubsection{Reverzní zónový soubor}
-Reverzní zónový soubor obsahuje záznamy typu {\tt PTR}, které překládají IP adresu na doménové jméno. Pravá strana záznamu leží ve speciální podstromu {\tt in-addr.arpa.} pro adresy IPv4 nebo v podstromu {\tt ip6.arpa} pro IPv6. Záznamy typu {\tt PTR} se vytvářejí pro každý přímý překlad, tj. pro každý záznam {\tt A} nebo {\tt AAAA} by měl existovat odpovídající reverzní záznam. V našem příkladu máme čtyři přímé záznamy pro doménová jména {\tt ns.isa.cz, pc1.isa.cz, pc2.isa.cz} a {\tt pc3.isa.cz}, pro které budeme vytvářet reverzní záznamy. 
+Reverzní zónový soubor obsahuje záznamy typu {\tt PTR}, které překládají IP adresu na doménové jméno. IP adresa se v reverzním stromu nachází ve speciální podstromu {\tt in-addr.arpa.} pro adresy IPv4 nebo v podstromu {\tt ip6.arpa} pro IPv6. Záznamy typu {\tt PTR} se vytvářejí pro každý záznam {\tt A} či {\tt AAAA} v přímém zónovém souboru. V našem příkladu máme čtyři doménová jména {\tt ns.isa.cz, pc1.isa.cz, pc2.isa.cz} a {\tt pc3.isa.cz}, pro která budeme vytvářet reverzní záznamy. 
 
-Reverzní záznamy jsou uloženy v jiném zónovém souboru než přímé záznamy. Pro název přímého zónového souboru jsme použili jméno domény (např. "isa.cz"), pro název reverzního zónového souboru se obvykle používá prefix podsítě, do které patří počítače v dané doméně. Tento prefix se zapisuje v opačné pořadí bytů. Tedy pro podsíť IPv4 {\tt 192.168.1.0} bude název reverzní zóny "1.168.192.in-addr.arpa". Tento název se objeví i v konfiguraci serveru DNS v souboru {\tt /etc/named.conf}, kde bude potřeba vytvořit novou zónu, viz následující příklad:
+Reverzní záznamy jsou uloženy v jiném zónovém souboru než přímé. Jako přímého zónového souboru jsme použili jméno domény (např. "isa.cz"). Pro název reverzního zónového souboru použijeme prefix podsítě, do které počítače v naší doméně patří. Prefix se zapisuje v opačné pořadí bytů, tedy pro podsíť IPv4 {\tt 192.168.1.0} bude název reverzní zóny "1.168.192.in-addr.arpa". Tento název se objeví i v konfiguračním souboru {\tt /etc/named.conf}, kde pro reverzní překlad vytvoříme novou zónu:
 \begin{verbatim}
 zone "1.168.192.in-addr.arpa" {
   type master;
   file "/var/named/192.168.1";
 };
 \end{verbatim}        
-Reverzní zónový soubor jsme v tomto případě pojmenovali {\tt 192.168.1}, nicméně název opět závisí na zvyklostech administrátora DNS. Podobně jako přímý zónový soubor musí reverzní zónový soubor obsahovat dobu platnosti zóny {\tt TTL}, dále povinné záznamy SOA a NS. Dále obsahuje záznamy PTR.
+Reverzní zónový soubor jsme v tomto případě pojmenovali {\tt 192.168.1}, nicméně název není důležitý a závisí na administrátorovi DNS. Podobně jako přímý zónový soubor musí reverzní zónový soubor obsahovat dobu platnosti zóny {\tt \$TTL} a povinné záznamy SOA a NS. Dále obsahuje jen záznamy PTR.
 
 Příklad reverzního zónového souboru pro doménu {\tt isa.cz} je v následující ukázce:
 \begin{verbatim}
 $TTL 3h
-
 @        IN SOA ns.isa.cz. admin.isa.cz. (            ; SOA záznam
                2023092501 ; serial number
                1w         ; refresh
@@ -199,28 +197,27 @@ $TTL 3h
                1w         ; expire
                1h         ; negative cache TTL
          )
-@                         IN NS ns.isa.cz.  ; NS záznam (zkrácený)
-1.168.192.in-addr.arpa.   IN NS ns.isa.cz.  ; plný zápis
+1.168.192.in-addr.arpa.   IN NS ns.isa.cz.  ; záznam NS
+@                         IN NS ns.isa.cz.  ; zkrácený zápis
 
-1.1.168.192.in-addr.arpa. IN PTR ns.isa.cz.  ; plný zápis pro ns
-1                         IN PTR ns.isa.cz.  ; zkrácený zápis pro ns
-2                         IN PTR pc1.isa.cz. ; zrkácený zápis pro pc1
-3                         IN PTR pc2.isa.cz. ; zkrácený zápis pro pc2
+1.1.168.192.in-addr.arpa. IN PTR ns.isa.cz.  ; reverzní překlad pro ns.isa.cz.
+1                         IN PTR ns.isa.cz.  ; zkrácený zápis
+2                         IN PTR pc1.isa.cz. ; zkrácený zápis pro pc1.isa.cz.
+3                         IN PTR pc2.isa.cz. ; zkrácený zápis pro pc2.isa.cz.
                     
 \end{verbatim}
-Při zápisu je potřeba si uvědomit, že na pravé straně musí být vždy plně kvalifikované doménové jméno. Pokud bychom na pravé straně uvedli například jenom "ns", tak po vyhodnocení se přidá "ns.1.168.192.in-addr.arpa.", což asi nechceme. Podobně když zapomeneme tečku, tj. napíšeme pouze "ns.isa.cz", vyhodnocení opět dopadne jinak, než si představujeme -- server vrátí hodnotu "ns.isa.cz.1 .168.192.in-addr.arpa.". 
+Při zápisu je potřeba si uvědomit, že na pravé straně musí být vždy plně kvalifikované doménové jméno. Pokud bychom na pravé straně uvedli například jenom "ns", tak po vyhodnocení dostaneme "ns.1.168.192.in-addr.arpa.", což asi nechceme. Podobně když zapomeneme tečku, tj. napíšeme pouze "ns.isa.cz", server vrátí hodnotu "ns.isa.cz.1 .168.192.in-addr.arpa.". 
 
-Pro reverzní překlad IPv6 bude muset existovat nový zónový soubor, protože reverzní adresy IPv6 mají jiný podstrom v DNS než adresy IPv4. Do konfiguračního souboru {\tt /etc/named.conf} přidáme novou zónu, např. "2.1.d.f.ip6.arpa.", viz následující ukázka:
+Pro reverzní překlad IPv6 musíme vytvořit další zónový soubor, protože reverzní adresy IPv6 se nacházejí v jiném podstromu DNS (doméně) než adresy IPv4. Do konfiguračního souboru {\tt /etc/named.conf} přidáme zónu "2.1.d.f.ip6.arpa.", viz následující ukázka:
 \begin{verbatim}
-zone "2.1.d.f.ip6.arpa" {
+zone "2.1.d.f.ip6.arpa" {     # odpovídá prefixu sítě fd12::
   type master;
   file "/var/named/fd12";
 };
 \end{verbatim} 
-Tento reverzní zónový soubor pro zpětný překlad adres IPv6 na doménová jména bude opět obsahovat záznam SOA a NS, dále pak záznamy PTR v doméně  "2.1.d.f.ip6.arpa", viz následující ukázka: 
+Tento reverzní zónový soubor pro zpětný překlad adres IPv6 na doménová jména bude opět obsahovat záznamy SOA a NS, dále pak záznamy PTR v doméně  "2.1.d.f.ip6.arpa", viz následující ukázka: 
 \begin{verbatim}
 $TTL 3h
-
 @        IN SOA ns.isa.cz. admin.isa.cz. (            ; SOA záznam
                2023092501 ; serial number
                1w         ; refresh
@@ -228,21 +225,34 @@ $TTL 3h
                1w         ; expire
                1h         ; negative cache TTL
          )
-
-@                   IN NS ns.isa.cz.  ; NS záznam (zkrácený)
-2.1.d.f.ip6.arpa.   IN NS ns.isa.cz.  ; plný zápis
-
+2.1.d.f.ip6.arpa.   IN NS ns.isa.cz.  ; záznam NS
+@                   IN NS ns.isa.cz.  ; zkrácený zápis
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.2.1.2.1.d.f.ip6.arpa. IN PTR pc3.isa.cz.
                                       ; plný zápis pro adresu fd12:1234::1
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.4.3.2.1 IN PTR pc3.isa.cz.
                                       ; zkrácený zápis pro adresu fd12:1234::1
 \end{verbatim}
-Nevýhodou reverzního zápis adresy IPv6 je, že záznamy DNS neznají zkracování nulových bytů. Je nutné uvést celou cestu v reverzním stromu DNS pro IPv6, kde každá úroveň má 8 bitů, tj. jeden byte. Adresa IPv6 obsahuje 32 bytů, které je nutné v reverzním překladu uvést. Protože tento výpis je značně složitý a může dojít snad k chybě, používají se na vytvoření těchto adres specializované generátory\footnote{Viz například \url{https://www.whatsmydns.net/reverse-dns-generator}.}. 
+Nevýhodou reverzního zápisu adresy IPv6 je, že záznamy DNS neznají zkracování nulových bytů. Je tedy nutné uvést celou cestu v reverzním stromu DNS pro IPv6, kde každá úroveň obsahuje jednu hexadecimální číslici adresy IPv6 reprezentující čtyři bity. Adresa IPv6 tedy obsahuje 32 hexadecimálních číslic, které je nutné v reverzním překladu rozepsat. Protože tento výpis je značně složitý a může dojít snad k chybě, používají se na vytváření reverzních adres specializované generátory\footnote{Viz například \url{https://www.whatsmydns.net/reverse-dns-generator}.}. 
 
-Po každé změně zónového souboru by se vždy mělo upravit i sériové číslo zóny a to tak, aby bylo vždy větší než předchozí hodnota. Také je nutné aplikaci načíst změněnou konfiguraci.
+\subsubsection{Kontrola záznamů a restart serveru DNS}
+Po každé změně zónového souboru by se vždy mělo upravit i sériové číslo zóny tak, aby bylo vždy větší než předchozí hodnota. Standardně se do sériového čísla vkládá datum a pořadí změny, tj. má formát {\tt yyyymmddxx}, kde {\tt xx} je pořadí změny v daném dni. 
+
+Pokud spouštíme službu DNS poprvé, lze použít příkaz:
+\begin{verbatim}
+systemctl start named.service
+\end{verbatim}
+
+Pokud restartujeme běžící službu DNS, lze použít  příkaz: 
 \begin{verbatim}
 systemctl restart named.service
 \end{verbatim}
+
+Následujícím příkazem ověříme, zda služba běží či nikoliv:
+\begin{verbatim}
+systemctl status named
+\end{verbatim}
+
+V případě syntaktické či sémantické chyby v zónových souborech či konfiguraci serveru DNS, proces nahlásí chybu a ukončí se. Z popisu chyby se dát obvykle snadno vyčíst, na kterém řádku konfigurace nastala chyba. 
 
 %% \subsection{DNS Over TLS}\label{DoT}
 %% DNS Over TLS (DOT) přináší šifrování a autentizaci do DNS komunikace. Tento protokol je definován v RFC 7858\cite{RFC7858}. Protokol má přidělen standardizovaný port 853 jako defaultní. TLS protokol zde zaobaluje DNS požadavky a odpovědi jako přenášený payload viz obrázek \ref{fig:dot_encapsulation}.
