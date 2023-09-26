@@ -1,99 +1,168 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Syslog}
-\label{syslog}
+\section{Přenos systémových události službou Syslog}\label{syslog}
+Služba Syslog  slouží pro generování a přenos systémových událostí síťových zařízení a koncových stanic na centrální úložiště (server). Systémové událostí jsou generovány operačním systémem či běžícími aplikace. Tyto události se lokálně ukládají do logovacích souborů. Služba Syslog posílá vygenerované události na server. 
 
-Protokol Syslog \cite{rfc5424} popisuje způsoby a formát pro záznam systémových událostí. Je využíván
- především v~unixových systémech pro záznam událostí jednak prvků součástí systém, jednak pro
- události běžících programů. 
+Architekturu služby Syslog tvoří protokol Syslog \cite{rfc5424}, který popisuje formát přenosu zpráv, dále Syslog klient ({\tt originator}), které vytvořené události posílá na server, a Syslog server ({\tt collector}), který přijímá poslané události protokolem Syslog od klientů a centrálně je zpracovává. 
 
-Součástí záznamů býva zpravidla časová značka, zařízení (facility), závažnost záznamu (severity)
- a samotný záznam. V~některých implementacích se může objevit i doménové jméno či IP adresa. Záznam
- může být uložen lokálně (např. soubor \verb|/var/log/messages|) nebo lze záznamy přeposílat
- na vzdálený server. Takové záznamy se pak objeví v syslogu daného serveru. Součástí záznamů může být
- i doménové jméno resp. IP adresa původce záznamu.
+Každá vygenerovaná událost se ukládá jako záznam do logovacího souboru buď operačního systému (např. \verb|/var/log/messages|) nebo do logovacího souboru konkrétní aplikace (např. \verb|/var/log/maillog| pro poštovní server, \verb|/var/log/ipfw| pro firewall, \verb|/var/log/apache/access.log| pro HTTP server).  
 
-V~položce facility je uvedena součást systému (jádro, autentizační zprávy,apod.) nebo
- přímo název programu, případně jeho PID. Kompletní seznam zařízení lze najít ve starším RFC 3164
- \cite{rfc3164}.
+Logovací záznam události zpravidla obsahuje časovou značku, typ zařízení, které událost vygenerovalo (facility), závažnost události (severity) a slovní popis události. V~některých logovacích souborech se může objevit i doménové jméno či IP adresa stanice, která událost způsobila. Záznamy mohou být uloženy lokálně v souborovém systému (na unixových systémech v adresáři \verb|/var/log|) nebo je můžeme přeposílat protokolem Syslog na vzdálený server. 
 
-Závažnost záznamu je rozdělena na 8 úrovní od nejzávažnější (0) po ladící informace (7). Obvykle
- jsou v syslogu zaznamenávány událostí od úrovně varování (4). Úplný seznam úrovní pak vypadá takto:
-\begin{table}[!h]
-	\centering
-	\begin{tabular}[!h]{|c|l|l|}
-	\hline
-	\shortstack{Závažnost} & & Popis \\
-	\hline
-	0 & EMERGENCY & Nejvyšší závažnost, systém je nestabilní\\
-	1 & ALERT & Událost vyžadující okamžitou akci.\\
-	2 & CRITICAL & Kritická chyba systému (např. HW chyby) \\
-	3 & ERROR & Chyba programu.\\
-	4 & WARNING & Varování programu.\\
-	5 & NOTICE & Důležité informační záznamy (např. změna nastavení)\\
-	6 & INFORMATIONAL & Informační zprávy nevyžadující speciální pozornost\\
-	7 & DEBUG & Ladicí informace\\
-	\hline
-	\end{tabular}
+Typ zařízení, které událost vygenerovalo, je definováno identifikátorem v záznamu události. Seznam zařízení, které definuje protokol Syslog, je v tabulce \ref{tab:facility}. 
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{|c|l|c|l|}
+    \hline
+    \bf Code & \bf Facility & \bf Code & \bf Facility\\
+    \hline
+     0  &  kernel messages                             &  12 &  NTP subsystem           \\
+     1  &  user-level messages                         &  13 &   log audit              \\
+     2  &  mail system                                 &  14 &   log alert              \\
+     3  &  system daemons                              &  15 &   clock daemon (note 2)  \\
+     4  &  security/authorization messages             &  16 &   local use 0  (local0)  \\
+     5  &  messages generated internally by syslogd    &  17 &   local use 1  (local1)  \\
+     6  &  line printer subsystem                      &  18 &   local use 2  (local2)  \\
+     7  &  network news subsystem                      &  19 &   local use 3  (local3)  \\
+     8  &  UUCP subsystem                              &  20 &   local use 4  (local4)  \\
+     9  &  clock daemon                                &  21 &   local use 5  (local5)  \\
+     10 &  security/authorization messages             &  22 &   local use 6  (local6)  \\
+     11 &  FTP daemon                                  &  23 &   local use 7  (local7)  \\
+     \hline
+  \end{tabular}
+  \caption{Typy zařízení Syslog dle RFC 5424 \cite{rfc5424}}\label{tab:facility}
+\end{table}
+Protože tento seznam z původního  návrhu protokolu BSD Syslog z roku 2001, obsahuje zařízení, která se dnes už příliš nepoužívají. Z tohoto důvodu se pro aplikace a další typy zdrojů událostí používá lokální označení z identifikátory 16-23. 
+
+Pro hodnocení závažnosti vzniklé události definuje Syslog osm úrovní od nejzávažnější typu Emergency (0) po ladící výpisy typu Debug (7). Pro správu sítí jsou důležité zejména události od úrovně Warning (4). Přehled definovaných úrovní závažnosti je v tabulce \ref{tab:severity}. 
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{|c|l|l|}
+    \hline
+    \bf Code & \bf Severity & \bf Description \\
+    \hline
+    0 & EMERGENCY & system is unusable  \\
+    1 & ALERT & action must be taken immediately\\
+    2 & CRITICAL & critical conditions \\
+    3 & ERROR & error conditions\\
+    4 & WARNING & warning conditions\\
+    5 & NOTICE & normal but significant condition\\
+    6 & INFORMATIONAL & informational messages\\
+    7 & DEBUG & debug-level messages\\
+    \hline
+  \end{tabular}
+  \caption{Úrovně závažznosti událostí Syslog dle RFC 5424 \cite{rfc5424}}\label{tab:severity}
 \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Simple Network Monitoring Protocol}
-\label{snmp}
+\clearpage
+\section{Monitorování sítě SNMP}\label{snmp}
 
-SNMP \cite{rfc1157} je protokol určený k monitorování stavu zařízení. Protokol podporuje nejen čtení
- provozních paramterů připojených stanic (využití paměti, zatížení CPU apod.), ale i nastevní
- některých paramterů těchto stanic.
-Protokol je provozován nad UDP na portech 161 a 162 pro asynchronní zprávy (traps). V případě
- potřeby přenášení větších bloků informací lze SNMP provozovat i nad TCP \cite{rfc3430}.
+Služba SNMP (Simple Network Monitoring Protocol) slouží k aktivnímu monitorování zařízení na síti. Protokol SNMP \cite{rfc3412} slouží k přenosu monitorovacích informací mezi řídící stanicí NMS (Network Management Station) a monitorovaným zařízením (SNMP Agent). Protokol slouží nejen ke čtení provozních parametrů (hodnot objektů MIB) připojených stanic (využití paměti, počty přenesených paketů, stav síťových rozhraní, zatížení CPU apod.), ale dá se použít i k  nastavení některých těchto parametrů. Protokol pracuje nad UDP na portech 161 (vyzývání) a 162 (asynchronní zprávy, traps).
 
-Stanice zapojené v síti dělíme na "správce" (Network Management station, NMS0 a~sledovaná zařízení.
- Správcovské stanice slouží ke shromažďování informací ze sledovaných zařízení a jejich případné prezentaci.
-Požadované informace mohou získat buď synchronní komunikací způsobem požadavek-odpověď, nebo mohou
- získávat informace od sledovaných stanic asynchronně pomocí tzv. traps. Tyto zprávy jsou odesílány
- přímo sledovanými zařízeními. Sbírané informace jsou pak uloženy v databázi MIB
- (Management Information Base). Každa položka je identifikována pomocí OID (Object Identifier),
- podobně jako v~LDAP. Příkladem může být položka sysLocation uložená pod OID {\tt 1.3.6.1.2.1.1.6.0}.
- Seznam OID podle standrardu RFC 1213 \cite{rfc1213} lze najít na stránce
+Řídicí stanice NMS posílá zprávy SNMP na jednotlivá síťová zařízení z cílem získat hodnoty sledovaných objektů systému. Standardní způsob komunikace pracuje na principu vyzývání (polling), kdy řídicí stanice NMS periodicky posílá zprávy typu dotaz na sledovaná zařízení. Požadované hodnoty (objekty MIB) jsou identifikovány pomocí tzv. OID (Object Identifier), které jsou standardizovány v databázi MIB (Management Information Base).
+
+Příkladem objektu je {\tt sysDescr} (System Description) s OID {\tt 1.3.6.1.2.1.1.6.0}. Standardizované objekty jsou uloženy v databázi MIB-2, která je definována standardem RFC 1213 \cite{rfc1213}.
+
+Pro vyhledávání objektů SNMP lze využít následující portály:
+\begin{itemize}
+  \item Global OID Reference Database: \url{http://oidref.com/}
+  \item Object Identifier (OID) Repository: \url{http://www.oid-info.com/}
+\end{itemize}
+
+\subsection{Nástroj pro monitorování zařízení SNMP}
+Pro monitorování zařízení SNMP můžeme využít nástroj {\tt snmpwalk}, viz {\tt man snmpwalk}, který slouží k získání objektů z daného zařízení protokolem SNMP. Program {\tt snmpwalk} vrátí buď požadový objekt MIB zadaný identifikátorem OID nebo množinu objektů MIB, které patří do zadaného podstromu MIB.
+
+Formát a příklad příkazu {\tt snmpwalk}:
+{\small
 \begin{verbatim}
-    http://www.oidview/mibs/0/RFC1213-MIB.html.
+snmpwalk -v <protocol> -c <community string> <host> <object>
+
+snmpwalk -v2c -c public isa.fit.vutbr.cz sysDescr         ; vyhledá objekt System Description
+snmpwalk -v2c -c public isa.fit.vutbr.cz 1.3.6.1.2.1.1.1  ; ekvivalentní zápis pomocí OID
+
+snmpwalk -v2c -c public isa.fit.vutbr.cz system           ; vyhledá objekty podstromu System
+snmpwalk -v2c -c public isa.fit.vutbr.cz 1.3.6.1.2.1.1    ; ekvivalentní zápis pomocí OID
 \end{verbatim}
+}
 
-Sledované stanice provozují v~síti SNMP programy pro získávání potřebných informací tzv. SNMP agenty.
- Ti sbírají data a zpracovávají požadavky z~NMS.
+\subsection{Konfigurace agentů SNMP}
+Zařízení v síti SNMP jsou rozdělena do logických celků, komunit, identifikovaných textovým  řetězcem. Komunita slouží k autentizaci zařízení v síti a definuje přístup k informacím MIB.
 
-Zařízení v síti SNMP jsou rozdělena do logických celků, komunit, identifikovaných textovým
- řetězcem. Komunita slouží k autentizaci zařízení v síti a definuje přístup k informacím MIB.
- Určuje tedy, které hodnoty a vlastnosti je povoleno v dané komunitě sledovat, případně nastavovat.
- Příklad takového nastavení může být následující: 
+V konfiguraci monitorovaného zařízení (agenta SNMP) můžeme definovat, kdo může přistupovat k jakým objektů SNMP. Můžeme definovat způsob přístupu k objektům SNMP (pro čtení: {\tt ro},  pro čtení a zápis: {\tt rw}), můžeme omezit přístup na určité zdrojové adresy, či můžeme definovat část podstromu MIB, do kterého má daný uživatel přístup.  
+Příklad nastavení: 
 \begin{verbatim}
 rocommunity public 10.0.0.0/24
 rocommunity public 192.168.0.0/24 1.3.6.1.2.1.1
 rwcommunity public localhost
 \end{verbatim}
-Konfigurace v příkladu umožňuje zařízením v síti 10.0.0.0/24 přístup k MIB komunity public pouze
- pro čtení. Při pokusu o zápis do jakékoli proměnné skončí akce neúspěchem, že proměnná neexistuje.
- Pro stanice v síti 192.168.0.0/24 je přístup pro čtení omezen pouze na základní szstémové informace
- (podstrom system). Při lokálním přístupu však budou záznamy přístupné i pro zápis.
+Výše uvedená konfigurace umožňuje zařízením v síti 10.0.0.0/24 přístup k objektům MIB komunity {\tt public} pouze
+ pro čtení. Stanice v síti 192.168.0.0/24 mají přístup pro čtení omezen pouze na základní systémové informace uložené v podstromu MIB-2 {\tt system} (OID 1.3.6.1.2.1.1). 
+ (podstrom system). Pro lokálního uživatele budou objekty MIB přístupné pro čtení i pro zápis.
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \newpage
-\section{Cisco NetFlow}
-\label{netflow}
+\section{Monitorování toků NetFlow}\label{netflow}
+Služba NetFlow byla navržena pro monitorování toků v síti. Její architekturu tvoří sonda NetFlow (exportér), která monitoruje síťový provoz, analyzuje jednotlivé pakety na úrovni L3 a L4, a vytváří tzv. záznamy (flow records) o probíhajícím provozu. Záznamy jsou uložený v lokální paměti sondy, který je po skončení toku přepošle protokole NetFlow na tzv. kolektor. Kolektor ukládá záznamy z různých sond do centrálního úložiště, kde je můžeme vyhledávat, analyzovat, identifikovat potenciálně nebezpečný provoz apod.
 
-Formát záznamu NetFlow umožňuje ukládání informací o IP provozu na síťovém zařízení. Formát byl
- vytvořen firmou Cisco jako funkcionalita jejich zařízení. Ve verzi 9 pak byl standartizován
- jako RFC 3954 \cite{rfc3954}.
+Příklad záznamu o toku:
+{\footnotesize
+\begin{verbatim}
+Date flow start       Duration Proto Src IP Addr:Port    Dst IP Addr:Port   Flags Tos Packets Bytes Flows
+2005-08-30 06:53:53.370 63.545 TC  113.138.32.15225   ->  222.33.70.124:3575.AP.SF 0    62     3512   1
+2005-08-30 06:53:53.370 63.545 TC  222.33.70.124:3575 ->  113.138.32.152:25 .AP.SF 0    58     3300   1
+\end{verbatim}
+}
+Tento záznam obsahuje dva toky TCP, z nichž první tvoří 62 paketů o velikosti 3.512 B, které byly poslány z adresy 113.138.32 a portu 15225 an adresu 222.33.70.124, port 3575. Délka přenosu trvala 63,545 sekund. 
 
-NetFlow záznamy jsou využívány k~monitorování a analýze provozu v~síti. Data obsahují záznamy
- o IP adresách, portech, počty přenesených paketů či bajtů apod. Data jsou uchovávána pro
- tzv. toky neboli flow. Toky jsou identifikovány pěticí zdrojová a cílová IP adresa,
- zdrojový a cílový port a protokol transportní vrstvy. Tok je chápán jako jednosměrná komunikace.
 
-Infrastruktura pro sběr a uchovánvání NetFlow dat sestává z~kolektoru a sond. Kolektorem je míněna
- stanice, která sbírá data ze sítě a provádí jejich uchování. Sondou pak může být jakékoli zařízení
- ať už směrovač, přepínač nebo zařízení přímo vyhrazené pro tuto činnost. Sběr dat může probíhat
- pro všechny toky, nebo může být prováděno vzorkování či agregace. 
+\subsection{Program {\tt nfdump}}
+Program {\tt nfdump} slouží jako kolektor systému NetFlow, viz {\tt man nfdump}. Program také umožňuje zobrazovat uložené záznamy, vyhledávat v nich, provádět agregaci, filtrování a další. 
 
+\begin{verbatim}
+  Format:   nfdump [options] [filter] 
+\end{verbatim}
+
+Příklady použití:
+\begin{verbatim}
+nfdump -r nfcapd.202004221040  # vypíše všechny záznamy o tocích z daného souboru
+
+nfdump -r nfcapd.202004221040 'host 147.229.5.2'  # vypíše všechny toky dané stanice
+ 
+nfdump -r nfcapd1 -c 100 'proto tcp and (src ip 172.16.17.18 or dst ip 172.16.17.19)'
+             # vybere ze souboru 100 záznamů, které vyhovují zadanému filtru
+
+nfdump -r nfcapd1 -s record/bytes -n 10
+             # vygeneruje statistiku Top 10 záznamů s největším počtem přenesených bytů
+
+nfdump -r nfcapd1 -s srcip/packets -n 10
+             # vygeneruje statistiku Top 10 IP adres s největším počtem odeslaných paketů
+
+nfdump -r nfcapd1 -A srcip,dstport
+             # vypíše agregované toky podle zdrojové IP adresy a cílového portu
+
+nfdump -r nfcapd1 -A srcip 'host 147.229.5.2'
+             # vypíše agregované toky podle zdrojové IP adresy pro daný filtr
+
+nfdump -r nfcapd1 -t 2020/04/22.12:19:00-2020/04/22.12:20:00 'port 53'
+             # vyhledá všechny záznamy s komunikací DNS v daném časovém okně 
+\end{verbatim}
+
+%% 
+%% Formát záznamu NetFlow umožňuje ukládání informací o IP provozu na síťovém zařízení. Formát byl
+%%  vytvořen firmou Cisco jako funkcionalita jejich zařízení. Ve verzi 9 pak byl standartizován
+%%  jako RFC 3954 \cite{rfc3954}.
+%% 
+%% NetFlow záznamy jsou využívány k~monitorování a analýze provozu v~síti. Data obsahují záznamy
+%%  o IP adresách, portech, počty přenesených paketů či bajtů apod. Data jsou uchovávána pro
+%%  tzv. toky neboli flow. Toky jsou identifikovány pěticí zdrojová a cílová IP adresa,
+%%  zdrojový a cílový port a protokol transportní vrstvy. Tok je chápán jako jednosměrná komunikace.
+%% 
+%% Infrastruktura pro sběr a uchovánvání NetFlow dat sestává z~kolektoru a sond. Kolektorem je míněna
+%%  stanice, která sbírá data ze sítě a provádí jejich uchování. Sondou pak může být jakékoli zařízení
+%%  ať už směrovač, přepínač nebo zařízení přímo vyhrazené pro tuto činnost. Sběr dat může probíhat
+%%  pro všechny toky, nebo může být prováděno vzorkování či agregace. 
+%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,102 +1,90 @@
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Signalizační protokol SIP}
-\label{sip}
-Session Initiation Protocol (SIP, RFC 3261, červen 2002) je textový aplikační protokol pro signalizaci VoIP, který provádí:
+\section{Signalizační protokol SIP}\label{sip}
+Session Initiation Protocol (SIP, RFC 3261 \cite{rfc3261}) je signalizační protokol pro IP telefonie, který provádí následující operace:
 \begin{itemize}
-    \item vytváření a udržování relace
-    \item adresování pomocí SIP URI sip:user@domain
-    \item registace uživatele
-    \item navazování spojení, směrování hovorů
+    \item registrace uživatel VoIP na serveru SIP
+    \item navázání hovoru, výměna parametrů spojení
+    \item směrování hovorů
+    \item ukončení či zrušení hovoru
 \end{itemize}
 
-\noindent SIP {\bf neprovádí} správu relací po jejich navázání, nezajišťuje kvalitu přenosu a nezajišťuje přenos hlasových dat. \\
-~\\
-\noindent {\bf Základními prvky} jsou server UAS (User Agent Server) a uživatelský agent UAC (User Agent Client). UAS může mít více úloh,
-např. registrační (přijímá žádosti REGISTER), proxy (analyzuje zprávy, směruje hovory), lokalizační (informace o umístění klientů)
-nebo server pro směrování (další bod spojení – hop – u altern. SIP serveru). \\
-~\\
-\noindent {\bf Adresování} používá SIP URI ve tvaru sip:user@domain, např. sip:matousp@cesnet.cz. {\bf Směrovací informace} uloženy v SIP
-hlavičce paketu Via, Route, Record-Route. {\bf Směrování} provádí servery SIP na cestě.
+Protokol SIP neprovádí správu relací po jejich navázání, nezajišťuje kvalitu přenosu, neslouží k přenosu hlasových dat.
 
-\subsection*{Příklad signalizace SIP}
-\begin{lstlisting}
-INVITE sip:541141118@cesnet.cz SIP/2.0
-Call-ID: D40CA785-2EEE-4801-9B04-349632F56CDC@147.229.14.146
-CSeq: 2 INVITE
-From: "Petr Matousek"<sip:matousp@cesnet.cz>;tag=2007034328740
+Základními prvky IP telefonie jsou {\em server UAS} (User Agent Server), který provádí registraci klientů, navazování a směrování hovorů, lokalizaci klienta účtování apod., a {\em uživatelský agent UAC} (User Agent Client), který zprostředkovává uživateli volání (vytáčení spojení, příjem telefonátu). 
+
+Služba SIP používá pro adresování speciální URI (Uniform Resource Identifier) ve tvaru {\tt sip:user @domain}, kde {\tt user} je uživatelské jméno, které přidělí poskytovatel uživateli, a {\tt domain} je VoIP doména poskytovatele. Adresa uživatele je součástí metody {\tt INVITE}, která slouží k vytvoření hovoru, nebo se využívá při registraci telefonu (metoda {\tt REGISTER}). 
+
+Směrovací informace se během navazování spojení ukládají v hlavičce SIP paketu {\tt Via:}, {\tt Route} či {\tt Record-Route}. 
+
+\subsection{Příklad signalizace SIP}
+{\footnotesize
+\begin{verbatim}
+INVITE sip:541141118@cesnet.cz SIP/2.0    # navázání spojení s uživatelem 541141118 v doméně cesnet.cz
+Call-ID: D40CA785-2EEE-4801-9B04-349632F56CDC@147.229.14.146   # jednoznačný identifikátor hovoru
+CSeq: 2 INVITE                                                 # sekvenční číslo zprávy, název metody
+From: "Petr Matousek"<sip:matousp@cesnet.cz>;tag=2007034328740 # identifikace volajícího (SIP URI)
+To: <sip:541151118@cesnet.cz>                                  # identifikace volaného (SIP URI)
+Contact: <sip:matousp@147.229.14.146:59183;ob>                 # identifikace volaného (Device URI)
+
+SIP/2.0 100 Trying -- your call is important to us             # odpověď na metodu INVITE
+Call-ID: D40CA785-2EEE-4801-9B04-349632F56CDC@147.229.14.146   # jednoznačný identifikátor hovoru
+CSeq: 2 INVITE                                                 # odpověď na metodu INVITE   
+From: "Petr Matousek"<sip:matousp@cesnet.cz>;tag=2007034328740 # zopakování hlaviček z metody INVITE
 To: <sip:541151118@cesnet.cz>
+\end{verbatim}
+}
 
-SIP/2.0 100 Trying -- your call is important to us
-Call-ID: D40CA785-2EEE-4801-9B04-349632F56CDC@147.229.14.146
-CSeq: 2 INVITE
-From: "Petr Matousek"<sip:matousp@cesnet.cz>;tag=2007034328740
-To: <sip:541151118@cesnet.cz>
-\end{lstlisting}
-
-\subsection*{Základní metody protokolu SIP}
+\subsection{Základní metody protokolu SIP}
 \begin{itemize}
-    \item REGISTER – žádost o registraci
-    \item INVITE, ACK, CANCEL – vytváření spojení
-    \item BYE – ukončení spojení
-    \item OPTIONS – zjišťování možností přenosu
-    \item PRACK – provizorní ACK
+    \item REGISTER -- žádost o registraci
+    \item INVITE, ACK -- vytváření spojení
+    \item CANCEL -- zrušení vytvářeného spojení
+    \item BYE -- ukončení spojení
+    \item OPTIONS -- zjišťování možností přenosu
+    \item PRACK -- provizorní ACK
 \end{itemize}
 
-\subsection*{Další metody protokolu SIP}
+\subsection{Další metody protokolu SIP}
 \begin{itemize}
-    \item INFO (RFC 6086) – přenost aplikačních inforpací
+    \item INFO (RFC 6086) – přenost aplikačních informací
     \item MESSAGE (RFC 3428) – textové zprávy IM
     \item SUBSCRIBE, NOTIFY (RFC 3265) – zasílání upozornění na události
     \item PUBLISH (RFC 3903) – zveřejnění stavu událostí (prezence)
 \end{itemize}
 
-\subsection*{Položky hlavičky SIP}
+\subsection{Položky hlavičky SIP}
 \begin{itemize}
-    \item {\bf Via} - Obsahuje směrovací informace. Každý server, přes který SIP zpráva po cestě projde,
-    přidá do hlavičky jeden řádek Via s IP adresou a číslem portu, na kterém zpracoval paket. Odpověď v opačném
-    směru pak prochází shora dolů všemi servery, které jsou uvedené ve Via. Každý server zpracuje paket,
-    odstraní svůj vlastní záznam a odešle ho na následující adresu ve Via. Poslední záznam Via je IP adresa
-    a číslo portu klienta.
+    \item {\bf Via:} obsahuje směrovací informace. Každý server, přes který zpráva {\tt INVITE} prochází,
+      přidá do hlavičky jeden řádek {\tt Via:} s IP adresou a portem, na kterém zpracoval paket. Zaznamenaná posloupnost uzlů, přes které zpráva {\tt INVITE} procházela, se pak využije pro směrování odpovědi. 
     \begin{verbatim}
     via: SIP/2.0/UDP 10.11.12.51:5062;rport;branch=z9hG4bk2079031997
     \end{verbatim}
-    
-    \item {\bf From} - Adresa odesílatele SIP zprávy. Obsahuje SIP URI a nepovinně zobrazitelné jméno (display-name).
-    Display-name (zde {\tt user03}) je určeno pouze pro „lidského uživatele“.
-    U registrace obsahuje pole From SIP URI adresu uživatele, který je zodpovědný za registraci. Pokud se nejedná o registraci třetí strany, je hodnota stejná jako To.
+    \item {\bf From:} obsahuje odesílatele SIP zprávy ve formátu SIP URI. Nepovinně může obsahovat i zobrazitelné jméno (display-name), které uživatel vložil do konfigurace klienta. 
     \begin{verbatim}
     From: "user08" <sip:user08@iss.cz>;tag=283687066
     \end{verbatim}
-
-    
-    \item {\bf To} - Adresa příjemce zprávy. Může to být koncový uživatel nebo adresa SIP proxy (next hop), která zpracuje danou žádost.
-    U registrace je v To uvedena adresa uživatele, která má být na serveru zaregistrována nebo modifikována.
+  \item {\bf To:} obsahuje adresu příjemce zprávy. 
     \begin{verbatim}
     To: <sip:1006@iss.cz>
     \end{verbatim}
-    
-    \item {\bf Allow} - Seznam SIP metod, které daný uživatel podporuje a používá.
+    \item {\bf Allow} obsahuje seznam metod SIP, které podporuje daný klient.
     \begin{verbatim}
     Allow: INVITE, INFO, PRACK, ACK, BYE, CANCEL, OPTIONS, NOTIFY, REGISTER
     \end{verbatim}
 \end{itemize}
 
-\subsection*{SDP}
-Session description protocol (SDP) se používá pro zaslání informací potřebných pro přijímání hlasového toku.
-Nepřenáší se pomocí něj vlastní data, slouží pro vyjednání parametrů, jako je typ média (video, audio, atd.),
-transportní protokol (RTP/UDP/IP, H.320, atd.), typ kodeku nebo přenosová rychlost.
-SDP zprávy se přenáší ve zprávách SIP typu INVITE a OK. \\
-~\\
-\noindent Příklad zprávy SDP:
-\begin{lstlisting}
-v=0                                             # version
-o=- 3434794301 3434794301 IN IP4 147.229.14.146 # originator
-s=Sjphone                                       # session name
-c=IN IP4 147.229.14.146                         # address
+\subsection{Protokol SDP (Session Description Protocol)}
+Protokol SDP \cite{rfc4566} se používá pro zaslání informací potřebných k vytvoření kanálu pro přenos hlasu (případně obrazu). Jde opět o signalizační protokol, který domlouvá parametry spojení, jako je typ média (video, audio, atd.), transportní protokol (RTP/UDP/IP, H.320, atd.), typ kodeku, IP adresa a port pro příjem hlasu (obrazu).
+Zprávy SDP se přenáší ve zprávách typu {\tt INVITE} a {\tt OK}.
+{\footnotesize
+\begin{verbatim}
+v=0                                             # verze protokolu SDP
+o=- 3434794301 3434794301 IN IP4 147.229.14.146 # původce spojení (username, IP adresa)
+s=Sjphone                                       # jméno spojení: jméno softwaru
+c=IN IP4 147.229.14.146                         # spojení: IP adresa pro příjem dat
 t=0 0 # time (start + end)
-a=direction:passive
-m=audio 49152 RTP/AVP 3 97 98 8 0_101           # media stream
+a=direction:passive                               
+m=audio 49152 RTP/AVP 3 97 98 8 0_101           # audio stream: číslo portu, nabízené kodeky
 a=rtpmap:3 GSM/8000
 a=rtpmap:97 iLBC/8000
 a=rtpmap:98 iLBC/8000
@@ -105,4 +93,5 @@ a=rtpmap:8 PCMA/8000
 a=rtpmap:0 PCMU/8000
 a=rtpmap:101 telephone-event/8000
 a=fmtp:101 0-11,16
-\end{lstlisting}
+\end{verbatim} 
+}
