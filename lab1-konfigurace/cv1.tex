@@ -43,14 +43,14 @@ Váš počítač je připojený ethernetovým kabelem do vnitřní sítě, kter�
 Základní příkazy pro práci v OS Linux jsou popsány v kapitole \ref{basics} laboratorního manuálu, který můžete využívat jako referenční příručku pro laboratorní cvičení.
 
 \begin{enumerate}
-  \item Pomocí příkazu {\tt ip address show} zjistěte nastavení síťového rozhraní vašeho počítače. Do protokolu zapište MAC adresu, IPv4 adresu, síťovou masku, adresu sítě a broadcastovou adresu na aktivním síťovém rozhraní.
+  \item Pomocí příkazu {\tt ip address show} zjistěte nastavení síťového rozhraní {\tt enp2s0} vašeho počítače. Do protokolu zapište MAC adresu, IPv4 adresu, síťovou masku, adresu sítě a broadcastovou adresu na aktivním síťovém rozhraní.
   \item Pomocí příkazů {\tt ip route} a {\tt ip neighbour} zobrazte záznamy ze směrovací tabulky a ARP tabulky. Vypište adresu výchozí brány a zjistěte její MAC adresu. 
   \item Příkaze {\tt ping} otestujte konektivitu k~výchozí bráně a následně do Internetu. 
   \item Vypište implicitní servery DNS ze souboru {\tt /etc/resolv.conf}.
-  \item Pomocí příkazu {\tt su} se přihlašte jako administrátor. Do souboru {\tt /etc/hosts} přidejte záznam, který provede překlad jména {\tt gw} (gateway) na IP address 10.10.10.1 (viz {\tt man hosts}). Vyzkoušejte překlad příkazem {\tt ping gw}. Vytvořený záznam zapište do protokolu. 
+  \item Pomocí příkazu {\tt su} se přihlaste jako administrátor. Do souboru {\tt /etc/hosts} přidejte záznam, který provede překlad jména {\tt gw} (gateway) na IP address 10.10.10.1 (viz {\tt man hosts}). Vyzkoušejte překlad příkazem {\tt ping gw}. Vytvořený záznam zapište do protokolu. 
   \item Pomocí příkaz {\tt ss -tun} vypište seznam aktivních TCP spojení. Ze seznamu vyberte jeden záznam a zapište ho s vysvětlením do protokolu (popište význam jednotlivých položek). Pokud je seznam TCP spojení prázdný, otevřete si například prohlížeč a načtěte libovolnou webovou stránku. 
-  \item Jako administrátor zobrazte systémové události pomocí programu \texttt{journalctl}. Vyhledejte informace týkajcí se služby NetworManager ({\tt journalctl -u NetworkManager}).  
-  \item Pokuste se jako uživatel user spustit Wireshark pomocí příkazu \texttt{sudo wireshark}. Pomocí nástroje {\tt journalctl} vyhledejte v~logu zprávu, která tam byla při chybě zaznamenána. Příkaz pro vyhledání zapište do protokolu. 
+  \item Jako administrátor zobrazte systémové události pomocí programu \texttt{journalctl}. Vyhledejte informace týkající se služby NetworManager ({\tt journalctl -u NetworkManager}).  
+  \item Pokuste se jako uživatel user spustit Wireshark pomocí příkazu \texttt{sudo wireshark}. Pomocí nástroje {\tt journalctl} vyhledejte v~logu zprávu, která tam byla při chybě zaznamenána. Využijte například parametr {\tt -p} pro filtrování chyb s vyšší prioritou. Příkaz pro vyhledání zapište do protokolu. 
 \end{enumerate}
 
 \section{Wireshark}
@@ -58,16 +58,16 @@ V~této úloze budeme pracovat s programem Wireshark. Spusťte aplikaci Wireshar
 pod uživatelem \texttt{root}. Další informace k práci s programem Wireshark najdete v~kapitole \ref{wireshark} laboratorního manuálu. 
 
 \begin{enumerate}
-  \item Nastavte v programu Wireshark vstupní filter (tzv. {\em capture filter}) pro zachytávání provozu HTTP. Uvažujte komunikaci HTTP na standardním portu (viz {\tt /etc/services}). Zapište použitý filter do protokolu.
+  \item Nastavte v programu Wireshark vstupní filtr (tzv. {\em capture filter}) pro zachytávání provozu HTTP. Uvažujte komunikaci HTTP na standardním portu (viz {\tt /etc/services}). Zapište použitý filtr do protokolu.
   \item Spusťte zachytávání síťového provozu v programu Wireshark.
   \item Ve webovém prohlížeči si otevřete stránku \texttt{http://cphoto.fit.vutbr.cz}.
   \item Ukončete zachytávání síťového provozu ve Wiresharku. 
   \item Vypište zdrojovou a cílovou IPv4 adresu a MAC adresu zachycené komunikace\footnote{Komunikaci OCSP můžete ignorovat. Slouží k ověřování certifikátů.}. Vysvětlete, jaký typ síťového zařízení či aplikace daná adresa popisuje.
-  \item Klikněte pravým tlačítkem na libovolný paket komunikace a zobrazte komunikaci TCP (volba {\em Follow TCP stream}) a HTTP (volba {\em Follow HTTP stream}). Popište do protokolu formát zobrazených dat. 
-  \item Zrušte filter pro zachytávání provozu.
+  \item Klikněte pravým tlačítkem na libovolný paket komunikace a zobrazte komunikaci TCP (volba {\em Follow TCP stream}) a HTTP (volba {\em Follow HTTP stream}). Popište do protokolu, v čem se liší zobrazená data. 
+  \item Zrušte filtr pro zachytávání provozu.
   \item Spusťte znovu zachytávání síťové komunikace bez použití vstupního filtru.
-  \item Pomocí příkaz \texttt{ip neighbor flush dev enp2s0} (spusťte jako {\tt root}) odstraňte ARP záznamy z tabulky ARP. Pomocí příkazu {\tt ping} vygenerujte ICMP na libovolný server.
-  \item V aplikaci Wireshark nastavte filter zobrazení ({\tt display filter}) tak, abyste zobrazili pouze komunikaci ARP a ICMP. Zapište, jaký filter jste nastavili.
+  \item Pomocí příkaz \texttt{ip neighbour flush dev enp2s0} (spusťte jako {\tt root}) odstraňte ARP záznamy z tabulky ARP. Pomocí příkazu {\tt ping} vygenerujte ICMP na libovolný server.
+  \item V aplikaci Wireshark nastavte filtr zobrazení ({\tt display filter}) tak, abyste zobrazili pouze komunikaci ARP a ICMP. Zapište, jaký filtr jste nastavili.
   \item Ve Wiresharku nastavte filtrování provozu HTTP, HTTPS a DNS na standardních portech. Otevřete ve webovém prohlížeči několik stránek na různých adresách URL. Sledujte návaznost komunikace DNS a HTTP(S) v odchyceném provozu. Vysvětlete, jak spolu souvisí. 
 \end{enumerate}
 
@@ -80,8 +80,8 @@ V poslední úloze budeme manuálně konfigurovat adresu IPv4 a IPv6. Podrobnost
     \item Zvolte nejmenší možný prefix IPv4 sítě, který umožňuje adresovat až sto koncových stanic.
     \item Každému členu skupiny přiřaďte jednu IPv4 adresu ze zadaného adresního prostoru IPv4.
 %    \item Pomocí nástroje {\tt ping} vyzkoušejte komunikaci mezi každým členem skupiny. 
-    \item Pro vytváření podsítě IPv6 využijeme privátní lokální adresy IPv6 ULA (Unicast Local Address). IPv6 adresa se skládá z 64bitové adresy sítě (tzv. prefix IPv6) a z 64bitového identifikátoru rozhraní (Interface ID). Prefix IPv6 u adresy ULA tvoří 7bitový prefix ULA se standardní hodnotou {\tt fc00::/7}, jednobitový přiznak lokální adresy, 40bitový unikátní globální identifikátor (Global ID) a 16bitovou hodnotu podsítě v dané síti. Unikátní prefix pro svou lokální podsíť IPv6 si můžete vygenerujte  na webové stránce \url{https://cd34.com/rfc4193/}.
-    \item Každému členu vaší skupiny přidělte jednu adresu s vygenerovaným prefixem IPv6, např. {\tt prefix ::1/64}, {\tt prefix::2/64} apod.
+    \item Pro vytváření podsítě IPv6 využijeme privátní lokální adresy IPv6 ULA (Unicast Local Address). IPv6 adresa se skládá z 64bitové adresy sítě (tzv. prefix IPv6) a z 64bitového identifikátoru rozhraní (Interface ID). Prefix IPv6 u adresy ULA tvoří 7bitový prefix ULA se standardní hodnotou {\tt fc00::/7}, jednobitový příznak lokální adresy, 40bitový unikátní globální identifikátor (Global ID) a 16bitovou hodnotu podsítě v dané síti. Unikátní prefix pro svou lokální podsíť IPv6 si můžete vygenerujte  na webové stránce \url{https://cd34.com/rfc4193/}. Nezapomeňte, že IPv6 prefix má 64 bitů. 
+    \item Každému členu vaší skupiny přidělte jednu adresu s vygenerovaným prefixem IPv6, např. {\tt prefix ::1/64}, {\tt prefix::2/64} apod. Druhou část adresy IPv6 (Interface ID) si můžete zvolit libovolně.
     \item Vytvořené adresy zapište do protokolu. Uveďte také, kolik může být maximálně síťových zařízení v dané podsíti.
       % Nakonfigurujte vybrané adresy na rozhraní vašich počítačů ve skupině a vyzkoušejte komunikaci pomocí příkazu {\tt ping}.
 \end{enumerate}
@@ -94,9 +94,10 @@ V poslední úloze budeme manuálně konfigurovat adresu IPv4 a IPv6. Podrobnost
     \item Manuálně vypněte (off) a zapněte (on) síťové rozhraní, aby se adresy aktivovaly.
     \item Vypište nakonfigurované adresy na příkazovém řádku příkazem {\tt ip address show}.
     \item Ověřte komunikaci IPv4 a IPv6 mezi všem počítači skupiny pomocí příkazů {\tt ping} a {\tt ping6}.
+    \item Předveďte vyučujícímu funkční komunikaci IPv4 a IPv6 se svými sousedy. 
 \end{enumerate}
 
 \section{Ukončení práce v~laboratoři}
-Po ukončení všech úkolů a zapsání výsledku do protokolu ukažte výsledné nastavení vyučujícímu. Poté spuťte jako uživatel {\tt root} skript {\tt /root/isa1/clean}, který smaže vaše nastavení a vypne počítač.
+Po ukončení všech úkolů a zapsání výsledku do protokolu ukažte výsledné nastavení vyučujícímu. Poté spusťte jako uživatel {\tt root} skript {\tt /root/isa1/clean}, který smaže vaše nastavení a vypne počítač.
 
 \end{document}
