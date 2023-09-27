@@ -21,7 +21,7 @@ TLS pracuje na principu klient -- server a vytváří obousměrný zabezpečený
   \item {\em Integrita dat} -- TLS zajišťuje ochranu proti modifikaci, vložení či odebrání dat z přenášené komunikace pomocí tzv. kryptografického heše (např. MD4, SHA). 
 \end{itemize}
 
-Samotný protokol TLS se skládá ze dvou podprotokolů, které jsou součástí zprávy TLS:
+Samotný protokol TLS se skládá ze dvou dílčích protokolů, které jsou součástí zprávy TLS:
 \begin{itemize}
   \item \emph{Handshake protocol} se používá při navazování spojení a zajišťuje autentizaci komunikujících stran, výběr kryptografických algoritmů, výměnu parametrů a sdílených klíčů.
   \item \emph{Record protocol} zajišťuje bezpečný přenos mezi komunikujícími stranami.
@@ -42,5 +42,5 @@ Pro validaci certifikátu se využívá podpisu certifikační autority, která 
 Pro ověřování certifikátů nejvyšší úrovně se používají národní a nadnárodní certifikační autority, jejichž veřejné klíče jsou obvykle umístěny přímo ve webových prohlížečích a dalších programech, čímž usnadní uživatelům ověřování důvěryhodnosti webových certifikátů či jiných elektronicky podepsaných dokumentů. 
 
 \subsection{Transparentnost certifikátů}
-Aby bylo možné ověřit, že CA vydávají certifikáty poctivě, byl experimentálně zaveden mechanismus transparentnosti certifikátů. Zapojené CA veřejně ohlašují každý vystavený certifikát (případně precertifikát). Vydané certifikáty se shromažďují v logovacím souboru {\tt certificate transparency log}, kde může kdokoliv monitorovat nově
+Aby bylo možné ověřit, že CA vydávají certifikáty poctivě, byl experimentálně zaveden mechanismus transparentnosti certifikátů. Zapojené CA veřejně ohlašují každý vystavený certifikát (případně pre-certifikát). Vydané certifikáty se shromažďují v logovacím souboru {\tt certificate transparency log}, kde může kdokoliv monitorovat nově
 přidávané certifikáty a auditovat přítomnost certifikátu nalezených při prohlížení webu.

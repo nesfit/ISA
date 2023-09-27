@@ -45,9 +45,9 @@ Argument \texttt{-v} vypíše detailní informace o průběhu konfigurace.
 %Chybu týkající se {\tt smbd.service} někdy zobrazovanou v~laboratoři můžete ignorovat.
 
 \subsection{Dynamická konfigurace IPv6}\label{dynipv6}
-Dynamická konfiguace IPv6 probíhá zcela jiným způsobem, než konfigurace DHCP u sítí s protokolem IPv4. Dynamický konfigurace IPv6 probíhá třemi různými způsoby:
+Dynamická konfigurace protokolu IPv6 probíhá zcela jiným způsobem, než konfigurace DHCP u sítí s protokolem IPv4. Využívají se tři základní přístupy:
 \begin{itemize}
-  \item {\bf Autokonfigurace (SLAAC, Stateless Autoconfiguration)} \cite{rfc4862} -- autokonfigurace slouží ke konfiguraci síťových rozhraní IPv6 bez použití serveru DHCPv6. Při autokonfiguraci si připojený klient sám vytvoří adresu IPv6 z prefixu sítě (prvních 64 bitů) a identifikátoru rozhraní (spodních 64 bitů). Prefix sítě získá stanice zasláním zprávy ICMPv6 RS (Router Solicitation) na multicastovou adresu všech směrovačů v síti. Směrovač odpoví zprávou ICMPv6 RA (Router Advertisement), která obsahuje prefix sítě, L2 adresu směrovače, případně další parametry. Z adresy IPv6 odesilatele získa klientská stanice adresu výchozí brány, z odpovědi RA prefix sítě a adresu rozhraní (spodních 64 bitů adresy IPv6) si vygeneruje ze své MAC adresy mechanismem EUI-64 (rozšíření MAC adresy na 64 bitů) či si vygeneruje 64 bitů náhodně.
+  \item {\bf Autokonfigurace (SLAAC, Stateless Autoconfiguration)} \cite{rfc4862} -- autokonfigurace slouží ke konfiguraci síťových rozhraní IPv6 bez použití serveru DHCPv6. Při autokonfiguraci si připojený klient sám vytvoří adresu IPv6 z prefixu sítě (prvních 64 bitů) a identifikátoru rozhraní (spodních 64 bitů). Prefix sítě získá stanice zasláním zprávy ICMPv6 RS (Router Solicitation) na multicastovou adresu všech směrovačů v síti. Směrovač odpoví zprávou ICMPv6 RA (Router Advertisement), která obsahuje prefix sítě, L2 adresu směrovače, případně další parametry. Z adresy IPv6 odesilatele získá klientská stanice adresu výchozí brány, z odpovědi RA prefix sítě a adresu rozhraní (spodních 64 bitů adresy IPv6) si vygeneruje ze své MAC adresy mechanismem EUI-64 (rozšíření MAC adresy na 64 bitů) či si vygeneruje 64 bitů náhodně.
   \item {\bf Bezstavový server DHCPv6 (Stateless DHCPv6)} \cite{rfc8415} -- v tomto případě získá klientská stanice prefix sítě a výchozí bránu ze zprávy Router Advertisement jako u autokonfigurace. Bezstavový server DHCPv6 v tomto případě neslouží k přidělení IP adresy, ale k zaslání dalších konfiguračních parametrů, např. seznamu serverů DNS, domény DNS a další. Klientská stanice tedy pošle na server DHCPv6 (s využitím multicastové adresy) dotaz typu {\tt Information-request}, ve kterém uvede požadované parametry pro konfiguraci. Pokud je v síti nainstalován bezstavový server DHCPv6, zprávou {\tt Reply} pošle požadované nastavení.
   \item {\bf Stavový server DHCPv6 (Stateful DHCPv6)} \cite{rfc8415} -- klient posílá žádost {\tt Solicit} pro vyhledání serveru DHCPv6. Jakýkoliv server DHCPv6 odpoví zprávou {\tt Advertise}, ve které uvede nabízenou adresu IPv6, dobu platnosti a ostatní konfigurační parametry (servery DNS, doménu DNS). Klient odpoví žádostí {\tt Request}, ve které uvede identifikátor serveru, se kterým komunikuje, a konfigurační parametry, které požaduje. Server potvrdí přidělení parametrů zprávou {\tt Reply}. 
 \end{itemize}
@@ -68,7 +68,7 @@ interface <rozhraní>
     };
 };
 \end{verbatim}
-Přehled všech možností konfigurace poskytnou manualové stránky {\tt man radvd} a {\tt man radvd.conf}.
+Přehled všech možností konfigurace poskytnou manuálové stránky {\tt man radvd} a {\tt man radvd.conf}.
 
 Pro zasílání zpráv RA je potřeba povolit směrování IPv6 provozu:
 \begin{verbatim}

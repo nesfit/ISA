@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Systém DNS (Domain Name System)}\label{dns}
-Systém DNS slouží jako podpora internetové komunikace, kdy ukládá informace důležité ke správnému fungování počítačových sítí a služeb. Jednou z nejvíce využívaných služeb je překlad doménového jméne na IP adresu a naopak, tzn. vyhledávání záznamů typu A, AAAA a PTR \cite{rfc1035,rfc3596}.
+Systém DNS slouží jako podpora internetové komunikace, kdy ukládá informace důležité ke správnému fungování počítačových sítí a služeb. Jednou z nejvíce využívaných služeb je překlad doménového jména na IP adresu a naopak, tzn. vyhledávání záznamů typu A, AAAA a PTR \cite{rfc1035,rfc3596}.
 
-Mezi další důležité záznamy patří záznam {\tt MX}, který obsahuje adresu poštovního serveru pro danou doménu. Záznamy {\tt MX} jsou nezbytné pro správné fungování systému elektronické pošty nad SMTP. Pro vyhledávání serverů dalších služeb (např. SIP, XMPP a další) slouží záznamy typu typu {\tt SRV}, které lze v~současnosti využít pro služby SIP a XMPP \cite{rfc2782}.
+Mezi další důležité záznamy patří záznam {\tt MX}, který obsahuje adresu poštovního serveru pro danou doménu. Záznamy {\tt MX} jsou nezbytné pro správné fungování systému elektronické pošty nad SMTP. Pro vyhledávání serverů dalších služeb (např. SIP, XMPP a další) slouží záznamy typu {\tt SRV}, které lze v~současnosti využít pro služby SIP a XMPP \cite{rfc2782}.
 
 Některé záznamy během vývoje internetu rozšířili svou funkci. Například záznamy typu {\tt TXT} byly původně používány pro uložení textových informací o dané doméně. V současné době se převážně využívají pro zajištění bezpečnosti softwarových služeb či přenosu elektronické pošty, kde záznam {\tt TXT} například obsahuje veřejný klíč pro službu DKIM (DomainKeys Identified Mail) \cite{rfc6376}).
 
@@ -35,12 +35,12 @@ dns
 \end{itemize}
 
 \subsection{Konfigurace serveru DNS}
-Konfiguraci serveru DNS tvoří jednak konfigurace démona DNS (např. program {\tt named}, což je implemetace serveru Bind) a dále zónové soubory, které obsahují záznamy DNS pro domény, které server spravuje. Konfigurace serveru DNS je uložena v konfiguračním souboru {\tt /etc/named.conf}, zónové soubory se ukládají do podadresáře {\tt /var/named/}. 
+Konfiguraci serveru DNS tvoří jednak konfigurace démona DNS (např. program {\tt named}, což je implementace serveru Bind) a dále zónové soubory, které obsahují záznamy DNS pro domény, které server spravuje. Konfigurace serveru DNS je uložena v konfiguračním souboru {\tt /etc/named.conf}, zónové soubory se ukládají do podadresáře {\tt /var/named/}. 
 
 \subsubsection{Konfigurační soubor {\tt named.conf}}
-Soubor {\tt named.conf} je základní konfigurační soubor aplikace {\tt named}, viz {\tt man named.conf}. Tento soubor specifikuje, jak má lokální server DNS zpracovat přijatý dotaz DNS. Server se nejprve pokusí najít hledané doménu v sekcích {\tt zone} v konfiguračním souboru {\tt /etc/named.conf}. Potom ji najde, začne prohledávat příslušný zónový soubor a v něm všechny platné záznamy dané domény. 
+Soubor {\tt named.conf} je základní konfigurační soubor aplikace {\tt named}, viz {\tt man named.conf}. Tento soubor specifikuje, jak má lokální server DNS zpracovat přijatý dotaz DNS. Server se nejprve pokusí najít hledané doménu v sekcích {\tt zone} v konfiguračním souboru {\tt /etc/named.conf}. Pokud ji najde, začne prohledávat příslušný zónový soubor a v něm všechny platné záznamy dané domény. 
 
-Pokud se jedná o lokálně spravovanou doménu, odpověď se hledá v lokálních zónových souborech umístěných na daném serveru v adresáři {\tt /var/named/}. Pokud server nenajde hledanou doménu v žádné sekci {\tt zone} konfiguračního souboru {\tt /etc/named.conf}, znamená to, že doména není lokální. V takovém případě se pokusí server (v případě rekurzivního vyhledávání) poslat dotaz  na kořenový server DNS ležící ve speciální zóně ".", která má typ {\tt hint}. Tato zóna je obvykle součástí konfigurače serveru DNS.
+Pokud se jedná o lokálně spravovanou doménu, odpověď se hledá v lokálních zónových souborech umístěných na daném serveru v adresáři {\tt /var/named/}. Pokud server nenajde hledanou doménu v žádné sekci {\tt zone} konfiguračního souboru {\tt /etc/named.conf}, znamená to, že doména není lokální. V takovém případě se pokusí server (v případě rekurzivního vyhledávání) poslat dotaz  na kořenový server DNS ležící ve speciální zóně ".", která má typ {\tt hint}. Tato zóna je obvykle součástí konfigurace serveru DNS.
 
 Zónový soubor kořenové domény mívá standardizované jméno {\tt named.root} (někdy také {\tt root.zone}) a obsahuje záznamy typu A a AAAA všech třinácti kořenových serverů DNS. Pokud zóna "." v konfiguračním souboru chybí a hledaná doména není lokální, vrátí server negativní odpověď.
 
@@ -76,7 +76,7 @@ zone "10.10.10.in-addr.arpa" IN {    # lokální reverzní doména se jménem "1
 %\subsubsection{Zóna typu hint}
 %Asociuje se s~nejvyšší doménou v~rámci celé hierarchie. Pokud přijde na server požadavek, prohledá seznam spravovaných zón ostatních typů ({\em master}, {\em slave}, {\em forward}). Pokud záznam nenajde, vybere jeden z~kořenových serverů definovaný právě v~tomto typu zóny.
 %
-Soubor {\tt named.root}, který obsahuje záznamy A a AAAA kořenových serverů, bývá součastí instalace serveru DNS. Po instalaci dojde k aktualizaci tohoto seznamu podle veřejného seznamu zpravovaného službou InterNIC. Soubor {\tt named.root} lze také získat programem dig:
+Soubor {\tt named.root}, který obsahuje záznamy A a AAAA kořenových serverů, bývá součástí instalace serveru DNS. Po instalaci dojde k aktualizaci tohoto seznamu podle veřejného seznamu spravovaného službou InterNIC. Soubor {\tt named.root} lze také získat programem dig:
 \begin{verbatim}
  dig +norec NS .  > db.root
 \end{verbatim}
@@ -115,7 +115,7 @@ např.   isa.cz.             IN      NS   ns.isa.cz.
   \begin{itemize}
     \item \verb|<domain-name>| obsahuje doménové jméno, které se vyhledává. Toto jméno musí být tzv. plně kvalifikované (FQDN, Fully Qualified Domain Name), tedy musí obsahovat cestu v doménovém stromě až ke kořeni (včetně ukončení tečkou). Pokud doménové jméno není ukončení tečkou, automaticky se za něj doplní doména uvedená v názvu zóny. Pokud bychom například napsali pouze "isa.cz", pak DNS server doplní jména na "isa.cz.isa.cz.", což je asi něco jiného, než jsme požadovali. Naopak, pokud zapíše pouze název server "ns" (zkrácený zápis), pak server doplní název domény na "ns.isa.cz.", což je v pořádku.
     
-    Pro záznamy typu {\tt SOA, NS, MX}, které popisují vlastnosti domény (tj. celého podstromu ve jmenném prostoru DNS), obsahuje toto políčko jméno dané domény, např. "isa.cz.". Pro záznamy záznamy typu {\tt A, AAA, CNAME}, které popisují vlastnosti konkrétního koncového uzlu jmenného prostoru DNS (například IP adresu, alias), obsahuje toto políčko doménové jméno (hostname) daného zařízení, např. "ns.isa.cz.", "pc1.isa.cz.", "www.isa.cz." apod. 
+    Pro záznamy typu {\tt SOA, NS, MX}, které popisují vlastnosti domény (tj. celého podstromu ve jmenném prostoru DNS), obsahuje toto políčko jméno dané domény, např. "isa.cz.". Pro záznamy záznamy typu {\tt A, AAAA, CNAME}, které popisují vlastnosti konkrétního koncového uzlu jmenného prostoru DNS (například IP adresu, alias), obsahuje toto políčko doménové jméno (hostname) daného zařízení, např. "ns.isa.cz.", "pc1.isa.cz.", "www.isa.cz." apod. 
     
     \item \verb|<TTL>| udává dobu platnosti záznamu. Pokud tato hodnota není v popisu záznamu uvedena (jako v našem případě), vezme se implicitní hodnota uvedená na začátku zónového souboru za klíčovým slovem {\tt \$TTL}.
     \item \verb|<CLASS>| popisuje třídu záznamů DNS. Historicky existovalo více různých tříd záznamů DNS, v současné době se používá pouze jediná třída typu {\tt IN} (Internet). Tuto hodnotu musí záznam DNS vždy obsahovat.

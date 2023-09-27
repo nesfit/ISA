@@ -2,7 +2,7 @@
 \subsection{Adresování v síti s protokolem IPv4}\label{adresy_ipv4}
 Pokud v síti provozujeme pouze komunikaci IPv4 \cite{rfc791}, používáme IPv4 adresy pro identifikaci síťových zařízení, směrování (směrovací protokoly RIP, OSPF, EIGRP) či filtrování dat (firewally). 
 \subsubsection{Formát IPv4 adresy}
-IPv4 adresa je jedinečný identifikátor síťového rozhraní, které se používá pro adresování na vrstvě IP. Délka IPv4 adresy je 32 bitů. Standardně se zapisuje v dekadickém tvaru ve formátu {\tt X.X.X.X}, kde {\tt X} je dekadický zápis jednotlivých bytů adresy oddělených tečkou. Příklad:
+IPv4 adresa je jedinečný identifikátor síťového rozhraní, který se používá pro adresování na vrstvě IP. Délka IPv4 adresy je 32 bitů. Standardně se zapisuje v dekadickém tvaru ve formátu {\tt X.X.X.X}, kde {\tt X} je dekadický zápis jednotlivých bytů adresy oddělených tečkou. Příklad:
 \begin{verbatim}
 8.8.8.8   (dekadicky) -- 00001000 00001000 00001000 00001000 (binárně)
 127.0.0.1 (dekadicky) -- 01111111 00000000 00000000 00000001 (binárně)  
@@ -14,7 +14,7 @@ IPv4 adresa se skládá ze dvou částí:
     \item adresy uzlu.
 \end{itemize}
 
-Všechny počítače ve stejné podsíti mají stejný prefix a liší se pouze adresou uzlu. Například u sítě s prefixem 192.168.1.0/24 je možné přidělit adresy 192.168.1.1, 192.168.1.2 až 192.168.1.255. Délka prefixu 24 bitů, tj. prvních 24 bitů adres počítačů z této sítě je stejných. Protože délka prefixu může být variabilní, zadává se při konfiguraci IP adresu u počítače buď formou délky prefixu za lomítkem (např. 192.168.1.1/24) nebo formou síťové masky, kdy jedničkový bit znamená bit prefixu (např. 255.255.255.0). 
+Všechny počítače ve stejné podsíti mají stejný prefix a liší se pouze adresou uzlu. Například u sítě s prefixem 192.168.1.0/24 je možné přidělit koncovým zařízením adresy 192.168.1.1, 192.168.1.2 až 192.168.1.254. Délka prefixu 24 bitů, tj. prvních 24 bitů adres počítačů z této sítě je stejných. Protože délka prefixu může být variabilní, zadává se při konfiguraci IP adresu u počítače buď formou délky prefixu za lomítkem (např. 192.168.1.1/24) nebo formou síťové masky, kdy jedničkový bit znamená bit prefixu (např. 255.255.255.0). 
 
 \medskip
 \noindent
@@ -56,7 +56,7 @@ Protože formát protokolů IPv4 a IPv6 je naprosto odlišný, není možné vyt
 Protokoly IPv4 a IPv6 tedy komunikují v síti nezávisle na sobě, využívají odlišné směrovací protokoly i filtrovací pravidla. Zde je potřeba si uvědomit, že firewall konfigurovaný pro IPv4 se nebude aplikovat na pakety s IPv6 a naopak. 
 
 \subsubsection{Formátování adres IPv6}
-Adresa IPv6 se narozdíl od IPv4 adresy zapisuje v hexadecimální podobě. Jedna hexadecimální číslice reprezentuje čtyřbitové číslo, tj. k reprezentaci 128bitové adresy potřebujeme 32 hexadecimálních číslic. V adrese IPv6 se hexadecimální číslice rozdělují do skupin oddělených dvojtečkou (:). Adresu IPv6 tvoří osm čtveřic hexadecimálních číslic. Standardní formát adresy IPv6 je {\tt X:X:X:X:X:X:X:X}, kde {\tt X} je čtveřice hexidecimálních číslic reprezentující 16 bitů. 
+Adresa IPv6 se na rozdíl od IPv4 adresy zapisuje v hexadecimální podobě. Jedna hexadecimální číslice reprezentuje čtyřbitové číslo, tj. k reprezentaci 128bitové adresy potřebujeme 32 hexadecimálních číslic. V adrese IPv6 se hexadecimální číslice rozdělují do skupin oddělených dvojtečkou (:). Adresu IPv6 tvoří osm čtveřic hexadecimálních číslic. Standardní formát adresy IPv6 je {\tt X:X:X:X:X:X:X:X}, kde {\tt X} je čtveřice hexadecimálních číslic reprezentující 16 bitů. 
 \begin{verbatim}
 Příklady plného zápisu adresy IPv56: 2001:067c:1220:080e:00ad:6c49:759f:3267
                                      fe80:0000:0000:0000:01cb:0238:26f4:359e
@@ -85,7 +85,7 @@ V praxi se zapisují adresy IPv6 ve zjednodušeném formátu. Standard RFC 5952 
 \end{enumerate}
 
 Stejně jako u~IPv4 má adresa IPv6 dvě části: \emph{adresu sítě} (IPv6 prefix) a
-\emph{adresu rozhraní} (interface ID). Délka prefixu se zapisuje jako číslo v~desítkové soustavě za lomítkem za adresou IPv6 (např. {\tt 2001:67c:1220:/46}).
+\emph{adresu rozhraní} (interface ID). Délka prefixu se zapisuje jako číslo v~desítkové soustavě za lomítkem za adresou IPv6 (např. {\tt 2001:67c:1220::/46}).
 
 \subsubsection{Rozdělení adres IPv6}
 Adresy IPv6 se rozdělují podle typu na adresy unicastové, multicastové a anycastové \cite{rfc4291}. Dále je možné unicastové adresy rozdělit podle dosahu na lokální či globální.
@@ -169,7 +169,7 @@ Tato adresa se obvykle vytváří automaticky na rozhraní stanice. Používá s
 \end{table}
 Adresu ULA tedy tvoří unikátní prefix délky 48 bitů, 16bitový identifikátor podsítě a  adresa uzlu o~délce 64 bitů.
 
-  Podle standardu má být globální identifikátor celosvětově unikátní. Proto musí být generován pseudo náhodným algoritmem, který kombinuje aktuální čas (64bitovou časovou značku z protokolu NTP), 64bitový identifikátor EUI-64 odvozený z MAC adresy, hešovací algoritmus SHA-1 \cite{rfc4193}. Příklad implementace takového generátoru je na \url{https://cd34.com/rfc4193/}.
+  Podle standardu má být globální identifikátor celosvětově unikátní. Proto musí být generován pseudonáhodným algoritmem, který kombinuje aktuální čas (64bitovou časovou značku z protokolu NTP), 64bitový identifikátor EUI-64 odvozený z MAC adresy, hešovací algoritmus SHA-1 \cite{rfc4193}. Příklad implementace takového generátoru je na \url{https://cd34.com/rfc4193/}.
 
   \subsubsection{Globální adresa IPv6 (GUA, global unicast address)}
 Adresy GUA jsou jsou směrovatelné v celé síti (veřejné adresy. Tvoří je n-bitový prefix pro směrování, identifikátor podsítě (subnet ID) a adresa rozhraní (interface ID). 

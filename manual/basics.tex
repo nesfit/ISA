@@ -39,10 +39,10 @@ Některé základní příkazy pro práci v~terminálu OS Linux:
   \item \texttt{ps} - výpis běžících procesů.
 \end{itemize}
 
-Mezi textové editory patří například \texttt{nano}, {\tt vi} nebo \texttt{vim}. Tyto editory je vhodné používat k editaci konfiguračních soborů v operačním systému. Kromě řádkových textových editorů lze použít použít i grafické editory, například \texttt{gedit}.
+Mezi textové editory patří například \texttt{nano}, {\tt vi} nebo \texttt{vim}. Tyto editory je vhodné používat k editaci konfiguračních souborů v operačním systému. Kromě řádkových textových editorů lze použít použít i grafické editory, například \texttt{gedit}.
 
 \subsubsection{Role uživatele a správce v OS}
-Každý uživatel operačním systému Linux má svůj jedineční identifikátor \texttt{uid} (user ID). Kromě uživatelů jsou v OS definovány i skupiny uživatelů definované identifikátor {\tt gid} (group ID). Každý soubor je vlastněn konkrétním uživatelem patřící do určité skupinou. Přístup k souboru je omezen přístupovými právy pro vlastníka souboru, skupinu či ostatní uživatele. 
+Každý uživatel operačním systému Linux má svůj jedineční identifikátor \texttt{uid} (user ID). Kromě uživatelů jsou v OS definovány i skupiny uživatelů definované identifikátor {\tt gid} (group ID). Každý soubor je vlastněn konkrétním uživatelem patřící do určité skupiny. Přístup k souboru je omezen přístupovými právy pro vlastníka souboru, skupinu či ostatní uživatele. 
 
 Každý proces (běžící aplikace) v~systému je spuštěn pod určitým uživatelem a je jednoznačně identifikován číslem procesu {\tt pid} (process ID).
 
@@ -74,7 +74,7 @@ Příklady použití:
   \item \texttt{systemctl restart [služba]} -- restartuje službu
   \item \texttt{systemctl enable [služba]} -- povolí automatické spuštění služby po startu systému
   \item \texttt{systemctl disable [služba]} -- zakáže automatické spuštění služby po startu systému
-  \item \texttt{systemctl status [služba]} -- vypíše informace aktuálního stavu služby a několik posledních řádků systémových logů této služby. Pokud spustíme příkaz bez parametrů, vypíš  informace
+  \item \texttt{systemctl status [služba]} -- vypíše informace aktuálního stavu služby a několik posledních řádků systémových logů této služby. Pokud spustíme příkaz bez parametrů, vypiš  informace
         o~všech aktuálně spuštěných službách.
 \end{itemize}
 
@@ -128,7 +128,7 @@ Testování dostupných zařízení a služeb
 \end{itemize}
 
 \subsection{Konfigurační soubory}
-Konfigurační soubory operačního systému a služeb se většinou ukládají do adresáře \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s názvem dané služby. Konfigurace některých služeb je ulžena v adresářích  \texttt{"/etc/<sluzba>.d/"} (například \texttt{/etc/rsyslog.d/}). 
+Konfigurační soubory operačního systému a služeb se většinou ukládají do adresáře \texttt{/etc}. Jednotlivé služby zde mají svůj konfigurační soubor s názvem dané služby. Konfigurace některých služeb je uložena v adresářích  \texttt{"/etc/<sluzba>.d/"} (například \texttt{/etc/rsyslog.d/}). 
 
 Důležité  konfigurační soubory:
 \begin{itemize}
@@ -161,7 +161,7 @@ Příklad použití \texttt{journalctl}:
   \item \texttt{journalctl -p <priority>} - zobrazí pouze záznamy s~danou prioritou Syslog.
   \item \texttt{journalctl -u <unit> | <pattern>} - zobrazí pouze záznamy s danou službou nebo obsahující zadaný řetězec
   \item \texttt{journalctl -t <syslog\_id> | <pattern>} -- vyhledává záznamy obsahující zadané ID syslogu nebo záznamy obsahující v ID syslogu zadaný řetězec.
-  \item \texttt{journalctl -f} - zobrazí posledních deset událostí.
+  \item \texttt{journalctl -f} - průběžně tiskne na terminál poslední přidávané události
   \item \texttt{journalctl --since <whenstart> --until <whenend>} - zobrazí záznamy v~daném časovém rozmezí.
 \end{itemize}
 

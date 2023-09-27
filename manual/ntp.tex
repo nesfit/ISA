@@ -23,7 +23,7 @@ ntpd -qg  # -g vypne kontrolu odchylky a nastaví čas bez ohledu na velikost od
 
 \subsubsection{Konfigurace}
 Základním konfiguračním souborem je {\tt /etc/ntp.conf}. Tento konfigurační soubor obsahuje mnoho
-konfiguračních voleb. Nastavení serverů NTP zajišťuje volba {\tt server}, za níž následuje adresa nebo jméno NTP serveru. Tato volba se může vyskytovat v konfiguračním souboru opakovaně. Pomocí této volby se aplikace {\tt ntpd} přepne do role klienta, který může využít k sychronizaci svého času více serverů NTP. V režimu klient se lokální hodiny synchronizují podle času ze vzdáleného serveru NTP. 
+konfiguračních voleb. Nastavení serverů NTP zajišťuje volba {\tt server}, za níž následuje adresa nebo jméno NTP serveru. Tato volba se může vyskytovat v konfiguračním souboru opakovaně. Pomocí této volby se aplikace {\tt ntpd} přepne do role klienta, který může využít k synchronizaci svého času více serverů NTP. V režimu klient se lokální hodiny synchronizují podle času ze vzdáleného serveru NTP. 
 
 Kromě režimu klient může {\tt ntpd} pracovat v režimu {\em peer}, která umožňuje, aby se vzdálený server synchronizoval podle lokálních hodin. To je užitečné v případě, že je v síti více serverů NTP, které mohou mít lepší zdroj času. Zároveň to řeší problém výpadků serverů. 
 

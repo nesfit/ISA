@@ -11,7 +11,7 @@ Wireshark je grafická aplikace sloužící k zachytávání paketů a jejich an
 Následující kroky popisují proces zachytávání paketů v programu Wireshark:
 \begin{enumerate}
   \item Zachytávat provoz můžeme z vybraného síťového rozhraní nebo z~více rozhraní najednou. Rozhraní vybereme v menu \texttt{Capture -> Options}.
-  \item V nastavení Wiresharku je možné nastavit filtr pro výběr zachytávaných paketů (Capture Filter), pomocí kterého řekneme aplikaci, jaké pakety má zachytávat. Protože zpracování každého paketu je výpočetně náročné (dochází k parserování jednotlivých vrstev paketu a detekci protokolů), snížeme použití vstupního filtru výpočetní nároky na odchyt paketů. Políčko {\tt Capture Filter} umožňuje vybrat již předdefinovaný filtr nebo je zadat vlastní filtr, viz {\tt man pcap-filter}.
+  \item V nastavení Wiresharku je možné nastavit filtr pro výběr zachytávaných paketů (Capture Filter), pomocí kterého řekneme aplikaci, jaké pakety má zachytávat. Protože zpracování každého paketu je výpočetně náročné (dochází k parserování jednotlivých vrstev paketu a detekci protokolů), snížíme použití vstupního filtru výpočetní nároky na odchyt paketů. Políčko {\tt Capture Filter} umožňuje vybrat již předdefinovaný filtr nebo je zadat vlastní filtr, viz {\tt man pcap-filter}.
   \item Záchyt spustíme pomocí tlačítka \texttt{Start}.
   \item Odchycený provoz (tj. jednotlivé pakety spolu s časovými značkami) můžeme také uložit do souboru typu PCAP pro pozdější analýzu.
 \end{enumerate}
@@ -19,7 +19,7 @@ Následující kroky popisují proces zachytávání paketů v programu Wireshar
 \subsection{Výběr zachyceného provozu pomocí zobrazovacího filtru (Display Filter)}
 Zachycené a zpracované pakety jsou zobrazeny v okně {\tt Packet List Pane}. Protože nás často zajímá pouze určitý provoz, např. komunikace HTTP s konkrétní stanicí, je vhodné využít zobrazovací filtr (Display Filter), který se nachází pod nástrojovou lištou. Pomocí tohoto filtru vybereme pouze pakety s požadovanou vlastností, např. filtr {\tt ip.addr == 147.229.8.12} vybere veškeré pakety, které mají danou zdrojovou či cílovou IP adresu. 
 
-Základní operace pro vytváření zobrazovacího filteru je popsána v tabulce \ref{tab:display-filter}. 
+Základní operace pro vytváření zobrazovacího filtru je popsána v tabulce \ref{tab:display-filter}. 
 \begin{center}
   \begin{table}[h]
     \centering
@@ -31,7 +31,7 @@ Základní operace pro vytváření zobrazovacího filteru je popsána v tabulce
       \textbf{Kombinace filtrů} & \texttt{(ip.src==192.168.0.105 and udp.port==53)}\\
       \textbf{Filtrování na základě existence pole} & \texttt{http.cookie or http.set\_cookie}\\
       \textbf{Filtrování specifických bytů} & \texttt{eth.src[4:2]==22:1b}\\
-      \textbf{Regex filtrování} & \texttt{http.host \&\& !http.host matches ".com"}\\
+      \textbf{Použití regulárních výrazů} & \texttt{http.host \&\& !http.host matches ".com"}\\
       \hline
     \end{tabular}
     \caption{Syntax zobrazovacího filtru (Display Filter)}\label{tab:display-filter}
