@@ -206,7 +206,7 @@ $TTL 3h
 3                         IN PTR pc2.isa.cz. ; zkrácený zápis pro pc2.isa.cz.
                     
 \end{verbatim}
-Při zápisu je potřeba si uvědomit, že na pravé straně musí být vždy plně kvalifikované doménové jméno. Pokud bychom na pravé straně uvedli například jenom "ns", tak po vyhodnocení dostaneme "ns.1.168.192.in-addr.arpa.", což asi nechceme. Podobně když zapomeneme tečku, tj. napíšeme pouze "ns.isa.cz", server vrátí hodnotu "ns.isa.cz.1 .168.192.in-addr.arpa.". 
+Při zápisu je potřeba si uvědomit, že na pravé straně musí být vždy plně kvalifikované doménové jméno. Pokud bychom na pravé straně uvedli například jenom "ns", tak po vyhodnocení dostaneme "ns.1.168.192.in-addr.arpa.", což asi nechceme. Podobně když zapomeneme tečku, tj. napíšeme pouze "ns.isa.cz", server vrátí hodnotu "ns.isa.cz.1.168.192.in-addr.arpa.". 
 
 Pro reverzní překlad IPv6 musíme vytvořit další zónový soubor, protože reverzní adresy IPv6 se nacházejí v jiném podstromu DNS (doméně) než adresy IPv4. Do konfiguračního souboru {\tt /etc/named.conf} přidáme zónu "2.1.d.f.ip6.arpa.", viz následující ukázka:
 \begin{verbatim}
