@@ -112,3 +112,43 @@ Výpis obsahuje následující hodnoty:
     vzdáleného zdroje času, podle kterého se volí primární a sekundární zdroje
     času.
 \end{description}
+
+\subsection{Aplikace pro správu času {\tt chronyd} a {\tt chronyc}}
+Pro sychronizaci času pomocí protokolu NTP lze využít službu {\tt chronyd}, který běží na pozadí, provádí měření a přizpůsobení lokalních hodin síťovému času. V konfiguračním souboru {\tt /etc/chrony.conf} lze nastavit například adresu serveru NTP, ze kterého se bude číst síťový čas. Pro práci s časem lze využít řádkového klienta {\tt chronyc}, který zobrazuje stav programu {\tt chronyd}, stav synchronizace času apod.
+
+Pro práci se službou {\tt chronyd} můžeme využít následující příkazy:
+\begin{verbatim}
+ systemctl status chronyd.service    # zjištění stavu služby 
+ systemctl restart chronyd.service   # restartování služby
+\end{verbatim}
+
+Konfiguraci vzdálených serverů NTP můžeme nastavit v konfiguračním souboru {\tt /etc/chrony.conf}, viz {\tt man chrony.conf}. Vzdálený server NTP lze nastavit v sekci {\tt server} nebo {\tt pool}. Pomocí directivy {\tt server} většinou nastavujeme synchronizaci oproti jednomu serveru NTP, zatímco v případě directivy {\tt pool} specifikujeme množinu serverů NTP jako doménové jméno, které se resolvuje na více IP adres, které se navíc mohou v čase měnit (např. z důvodu distribuce zátěže).
+
+Příklad konfigurace:
+\begin{verbatim}
+ pool pool.ntp.org iburst maxsources 3
+           # adresa serveru NTP je pool.ntp.org
+           # parametr iburst zajistí rychlou počáteční synchronizaci
+           # parametr maxsources definuje max. počet serverů,
+           # které se mohou použít ze zadané množiny serverů NTP
+\end{verbatim}
+
+Pro výpis nakonfigurovaných serverů NTP lze použít aplikaci {\tt chronyc}, viz následující příklad:
+\begin{verbatim}
+210 Number of sources = 3
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================================
+#* GPS0                          0   4   377    11   -479ns[ -621ns] +/-  134ns
+^? foo.example.net               2   6   377    23   -923us[ -924us] +/-   43ms
+^+ bar.example.net               1   6   377    21  -2629us[-2619us] +/-   86ms
+\end{verbatim}
+
+Tento výpis obsahuje seznam serverů NTP, se kterými služba {\tt chronyd} komunikuje. Pro zjištění, odkud z kterého serveru se bere aktuální čas, můžeme využít příznaky {\tt M} a {\tt S}.
+\begin{itemize}
+  \item Režim synchronizace {\tt M} (Mode)
+  
+  Tento příznak nám říká, zda se jedná o režim {\tt server} (\verb|^|), režim {\tt peer} (\verb|=|) nebo lokální zdroj času (\verb|#|). 
+  \item Stav zdroje času {\tt S} (Status)
+
+  Tento příznak definuje stav využití daného zdroje. Hodnota (\verb|*|) označuje zdroj, podle kterého se služba {\tt chronyd} aktuálně synchronizuje. Příznak (\verb|+|) označuje použitelné zdroje hodin, které lze kombinovat s vybraným zdrojem. Hodnota (\verb|-|)  označuje použitelné zdroje hodin, které jsou vyloučeny ze synchronizace. Hodnota (\verb|?|) označuje zdroje hodin, kde došlo ke ztrátě spojení. Hodnota (\verb|x|) označuje falešné hodiny, tj. hodiny, které jsou nekonzistentní s ostatními zdroji času. Hodnota (\verb|~|) označuje hodiny s příliš velkou proměnlivostí (nestabilní). 
+\end{itemize}

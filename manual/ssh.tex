@@ -15,10 +15,12 @@ ssh h01
 \end{verbatim}
 Zde jsou nejčastěji používané parametry příkazu {\tt ssh}, podrobnosti viz {\tt man ssh}:
 \begin{itemize}
-  \item {\tt -l} přihlašovací jméno na vzdáleném počítači, např. {\tt ssh -l xnovak02 merlin}
-  \item {\tt -p} zadání nestandardního portu ssh serveru, např. {\tt ssh -p 6222 merlin}
-  \item {\tt -v} výpis podrobností ohledně přihlašování. např. {\tt ssh -v merlin}
-  \item {\tt -X} tunelování komunikace protokolu X11  s X serverem přes SSH, např. {\tt ssh -X xnovak02@merlin}
+  \item {\tt -l} přihlašovací jméno na vzdáleném počítači, např. {\tt ssh -l xnovak02 merlin}.
+
+  Varianta přihlášení přes SSH na vzdálený počítač jako uživatel {\tt xnovak02}: \verb|ssh xnovak02@merlin|.
+  \item {\tt -p} zadání nestandardního portu ssh serveru, např. {\tt ssh -p 6222 merlin}.
+  \item {\tt -v} výpis podrobností ohledně přihlašování (verbose mode), např. {\tt ssh -v merlin}.
+  \item {\tt -X} tunelování komunikace protokolu X11  s X serverem přes SSH, např. {\tt ssh -X xnovak02@merlin}.
   \item {\tt -L} přesměrování komunikace na daném lokálním portu na vzdálený port přes SSH, např {\tt ssh -N -f -L 25:localhost:25 user@mailserver.example.com}, které vytvoří zabezpečené spojení z lokálního portu 25 na vzdálený port 25. Pro vytvoření tunelu se využije uživatelský účet {\tt user} na vzdáleném mailserveru. Po dobu vytvoření tohoto spojení bude veškerý provoz z lokálního portu 25 tunelován na vzdálený port 25 přes SSH. 
 %% %    
 %%  Z~těch nejčastěji používaných zmíníme alespoň změnu uživatelského jména ({\tt -l}), specifikování
@@ -54,6 +56,38 @@ Následující příkaz zkopíruje lokální soubor {\tt isa.txt} na vzdálený 
 scp isa.txt student@h01:~/fit/
 \end{verbatim}
 
+\subsection{Spuštění příkazu na vzdáleném počítači}
+Protokol SSH umožňuje také spouštět příkaza na vzdáleném serveru. Je to možné zadat na straně klient SSH i serveru SSH.
+\begin{itemize}
+  \item Spuštění příkazu ze strany klienta SSH
+
+    V tomto případě zadáváme příkaz a jeho parametry jako poslední argument příkazu {\tt ssh}. Protokol SSH zajistí přihlášení na vzdálený počítač, ale místo otevření terminálového okna pouze vykoná zadaný příkaz, zobrazí výsledek, a ukončí se. Jako příkaz lze zadat i seznam příkazů oddělených středníkem, případně skript, který se vykoná. 
+\begin{verbatim}
+Formát:
+  ssh user@remote_host <command> <args>
+Příklad:                  # date -R zobrazí aktuální čas ve formátu RFC 2822
+  ssh merlin.fit.vutbr.cz date -R     
+  Enter passphrase for key '/home/xnovak02/.ssh/id_rsa':
+  Thu, 12 Oct 2023 13:26:59 +0200
+\end{verbatim}        
+  \item Spuštění příkazu ze strany serveru SSH (omezení přístupu, vnucený příkaz).
+
+    Ve druhém případě se zadaný příkaz spouští na serveru místo standardního vzdáleného přihlášení. Používá se spíše k omezení přístupu pro daného uživatele, který po přihlášení pouze obdrží výsledek předem zadaného příkazu. Tento příkaz je vložen do souboru s autorizovanými klíče {\tt authorized\_keys} před vlastní klíč za klíčové slovo \verb|command = "cmd"|.
+\begin{verbatim}
+Soubor authorized_keys na serveru merlin:
+  command="date" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQESN
+  uhsEU5GJA/+CnBaK56x0s9WSeYCqEkyfNIJibO7yZSBkW/526QzPrt16Nu
+  fTJs+HtSekQJpjSoQroMtuvnG9mR4rG//0uQOU6Zdfx4ZqnEaOzRhT4XXM
+  HwcU/o5UAJT9f4P/L+DItgfEoQ524HBx xnovak02@eva.fit.vutbr.cz
+
+Příklad použití: 
+  ssh merlin
+  Enter passphrase for key '/home/xnovak02/.ssh/id_rsa': 
+  Thu Oct 12 13:40:41 CEST 2023
+  Connection to merlin.fit.vutbr.cz closed.
+\end{verbatim}        
+\end{itemize}
+
 \subsection{Tunelování provozu přes SSH}
 Pomocí protokolu SSH je možné tunelovat provoz z daného zařízení na vzdálený počítač. Tunelování SSH zabezpečí původně nešifrovaný provoz, který je vložen do šifrované komunikace SSH. Následující příkaz otevře spojení SSH, které pak můžeme použít jako proxy ve webovém prohlížeči.
 \begin{verbatim}
@@ -77,7 +111,7 @@ Následující příklad vygeneruje klíč o~délce 4096\,B, který nebude chrá
 ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/nopass -C nopass
 \end{verbatim}
 
-Po vytvoření klíčů vzniknou dva soubory. Klíč v souboru bez přípony je soukromý klíč, který by měl zůstat utajený a uživatel by ho neměl dále distribuovat. V souboru s~příponou {\tt .pub} je veřejný klíč, který slouží k ověřování a je určen k zveřejnění\footnote{Popis používání klíčů je například na stránce na \url{https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process}}.
+Po vytvoření klíčů vzniknou dva soubory. Klíč v souboru bez přípony je soukromý klíč, který by měl zůstat utajený a uživatel by ho neměl dále distribuovat. V souboru s~příponou {\tt .pub} je veřejný klíč, který slouží k ověřování a je určen k zveřejnění\footnote{Popis používání klíčů je například na stránce na \url{https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process}.}.
 
 \subsection{Použití klíčů SSH}
 Pro správné použití zabezpečení SSH je potřeba vygenerovaný veřejný klíč umístit na vzdálený počítač, aby tento vzdálený počítač mohl správně ověřit připojujícího se uživatel. Veřejný klíč v souboru se jménem např.  {\tt id\_rsa.pub} je potřeba přenést na vzdálených počítač a uložit (přidat) do souboru \verb| ~/.ssh/authorized_keys|, kde ho bude hledat server SSH při pokusu o přihlášení.
@@ -85,6 +119,14 @@ Pro správné použití zabezpečení SSH je potřeba vygenerovaný veřejný kl
 Na vzdálený počítač můžeme veřejný klíč přenést programem {\tt scp}. Do souboru {\tt authorized\_keys} ho můžeme přidat příkazem {\tt cat}, viz následující příklad. Je potřeba striktně dodržovat názvy souborů -- pokud dojde k překlepu ve jménu souboru (např. {\tt authorized\_key}), server SSH klíče nenajde a nebude provádět autentizaci vůči klíčům SSH. 
 \begin{verbatim}
 cat id_rsa.pub >> ~/.ssh/authorized_keys
+\end{verbatim}
+
+Jiný způsob přenesení klíče je pomocí utility {\tt ssh-copy-id}, viz {\tt man ssh-copy-id}, která zkopíruje veřejné klíče z lokálního počítač na vzdálený počítač do souboru {\tt ~/.ssh/authorized\_keys}. Na rozdíl od předchozího řešení je možné tento přenos provést jediným příkazem, tj. není nutné přenést soubor pomocí {\tt scp} a pak ho ručně přidat do souboru {\tt authorized\_keys}.
+\begin{verbatim}
+Formát:
+   ssh-copy-id -i <key-file> [user@]hostname1] [user@hostname2] ...
+Příklad:
+   ssh-copy-id -i ~/.ssh/id_rsa.pub user@h23
 \end{verbatim}
 
 Nyní se již můžeme připojit ke vzdálenému počítači pomocí vytvořených klíčů. Pokud je soukromý klíč SSH na lokálním počítači umístěn ve výchozím nastavení, použije se automaticky. Pokud jsme  zvolili jiné umístění, je potřeba program {\tt ssh} informovat o~umístění soukromého klíče parametrem  {\tt -i}, nebo volbou {\tt IdentityFile} v~konfiguračním souboru. Pořadí hledání a použití klíčů u klienta SSH lze vypsat parametrem {\tt -v}, např. {\tt ssh -v merlin}.
