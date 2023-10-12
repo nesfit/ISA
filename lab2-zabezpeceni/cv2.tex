@@ -7,6 +7,13 @@
 \usepackage{listings}
 \usepackage{url}
 \usepackage{xr}
+
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+}
+
 \externaldocument{../manual/manual}
 
 \title{Zabezpečený přenos dat\\
@@ -46,12 +53,14 @@ Pro automatizovanou synchronizaci hodin na síťových zařízeních se využív
   \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda na počítači běží služba \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Příkazem {\tt chronyc -n sources} zkontrolujte seznam serverů, které váš počítač používá
     pro synchronizaci času.
 
-  \item Do protokolu vyplňte IP adresy nakonfigurovaných serverů NTP a hodnotu {\em stratum}  serverů.
+  \item Do protokolu vyplňte IP adresy nakonfigurovaných serverů NTP. 
+  U každého serveru vyplňte nastavení příznaků {\em M}, {\em S} a hodnotu {\em Stratum}.
+  V protokolu také vysvětlete význam těchto hodnot (viz \texttt{man chronyc}).
 
   \item Jako uživatel \texttt{root} otevřete konfiguračního soubor {\tt /etc/chrony.conf}. V souboru
     nahraďte implicitní server NTP Cent OS ({\tt *.centos.pool.ntp.org}) za server na FIT ({\tt ntp.fit.vutbr.cz}). 
   \item Restartujte démona NTP příkazem {\tt systemctl restart chronyd.service}
-  \item  Ověřte pomocí příkazu {\tt systemctl status chronyd.service}, zda služba běží. Pokud neběží, zjistěte chybu příkazem {\tt journalctl -u chronyd}. Případnou chybu opravte v konfiguraci a službu {\tt chronyd} znovu restartujte.
+  \item Ověřte pomocí příkazu {\tt systemctl status chronyd.service}, zda služba běží. Pokud neběží, zjistěte chybu příkazem {\tt journalctl -u chronyd}. Případnou chybu opravte v konfiguraci a~službu {\tt chronyd} znovu restartujte.
   \item Pomocí příkazu {\tt chronyc -n sources} ověřte, zda je čas správně synchronizován se serverem NTP na FIT.
 
 \end{enumerate}
