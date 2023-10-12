@@ -96,14 +96,17 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
 
   \item Distribuce klíčů:
     \begin{enumerate}
-      \item Oba  veřejné klíče zkopírujte na vzdálený počítač hYY do souboru \verb|.ssh/authorized_keys|. Můžete využít následující postup:
+      \item Oba veřejné klíče zkopírujte na vzdálený počítač hYY do souboru \verb|.ssh/authorized_keys|. Můžete využít následující postup:
         \begin{itemize}
           \item Klíč uživatele {\tt user} zkopírujte příkazem: \\
-            {\verb&cat ~user/.ssh/*.pub | ssh user@hYY "cat >> .ssh/authorized_keys"&}
+            {\verb&ssh-copy-id -i ~user/.ssh/id_rsa.pub user@hYY&}
           \item Na vzdáleném počítači nastavte správně přístupová práva k souboru:\\
-            {\verb&ssh user@hYY "chmod g-w .ssh/authorized_keys"&} 
+            {\verb&ssh user@hYY "chmod g-w ~/.ssh/authorized_keys"&} 
           \item Zkopírujte na vzdálený počítač také veřejný klíč uživatele {\tt root}: \\
-            {\verb&cat /root/.ssh/*.pub | ssh root@hYY "cat >> .ssh/authorized_keys"&}
+            {\verb&ssh-copy-id -i /root/.ssh/id_rsa.pub root@hYY&}
+          \item Zkontrolujte obsah obou souborů a ověřte si, že jsem klíče přidány: \\
+            {\verb&ssh user@hYY "cat ~user/.ssh/authorized_keys"&} \\
+            {\verb&ssh root@hYY "cat /root/.ssh/authorized_keys"&}
         \end{itemize}
       \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na vzdálený počítač hYY.
       Vzdálená sezení opět ukončete příkazem {\tt exit} nebo stiskem {\tt Ctrl-D}.
@@ -163,7 +166,7 @@ V této budeme analyzovat zabezpečený přenos pomocí TLS (Transport Layer Sec
 
     \begin{enumerate}
       \item V prohlížeči Firefox otevřete stránku  \verb|wis.fit.vutbr.cz|.
-      \item Klikněte na ikonku zámku nalevo od URL a~zjistěte, jaká šifrovací sada je použita pro dané zabezpečené připojení na. Zobrazte informace o použitém certifikátu.
+      \item Klikněte na ikonku zámku nalevo od URL a~zjistěte, jaká šifrovací sada je použita pro dané zabezpečené připojení k serveru. Zobrazte informace o použitém certifikátu.
       Požadované údaje vyplňte do protokolu.
       \item V menu \emph{Edit » Settings » Privacy \& Security} v sekci
         \emph{Certificates} zobrazte certifikáty autorit, kterým důvěřujete. Do protokolu vypište názvy alespoň tří z nich.
