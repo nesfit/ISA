@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{url}
+\usepackage{multirow}
 
 \title{Zabezpečený přenos dat\\
 {\bf\large ISA - Laboratorní cvičení č.2}\\
@@ -27,7 +28,7 @@ Skupina (číslo nebo čas):\\
 Datum:
 
 \section{Synchronizace času pomocí NTP}
-{\bf 1.2} Nakonfigurované servery NTP\\
+{\bf 1.2} Nakonfigurované servery NTP:\\
         
 NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
 NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm}} \\
@@ -37,7 +38,7 @@ NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm
 \section{Zabezpečený vzdálený přístup pomocí SSH}
 \textbf{2.4 e)} Uveďte, jaké zajímavé informace lze vyčíst z odchycené komunikace SSH:
 
-\vskip 6em
+\vskip 5em
 %\underline{\hspace{16cm}}
 %~\\
 
@@ -45,14 +46,15 @@ NTP server: \underline{\hspace{4cm}}\hspace{1cm} stratum: \underline{\hspace{1cm
 
 \begin{tabular}{|r|c|c|c|}
 \hline
-~ & Název souboru & Přístupová práva \\
+~ & \hspace{2.7cm}Význam\hspace{2.7cm}  & Název souboru & Přístupová práva \\
 \hline
-Veřejný klíč: & & \\
+\multirow{2}{*}{Veřejný klíč:} & & & \\[1.3em]
 \hline
-Privátní klíč: & & \\
+\multirow{2}{*}{Privátní klíč:} & & & \\[1.3em]
 \hline
 \end{tabular}
 \vspace{1em}
+
 
 \textbf{2.6 c)-d)} Vyplňte hesla požadovaná při přihlášení na vzdálený počítač:\\
 ~\\
@@ -66,21 +68,22 @@ Heslo vyžadované při druhém přihlášení: & & \\
 \hline
 \end{tabular}
 
-\bigskip
+%\bigskip
+\newpage
 K čemu slouží soubor \texttt{.ssh/authorized\_keys}?\\
 
-\vskip 3em
+\vskip 2em
 Jak je možné přihlásit se na vzdálený počítač po neúspěšné autentizaci klíčem SSH?\\
 
-\vskip 3em
+\vskip 2em
 
 \textbf{2.7 d)} Vypište výstup na terminálu při přihlášení z účtu {\tt root}:\\
 
-\vskip 3em
+\vskip 2.5em
 
 \textbf{2.8 c)} Jak proběhlo opakované přihlášený na vzdálený počítač pomocí SSH? \\
 
-\vskip 3em
+\vskip 2.8em
 
 \section{Zabezpečení transportní vrstvy pomocí TLS}
 
@@ -112,9 +115,9 @@ Hešovací algoritmus: & \\ \hline
 \renewcommand\arraystretch{1}
 \vspace{0.5cm}
 
-\textbf{3.3 b)} Použitá šifrovací sada v prohlížeči (id, name): \\
+\textbf{3.3 b)} Použitá šifrovací sada v prohlížeči (id, name): \underline{\hspace{7cm}} \\ 
 
-\vskip 1em
+%\vskip 1em
 Informace o certifikátu:\\
 
 \renewcommand\arraystretch{1.3}

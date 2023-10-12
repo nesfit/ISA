@@ -83,6 +83,9 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
     \end{enumerate}
 
   \item Vytvoření veřejného a privátního klíče pro službu SSH:
+
+  \textbf{Pozn.:} Klíče budete vytvářet na \textbf{svém počítači}. Podle promptu \verb|uzivatel@hXX| si vždy ověřte, zda jste přihlášen jako
+  uživatel {\tt user} nebo {\tt root} a že \verb|XX| odpovídá číslu vašeho počítače.
     \begin{enumerate}
       \item Jako uživatel {\tt user} vygenerujte příkazem \verb|$ ssh-keygen -C <login>@user|\footnote{Řetězec {\tt <login>} nahraďte svým loginem, např. xstudent00.} implicitní klíč pro uživatele {\tt user}. Ponechte implicitní názvy souborů pro uložení klíčů. Zvolte heslo o délce alespoň osmi znaků, například \texttt{fitvutisa}. Heslo se používá pro přístup k soukromému klíči.
       \item Jako uživatel {\tt root} vygenerujte příkazem \verb|# ssh-keygen -N "" -C <login>@root|
@@ -103,6 +106,7 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
             {\verb&cat /root/.ssh/*.pub | ssh root@hYY "cat >> .ssh/authorized_keys"&}
         \end{itemize}
       \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na vzdálený počítač hYY.
+      Vzdálená sezení opět ukončete příkazem {\tt exit} nebo stiskem {\tt Ctrl-D}.
 
       \item Do protokolu uveďte, jaká hesla bylo nutné zadat při přihlášení. Vysvětlete význam souboru \texttt{authorized\_keys}.
       \item Zkuste opakovaně zadat špatné heslo pro přístup ke klíči. Do protokolu napište, jaké heslo bude po vás požadovat SSH k připojení na vzdálený počítač. Při experimentu použijte režim verbose (\texttt{ssh -v}).
@@ -120,7 +124,7 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
     \end{enumerate}
   \item Opakované použití klíče zabezpečeného heslem pomocí agenta SSH.
     \begin{enumerate}
-      \item Otevřete si nový unixový terminál pod uživatelem {\tt user}. Pomocí příkazu \verb|env| ověřte, jak je nastavená proměnná \verb|SSH_AUTH_SOCK|.
+      \item Otevřete si \textbf{nový unixový terminál} pod uživatelem {\tt user}. Pomocí příkazu \verb|env| ověřte, jak je nastavená proměnná \verb|SSH_AUTH_SOCK|.
       \item Přihlaste se znovu k sousednímu počítači hYY.
       \item Odhlaste se a znovu přihlašte na sousední počítač. Jak proběhlo přihlášení? Výsledek zapište do protokolu.
     \end{enumerate}
@@ -135,7 +139,7 @@ V této budeme analyzovat zabezpečený přenos pomocí TLS (Transport Layer Sec
       \item Pomocí programu {\tt telnet} se připojte k fakultnímu webovému
         serveru: \\ \verb|telnet nes.fit.vutbr.cz 80|.
       \item V programu Wireshark pozorujte navázání spojení pomocí trojcestné synchronizace TCP.
-      \item Zašlete serveru požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem. V terminálu pozorujte odpověď.
+      \item Zašlete serveru požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem -- tj. je nutné 2x stitknout ENTER. V terminálu pozorujte odpověď.
       \item Zobrazte komunikace HTTP v programu Wireshark.  Do~protokolu uveďte, zda je možné vidět obsah odchycené komunikace.
     \end{enumerate}
 
@@ -146,7 +150,7 @@ V této budeme analyzovat zabezpečený přenos pomocí TLS (Transport Layer Sec
 
       \item V programu Wireshark pozorujte navázání spojení TCP a TLS. Jak je možné z odchycené komunikace zjistit jméno serveru? Zapište odpověď do protokolu.
 
-      \item Pomocí programu \texttt{openssl} zašlete webovému serveru FIT požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem. V terminálu pozorujte odpověď.
+      \item Pomocí programu \texttt{openssl} zašlete webovému serveru FIT požadavek protokolem HTTP, např. \verb|GET / HTTP/1.0|. Dotaz ukončete prázdným řádkem (opět 2x ENTER). V terminálu pozorujte odpověď.
 
       \item Zobrazte tuto odchycenou komunikaci ve Wiresharku.  Do~protokolu uveďte, zda je možné přečíst obsah komunikace. 
 
