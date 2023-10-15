@@ -47,7 +47,7 @@
 %\newpage
 %\section{Laboratorní úlohy}
 \section{Synchronizace času pomocí protokolu NTP}
-Pro automatizovanou synchronizaci hodin na síťových zařízeních se využívá protokol NTP (Network Time Protocol), viz kapitola \ref{ntp} v laboratorním manuálu. Správná synchronizace  času je nezbytná pro zajištění bezpečnosti zejména kvůli časovým razítkům omezujícím platnost klíčů, certifikátů či elektronických podpisů.
+Pro automatizovanou synchronizaci hodin na síťových zařízeních se využívá protokol NTP (Network Time Protocol), viz kapitolu \ref{ntp} v laboratorním manuálu. Správná synchronizace  času je nezbytná pro zajištění bezpečnosti zejména kvůli časovým razítkům omezujícím platnost klíčů, certifikátů či elektronických podpisů.
 
 \begin{enumerate}
   \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda na počítači běží služba \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Příkazem {\tt chronyc -n sources} zkontrolujte seznam serverů, které váš počítač používá
