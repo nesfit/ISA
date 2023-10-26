@@ -82,7 +82,7 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
 
   \item Bezpečné připojení na vzdálený počítač bez autentizačních klíčů (jako uživatel {\tt user}):
     \begin{enumerate}
-      \item Spusťte program Wireshark a zachytávejte komunikaci na portu 22 (rozhraní enp2s0).
+      \item Spusťte program Wireshark\footnote{Pro odchyt paketů musí být Wireshark spuštěn pro uživatelem {\tt root}.} a zachytávejte komunikaci na portu 22 (rozhraní enp2s0).
       \item Přihlaste se pomocí {\tt ssh} na počítač svého souseda hYY (např. h01): příkaz
         {\tt ssh user@hYY. netlab.fit.vutbr.cz}. Zadejte heslo uživatele {\tt user} v OS {\tt user4lab}.
       \item Na vzdáleném počítači zadejte libovolný příkaz, např. výpis manuálové stránky ssh ({\tt man ssh}), obsahu adresáře ({\tt ls}) či login aktuálně uživatele ({\tt whoami}).

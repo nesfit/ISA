@@ -1,11 +1,14 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[czech]{babel}
 \usepackage[left=2cm,top=3cm,text={17cm,24cm}]{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{multirow}
+\usepackage{array}
 \usepackage{url}
+\renewcommand{\arraystretch}{1.27}
 
 \title{Systém DNS\\
 {\bf\large ISA - Laboratorní cvičení č.3}\\
@@ -27,81 +30,105 @@ Skupina (číslo nebo čas):\\
 Datum:
 
 \section{Služba DNS}
-\textbf{1.2} IPv4 adresa serveru {\tt www.vutbr.cz}: \underline{\hspace{8cm}}\\
+\textbf{1.2} IPv4 adresa serveru {\tt www.vutbr.cz}: \underline{\hspace{5cm}}\\
 
 
-\textbf{1.3} Podle čeho se pozná, ke kterému dotazu DNS patří daná odpověď? \underline{\hspace{25mm}}\\
+\textbf{1.3} Adresa lokálního serveru DNS: \underline{\hspace{55mm}}\\
+\vskip 0.1em
+\hspace*{0.55cm} V jaké části dotazu DNS je zapsána hledaná doména? \underline{\hspace{35mm}}\\
 
-\textbf{1.6} Jaký typ záznamů obsahuje autoritativní servery? \underline{\hspace{25mm}}\\
 
-Autoritativní servery DNS pro doménu \texttt{vutbr.cz}:
+\textbf{1.4} Je dotazovaný server DNS autoritativní pro danou doménu? \textbf{ANO / NE}\\
+\vskip 0.1em
+\hspace*{0.55cm} Je typ odeslaného dotazu DNS rekurzivní? \textbf{ANO / NE}\\
 
-\vskip 4em
+\textbf{1.5} Zjištěné informace z DNS o doméně \texttt{fit.vutbr.cz}:
+\begin{table}[h]
+\begin{tabular}{l|c|c|}
+\hline
+\multicolumn{1}{|l|}{}                                              & Typ záznamu & ~~~~~~~~~~~~~~~~~~~~~ Hodnota ~~~~~~~~~~~~~~~~~~~~~  \\ \hline
+\multicolumn{1}{|l|}{E-mail správce DNS zóny fit.vutbr.cz}       &  & \\ \hline
+\multicolumn{1}{|l|}{Primární server DNS domény fit.vutbr.cz}    &  & \\ \hline
+\multicolumn{1}{|l|}{Sekundární servery DNS domény fit.vutbr.cz} &  & \\
+\multicolumn{1}{|l|}{}                                           &  & \\ 
+\multicolumn{1}{|l|}{}                                           &  & \\ \hline
+\multicolumn{1}{|l|}{Primární poštovní server domény fit.vutbr.cz} & & \\ \hline
+\multicolumn{1}{|l|}{IPv4 adresa serveru www.fit.vutbr.cz}       &  & \\ \hline
+\multicolumn{1}{|l|}{IPv6 adresa serveru www.fit.vutbr.cz}       &  & \\ \hline
+\end{tabular}
+\end{table}
 
-\textbf{1.9} Zjištění typ dotazu DNS? \underline{\hspace{4cm}}\\
-
-\textbf{1.10} Cílová IP adresa paketu dotazu DNS: \underline{\hspace{4cm}}\\
-
-Jak zjistí klient DNS, na který server DNS má posílat dotazy? \underline{\hspace{40mm}}\\
-
-\textbf{1.12.} Primární e-mailový server pro doménu \texttt{fit.vutbr.cz}: \underline{\hspace{45mm}}
+\vspace{-6mm}
 
 \section{Služba Whois}
-\textbf{2.1} Ve kterém roce byla registrována doména {\tt vutbr.cz}? \underline{\hspace{3cm}}\\
+\textbf{2.1} Ve kterém roce byla zaregistrována doména {\tt vutbr.cz}? \underline{\hspace{3cm}}\\
 
-\textbf{2.2} Nakonfigurovaná IPv4 adresa na rozhraní \texttt{enp2s0}: \underline{\hspace{3.8cm}}\\
+\textbf{2.2} IP adresa vašeho počítače (rozhraní \texttt{enp2s0}): \underline{\hspace{3.8cm}}\\
 
-Zjištěná veřejná IPv4 adresa: \underline{\hspace{3.8cm}}\\
+\hspace*{0.55cm} Zjištěná veřejná IP adresa: \underline{\hspace{3.8cm}}\\
 
-Proč se veřejná adresa neshoduje s žádnou adresou nakonfigurovanou na vašem počítači?\\
+\hspace*{0.55cm} Proč se veřejná adresa neshoduje s nakonfigurovanou adresou?\underline{\hspace{65mm}}\\
 
 \vskip 2em
 
-\textbf{2.3} Do jakého rozsahu patří Vaše veřejná IP adresa? \underline{\hspace{3.8cm}} -- \underline{\hspace{3.8cm}}\\
+\textbf{2.3} Do jakého rozsahu patří vaše veřejná IP adresa? \underline{\hspace{3.8cm}} -- \underline{\hspace{3.8cm}}\\
 
-Komu je tento  rozsah přidělen?\hspace*{0.2cm}\underline{\hspace{3.8cm}}
+\hspace*{0.55cm} Komu je tento adresní rozsah přidělen?\hspace*{0.2cm}\underline{\hspace{3.8cm}}
 
 \section{Konfigurace vlastního serveru DNS}
-\textbf{3.14} Výstup příkazu \texttt{nslookup 10.10.10.1}:
+{\bf 3.15} Výstup příkazu \texttt{dig <vaše doména> soa}:
+%\hspace*{0.7cm} Výstup příkazu \texttt{dig <vase domena> soa}:
+{
+\footnotesize\\
+
+\hspace*{0.8cm}ANSWER SECTION:\\
+\vskip 1em
+
+\hspace*{0.8cm}AUTHORITY SECTION:\\
+\vskip 1em
+
+\hspace*{0.8cm}ADDITIONAL SECTION:\\
+\vskip 1em
+
+}
+Výstup příkazu \texttt{dig pcuc.<vaše doména>.cz}:
+{
+\footnotesize\\
+
+\hspace*{0.8cm}ANSWER SECTION:\\
+\vskip 1em
+
+%\hspace*{0.8cm}AUTHORITY SECTION:\\
+%
+%\hspace*{0.8cm}ADDITIONAL SECTION:\\
+%
+}
+Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače:
+{
+\footnotesize\\
+
+\hspace*{0.8cm}ANSWER SECTION:\\
+\vskip 1em
+
+\hspace*{0.8cm}AUTHORITY SECTION:\\
+\vskip 1em
+
+%\hspace*{0.8cm}ADDITIONAL SECTION:\\
+%
+}
+
+\textbf{3.19} Doplňte sekvenční diagram popisující posloupnost dotazů při rezoluci DNS. Do diagramu napište jména a IP adresy serverů DNS, na které dotaz směroval. Využijte výstup z programu {\tt dig} a zachycené komunikace v programu Wireshark. 
 \\
 \\
-\\
-\hspace*{0.7cm} Výstup příkazu \texttt{dig PCUC.xlogin00.cz}:
-\\
-\\
-{\footnotesize \hspace*{0.8cm}ANSWER SECTION:
-\\
-\\
-\\
-\hspace*{0.8cm}AUTHORITY SECTION:
-\\
-\\
-\\
-\hspace*{0.8cm}ADDITIONAL SECTION:}
-\\
-\\
-\\
-\hspace*{0.7cm} Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde xx je číslo vašeho počítače:
-\\
-\\
-{\footnotesize \hspace*{0.8cm}ANSWER SECTION:
-\\
-\\
-\\
-\hspace*{0.8cm}AUTHORITY SECTION:
-\\
-\\
-\\
-\hspace*{0.8cm}ADDITIONAL SECTION:}
-\\
-\\
-\\
-\textbf{3.19} Doplňte diagram popisující posloupnost dotazů DNS zachycených na rozhraních \texttt{loopback} a \texttt{enp2s0}. Do diagramu napište IP adresy serverů DNS, na které dotaz směroval. Uveďte typy dotazů. 
-\\
-\\
-\hspace*{0.8cm}Zadaný příkaz: \texttt{dig }\underline{\hspace{4.5cm}}
+\hspace*{0.8cm}Typ rezoluce: % \textbf{ITERATIVNÍ / REKURZIVNÍ}
 \begin{figure}[h]
 	\centering
-	\includegraphics[bb=0 365 550 130, clip=true]{dia.eps}
+	\includegraphics[scale=0.8]{dns-rezoluce.pdf}
+%	\includegraphics[scale=0.6]{dia.eps}
 \end{figure}
+%\vskip 0.15em
+%\textbf{3.19} Typ rezoluce: \textbf{ITERATIVNÍ / REKURZIVNÍ}\\
+%\vskip 0.15em
+%\hspace*{0.8cm} Počet vyměněných datagramů na localhost: \underline{\hspace{20mm}}\\
 \end{document}
+

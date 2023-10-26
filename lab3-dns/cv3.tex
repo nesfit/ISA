@@ -38,76 +38,111 @@
 \section{Služba DNS}
 Služba DNS slouží k ukládání a vyhledávání záznamů DNS v globálním distribuovaném prostoru DNS. Pro komunikaci využívá protokol DNS. Podrobnější informace ke službě DNS, záznamům DNS a konfiguraci serveru najdete v laboratorním manuálu, kapitola \ref{dns}. 
 \begin{enumerate}
-    \item Spusťte program Wireshark\footnote{Aplikaci Wireshark spuťte jako uživatel \texttt{root} z~příkazové řádky příkazem "\texttt{wireshark \&}".} a zachytávejte komunikaci DNS na rozhraní \texttt{enp2s0}.
-    \item Otevřete terminál a pomocí příkazu \texttt{nslookup -type=a www.vutbr.cz} zjistěte, na jakou IPv4 adresu se překládá doménové jméno \texttt{www.vutbr.cz}. Zjištěnou IPv4 adresu zapište do protokolu.
-    \item Prohlédněte si strukturu dotazů a odpovědí DNS v~programu Wireshark. Podle čeho klient DNS pozná, která odpověď náleží k jakému dotazu? 
-    \item Příkazem \texttt{nslookup -type=soa vutbr.cz} zobrazte záznam SOA naší univerzity. Prohlédněte si políčka, která záznam SOA obsahuje. 
-    \item V~programu Wireshark znovu spusťte zachytávání komunikace DNS.
-    \item Pomocí příkazu \texttt{nslookup -type=<X> <doména>} zjistěte autoritativní servery DNS pro doménu \texttt{vutbr.cz}. Hodnotu \texttt{<X>} nahraďte typem záznamu DNS, které obsahují názvy autoritativních serverů dané domény. Výsledek dotazu zapiště do protokolu.
-    \item Zastavte zachytávání komunikace v~programu Wireshark.
-    \item V~zachyceném provozu prozkoumejte pakety obsahující komunikaci poslední rezoluce DNS.
-    \item Podle příznaku v poli {\tt Flags} zjistěte, zda se jedná o rekurzivní či iterativní dotaz DNS. Zjištěný údaj zapište do protokolu.
-    \item Uveďte, na jakou IP adresu daný dotaz směřoval. Jak zjistí klient adresu serveru DNS, na který bude dotazy směrovat?    \item Zobrazte záznamy typu \texttt{MX} pro doménu \texttt{fit.vutbr.cz}. Zapište do protokolu, jaký je primární e-mailový server pro doménu \texttt{fit.vutbr.cz}.
+    \item Spusťte program Wireshark\footnote{Aplikaci Wireshark spusťte jako uživatel \texttt{root} z~příkazové řádky příkazem "\texttt{wireshark}".} a zachytávejte komunikaci DNS na rozhraní \texttt{enp2s0}.
+    \item Otevřete si nový terminál a pomocí příkazu \texttt{dig www.vutbr.cz a} zjistěte, na jakou IPv4 adresu se překládá doménové jméno \texttt{www.vutbr.cz}. Zjištěnou IPv4 adresu zapište do protokolu.
+    \item Zastavte zachytávání v programu Wireshark a prohlédněte si komunikaci DNS. Zjistěte, na jaký server DNS směřují dotazy DNS z vašeho počítače a v jaké sekci paketu DNS je uvedena hledaná doména. Výsledky zapište do protokolu.
+    \item Z hlavičky DNS, část \texttt{FLAGS} zjistěte, jaký je typ odeslaného dotazu (rekurzivní či iterativní) a zda je dotazovaný server autoritativní (viz příznak v odpovědi DNS). Výsledek zapište do protokolu.  
+    \item Pomocí programu {\tt dig} vyhledejte informace o doméně {\tt fit.vutbr.cz} a zapište je do protokolu. Využijte záznamy \texttt{A, AAAA, SOA, MX} a {\tt NS}.
 \end{enumerate}
 
 \section{Služba Whois}
 \begin{enumerate}
-    \item Zadejte do terminálu příkaz \texttt{whois vutbr.cz}. Prohlédněte si zobrazené informace o doméně. Zapište do protokolu, ve kterém roce byla doména v systému Whois zaregistrována.
-    \item Zjistěte veřejnou IP adresu vašeho počítače. Využijte například  webovou stránku \url{www.fit.vut.cz}, která zobrazí vaši veřejnou IP adresu vpravo dole. Nalezenou adresu zapiště do protokolu. Pomocí příkazu \texttt{ip address show} zjistěte nakonfigurovanou IP adresy vašeho počítače. Nalezené adresy zapište do protokolu a vysvětlete, proč se liší. 
-    \item Pomocí služby Whois zjistěte, do jakého rozsahu IP adres vaše veřejná IP adresa patří a komu byl přidělen. Použijte příkaz \texttt{whois <vase-verejna-IP-adresa>}. Výsledek zapište do protokolu.
+    \item Zadejte do terminálu příkaz \texttt{whois vutbr.cz}. Prohlédněte si zobrazené informace o této doméně. Zapište do protokolu, ve kterém roce byla doména v systému Whois zaregistrována.
+    \item Zjistěte IP adresu vašeho počítače. Využijte například  webovou stránku \url{www.fit.vut.cz}, která zobrazí vaši veřejnou IP adresu vpravo dole. Pomocí příkazu \texttt{ip address show} zjistěte nakonfigurovanou IP adresu vašeho počítače. Adresy zapište do protokolu a vysvětlete, proč se liší. 
+    \item Pomocí služby Whois zjistěte, do jakého rozsahu IP adres patří vaše veřejná IP adresa a komu je rozsah přidělen. Použijte příkaz \texttt{whois <IP-adresa>}. Výsledek zapište do protokolu.
 \end{enumerate}
-
-%\section{Blokování vybraných domén}
-%\begin{enumerate}
-%	\item Do souboru \texttt{/etc/hosts} přidejte následující řádek:\\
-%    \verb|0.0.0.0    www.facebook.com|
-%    \item Ve webovém prohlížeči zadejte do adresního řádku \url{www.facebook.com}. Podařilo se Vám stránku zobrazit? Pokud ano, restartujte webový prohlížeč, aby se vymazala DNS mezipaměť webového prohlížeče, a zkuste znovu.
-%    \item Zamyslete se nad slabinami tohoto řešení omezení přístupu na webové stránky. Jak lze toto řešení (jednoduše) obejít?
-%\end{enumerate}
 
 \section{Konfigurace vlastního DNS serveru}
 \begin{enumerate}
-  \item Prostudujte si začátek podkapitoly \ref{sec:vlastni_zona} z laboratorního manuálu.
-  \item Zvolte si jméno vlastní doménu ve tvaru {\tt xlogin00.cz}, například {\tt xnovak01.cz}. Název domény, tj. řetězec {\tt xlogin00.cz}, bude využívat v názvech souborů a v konfiguraci.
+  \item Prostudujte si začátek podkapitoly \ref{sec:vlastni_zona} z laboratorního manuálu. V následující části budeme konfigurovat vlastní DNS zónu na DNS serveru BIND.
+  \item Zvolte si název vlastní doménu ve tvaru {\tt xlogin00.cz}, kde místo řetězce {\tt xlogin00} použijte svůj vlastní login, například {\tt xnovak01.cz}. 
 
-\item Pro svou doménu vytvořte zónový soubor dle následujících instrukcí (jako uživatel {\tt root}):
+  \item Jako uživatel {\tt root} zkopírujte šablonu zónového souboru {\tt /root/isa3/template.dns.zone} do adresáře {\tt /var/named}. Přejmenujte soubor se šablonou na název vaší domény {\tt xlogin00.cz}.
+  \item Upravte zónový soubor vaší domény {\tt xlogin00.cz} tak, aby obsahoval následující informace:
     \begin{enumerate}
-      \item Šablonu přímého zónového souboru najdete v souboru {\tt /root/isa3/template.dns.zone}. Zkopírujte tento soubor do složky {\tt /var/named} pod novým jménem "xlogin00.cz".
-      \item V~nově vytvořeném souboru {\tt /var/named/xlogin00.cz} upravte záznam SOA pro svou doménu {\tt xlogin00.cz}. Jméno primárního serveru DNS bude "{\tt ns1.xlogin00.cz.}". \rm E-mailovou adresu správce nastavte na hodnotu "{\tt admin.xlogin00.cz.}"\rm \footnote{V záznamu SOA se znak "@" v~e-mailové adrese nahrazuje znakem ".".}.
-      \item V záznamu SOA aktualizujte sériové číslo, aby odpovídalo dnešnímu datu ve tvaru {\tt yyyymmdd}.
-      \item Vytvořte záznam NS pro svou doménu. Záznam ukazuje na váš server "{\tt ns1.xlogin00.cz.}"\rm.
-      \item Pro server "{\tt ns1.xlogin00.cz.}"\rm \; vytvořte záznam A, který se odkazuje na IP adresu Vašeho počítače, tj. adresu na rozhraní {\tt enp2s0}. 
-      \item Do zónového souboru přidejte další záznam A, který ukazuje na učitelský počítač v~laboratoři. Záznam zadejte ve tvaru: \verb|PCUC    IN    A    10.10.10.1|
-      \item Přidejte další záznamy A, které ukazují na tři libovolné počítače v~laboratoři, např. PC01, PC02 a PC03.
-      \item Přidejte záznam CNAME, který vytvoří alias s názvem {\tt server} pro počítač {\tt ns1.xlogin00.cz.}
-      \item V~případě zájmu nakonfigurujte pro doménu překlad na adresy IPv6 (záznamy AAAA).
+      \item název primárního serveru DNS bude  {\tt ns1.xlogin00.cz},
+      \item e-mailová adresa na správce DNS bude {\tt admin@xlogin00.cz},
+      \item sériové číslo záznamu SOA zapište ve tvaru {\tt yyyymmdd}, které odpovídá datu poslední změny, 
+      \item vytvořte překlad doménového jména serveru {\tt ns1.xlogin00.cz} na IP adresu vašeho počítače, 
+      \item vytvořte překlad doménového jména {\tt pcuc.xlogin00.cz} na IP adresu {\tt 10.10.10.1},
+      \item vytvořte alias pro DNS server se jménem {\tt server.xlogin00.cz}. 
     \end{enumerate}
+  \item Tyto úpravy zahrnují vytvoření či úpravu záznamů typu SOA, NS, A a CNAME. Příklad zónového souboru pro doménu {\tt example00.cz} je níže:
+\begin{verbatim}
+$TTL   3600
+@      IN  SOA    ns1.example00.cz. admin.example00.cz. (
+                     2016072701        ; serial number
+                     3600              ; refresh period
+                     600               ; retry period
+                     604800            ; expire time
+                     1800              ; minimum ttl
+                  )
+@       IN  NS    ns1.example00.cz.
+ns1     IN  A     192.168.0.1
+pc1     IN  A     192.168.0.2
+webapp  IN  CNAME ns1.example00.cz.
+\end{verbatim}
   
-  \item Nyní upravte konfigurační soubor {\tt /etc/named.conf}. Při úpravách se můžete inspirovat ukázkovým konfiguračním souborem {\tt /root/isa3/named.conf.local}. Proveďte následující úpravy:
-    \begin{itemize}
-      \item Vytvořte novou zónu pro vaši doménu {\tt xlogin.cz}. Zónu vložte téměř na konec souboru před klíčové slovo {\tt include}.
-      \item Doplňte absolutní cestu k~vašemu zónovému souboru \texttt{xlogin00.cz}.
-    \end{itemize}
-  \item Spusťte server DNS příkazem {\tt systemctl start named.service}. Příkazem {\tt systemctl status named} ověříte, zda služba správně běží. Chyby související s IPv6 můžete ignorovat.
-  
-  \item Po úspěšném spuštění serveru DNS nakonfigurujte reverzní překlad pro vaši doménu. Zónový soubor pro reverzní doménu {\tt 10.10.10.in-addr.arpa.} vytvořte následujícím způsobem:
-    \begin{enumerate}
-      \item Jako šablonu zónového souboru pro reverzní překlad použijte soubor {\tt /root/isa3/temp\-late.dns.zone}.
-            Zkopírujte tento soubor do složky {\tt /var/named} pod názvem "10.10.10".
-      \item V~nově vytvořeném souboru {\tt /var/named/10.10.10} upravte záznam SOA pro doménu {\tt 10.10.10.in-addr.arpa.} Autoritativní server bude opět "{\tt ns1.xlogin00.cz.}"\rm. E-mailová adresa správce zůstává "{\tt admin.xlogin00.cz.}"\rm.
-      \item V záznamu SOA aktualizujte sériové číslo, aby odpovídalo dnešnímu datu.
-      \item Vytvořte záznam NS, který ukazuje na autoritativní server "{\tt ns1.xlogin00.cz.}"\rm.
-      \item Přidejte záznam PTR, který mapuje IP adresu vašeho počítače na doménové jméno autoritativního serveru {\tt ns1.xlogin00.cz.}
-      \item Přidejte další záznam PTR, který ukazuje na učitelský počítač v~laboratoři. Záznam zadejte ve tvaru:
-            \verb|1    IN    PTR    PCUC.xlogin00.cz.|
-      \item Přidejte další tři záznamy PTR, které ukazují na vybrané tři počítače v~laboratoři, např. PC01, PC02 a PC03. IP adresy počítačů musí odpovídat názvům, které jsou uvedeny v záznamech A zónového souboru {\tt xlogin.cz}.
-      \item V~případě zájmu nakonfigurujte záznamy PTR pro revezní překlad z~adres IPv6.
-    \end{enumerate} 
+\item Upravte konfigurační soubor {\tt /etc/named.conf} serveru DNS. Vložte do něho odkaz na vytvořený zónový soubor pro vaši doménu {\tt xlogin00.cz}. Zónu vložte na konec souboru před klíčové slovo {\tt include}. Při vytvoření nové zóny v konfiguračním souboru DNS se můžete inspirovat ukázkovým konfiguračním souborem {\tt /root/isa3/named.conf.local}, případně následujícím příkladem:
+\begin{verbatim}
+zone "xlogin00.cz" IN {
+       type master;
+       file "/var/named/xlogin00.cz";
+};
+\end{verbatim}
+  \item Spusťte server DNS příkazem {\tt systemctl start named.service}. Příkazem {\tt systemctl status named} ověřte, zda služba správně běží\footnote{Pro kontrolu syntaxe zónového souboru a konfiguračního souboru DNS lze také použít nástroje {\tt named-checkzone} a {\tt named-checkconf}, viz {\tt man named-checkzone} a {\tt man named-checkconf}.}. Chyby související s IPv6 můžete ignorovat. Pokud budete chtít službu restartovat, použijte příkaz {\tt systemctl restart named.service}.
 
-  \item V~souboru {\tt /etc/named.conf} vytvořte novou zónu "10.10.10.in-addr.arpa". Vložte ji téměř na konec souboru před klíčové slovo {\tt include} a doplňte absolutní cestu k příslušnému zónovému souboru.
+  \item V souboru {\tt /etc/resolv.conf} nastavte ručně adresu lokálního serveru DNS na IP adresu {\tt 127.0.0.1}. Řádek {\tt search netlab.fit.vutbr.cz} můžete smazat. 
+  \item Ověřte vytvořenou konfigurace následujícími příkazy. Výstupy vybraných příkazů zapište do laboratorního protokolu. 
+    \begin{itemize}
+        \item {\tt ping server.xlogin00.cz}
+        \item {\tt ping pcuc.xlogin00.cz}
+        \item {\tt dig xlogin00.cz soa}
+        \item {\tt dig xlogin00.cz ns}
+        \item {\tt dig server.xlogin00.cz}
+        \item {\tt dig pcuc.xlogin00.cz}
+    \end{itemize}
+
+  \item Nakonfigurujte také reverzní záznamy pro vaši doménu. Protože počítače ve vaší doméně ukazují na adresy v rozsahu 10.10.10.0/8, bude potřeba vytvořit doménu pro reverzní záznamy se jménem \texttt{10.10.10.in-addr.arpa}. Pro vytvoření využijte šablonu v souboru {\tt /root/isa3/db.127}, kterou zkopírujte do adresáře {\tt /var/named} pod názvem {\tt 10.10.10}.
+  \item Upravte zónový soubor pro reverzní překlad tak, aby obsahoval následující informace:
+    \begin{enumerate}
+      \item jméno primárního serveru DNS bude {\tt ns1.xlogin00.cz}, 
+      \item e-mailová adresa na správce DNS bude {\tt admin@xlogin00.cz},
+      \item sériové číslo záznamu SOA zapište ve tvaru {\tt yyyymmdd}, které odpovídá datu poslední změny,
+      \item vytvořte záznam pro překlad IP adresy vašeho počítače na doménové jméno {\tt ns1.xlogin00.cz},
+      \item vytvořte překlad IP adresy {\tt 10.10.10.1} na doménové jméno {\tt pcuc.xlogin00.cz}.
+    \end{enumerate}
+  \item Tyto úpravy zahrnují záznamy SOA, NS a PTR. Příklad reverzního zónového souboru pro doménu {\tt 0.168.192.in-addr.arpa}:
+    \vspace{-3mm}
+\begin{verbatim}
+$TTL 3600
+@   IN SOA  ns1.example00.cz. admin.example00.cz. (
+               2016072701       ; serial number
+               3600             ; refresh period
+               600              ; retry period
+               604800           ; expire time
+               1800             ; minimum ttl
+            )
+@   IN  NS  ns1.example00.cz.
+1   IN  PTR ns1.example00.cz.
+\end{verbatim}
+  \enlargethispage{2mm}
+\item Do konfiguračního souboru {\tt /etc/named.conf} vložte novou zónu pro doménu "10.10.10.in-addr.arpa". Zónu vložte na konec konfiguračního souboru před klíčové slovo {\tt include}. Příklad reverzní zóny pro doménu {\tt 0.168.192.in-addr.arpa}:
+\begin{verbatim}
+zone "0.168.192.in-addr.arpa" IN {
+       type master;
+       file "/var/named/192.168.0";
+};
+\end{verbatim}
+
   
-  \item Restartujte DNS server příkazem {\tt systemctl restart named.service}.
-    Příkazem {\tt systemctl status named} opět ověřte, zda služba běží. Chyby spjaté s IPv6 můžete ignorovat.
+  \item Restartujte server DNS příkazem {\tt systemctl restart named.service}. Ověřte, zda služba běží správně. 
+
+    \item Následujícími příkazy otestujte nastavení. Výstupy vybraných příkazů zapište do laboratorního protokolu. 
+    \begin{itemize}
+        \item {\tt dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače;
+        \item {\tt dig -x 10.10.10.1}
+    \end{itemize}
 
 %  \item Upravte IP adresu výchozího DNS serveru tímto postupem:
 %  \begin{itemize}
@@ -116,35 +151,43 @@ Služba DNS slouží k ukládání a vyhledávání záznamů DNS v globálním 
 %          \verb|DNS1=127.0.0.1|
     %    \item Vypněte a znovu zapněte síťové rozhraní {\tt enp2s0} příkazy: {\tt ifdown Wired\char`_connection\char`_1}; {\tt ifup Wired\char`_connection\char`_1}
 %  \end{itemize}
-  \item V konfiguraci počítače nastavte manuálně adresu serveru DNS na lokální IP adresu {\tt 127.0.0.1}. Vypněte a zapněte síťové rozhraní. Ověřte, že došlo ke změně výchozího serveru DNS výpisem souboru {\tt /etc/resolv.conf}.
-  \item V~programu Wireshark začněte zachytávat  komunikaci DNS na rozhraní {\tt loopback}.
-  \item V~terminálu zadejte {\tt ping PCUC.xlogin00.cz} a ověřte, zda došlo ke správnému překladu doméno\-vého jména na IP adresu. Prohlédněte si jednotlivé části dotazu a odpovědi DNS zachycené programem Wireshark.
-  \item Otestujte funkčnost dalších záznamů DNS:\\
-    {\tt ping server.xlogin00.cz},\\
-    {\tt ping PC01.xlogin00.cz},\\
-    {\tt nslookup -type=soa xlogin00.cz},\\
-    {\tt dig xlogin00.cz},\\
-    {\tt dig xlogin00.cz NS}. 
-  \item Do protokolu zapište výstupy následujících příkazu:\\
-    {\tt nslookup 10.10.10.1},\\
-    {\tt dig PCUC.xlogin00.cz},\\
-    {\tt dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače.
-  \item Demonstrujte funkčnost vašeho řešení cvičícímu. Ukažte výstupy z následujících dotazů: \\
-    {\tt nslookup PCUC.xlogin00.cz}, \\
-    {\tt nslookup -type=SOA xlogin.cz}, \\
-    {\tt nslookup -type=NS xlogin.cz}, \\
-    {\tt nslookup 10.10.10.1xx}. 
-  \item Ve dvou instancích Wiresharku začněte zachytávat DNS komunikaci na rozhraních {\tt enp2s0} a {\tt Loopback: lo}. Případně můžete použít jedinou instanci Wiresharku, ale musíte zachytávat na obou rozhraních zároveň \footnote{Příkaz \texttt{Ctrl + left\_click} k výběru více rozhraní v programu Wireshark.}. Zachycený provoz seřaďte podle časových razítek.
+
+  % \item V~programu Wireshark začněte zachytávat  komunikaci DNS na rozhraní {\tt loopback}.
+  % \item V~terminálu zadejte {\tt ping PCUC.xlogin00.cz} a ověřte, zda došlo ke správnému překladu doméno\-vého jména na IP adresu. Prohlédněte si jednotlivé části dotazu a odpovědi DNS zachycené programem Wireshark.
+  % \item Otestujte funkčnost dalších záznamů DNS:\\
+  %   {\tt ping server.xlogin00.cz},\\
+  %   {\tt ping PC01.xlogin00.cz},\\
+  %   {\tt nslookup -type=soa xlogin00.cz},\\
+  %   {\tt dig xlogin00.cz},\\
+  %   {\tt dig xlogin00.cz NS}. 
+  % \item Do protokolu zapište výstupy následujících příkazu:\\
+  %   {\tt nslookup 10.10.10.1},\\
+  %   {\tt dig PCUC.xlogin00.cz},\\
+  %   {\tt dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače.
+  % \item Demonstrujte funkčnost vašeho řešení cvičícímu. Ukažte výstupy z následujících dotazů: \\
+  %   {\tt nslookup PCUC.xlogin00.cz}, \\
+  %   {\tt nslookup -type=SOA xlogin.cz}, \\
+  %   {\tt nslookup -type=NS xlogin.cz}, \\
+  %   {\tt nslookup 10.10.10.1xx}. 
+  \item Spusťte záchyt paketů v programu Wireshark.
   
-  \item V~terminálu zadejte rezoluci na doménové jméno, které váš server DNS nezná, např. {\tt dig www. google.com}. Pozor na záznamy uložené DNS cache.
+  \item V~terminálu zadejte příkaz \texttt{dig nes.fit.vutbr.cz +trace}, který provede rezoluci daného doménového jména a vypíše  její podrobný průběh. 
   
   \item Zastavte zachytávání provozu DNS v programu Wireshark.
-  \item Analyzujte zachycený provoz DNS. Zjistěte časovou posloupnost dotazů a odpovědí. Do sekvenčního diagramu v  protokolu vyplňte informace, ke kterým serverům DNS dané dotazy směrovaly. Zamyslete se nad tím, který dotaz byl iterativní a který rekurzivní. 
+
+  \item Proveďte analýzu rezoluce na základě výpisu programu {\tt dig}. Do protokolu zapište, na které servery se dotazy DNS posílali a v jakém pořadí. Do protokolu zapište IP adresy a doménová jména serverů. Výstup můžete zkontrolovat podle zachyceného provozu ve Wiresharku, využijte zobrazení toků v menu {\tt Statistics/Flow Graph}. 
+
+%%zachycený DNS provoz. Do protokolu doplňte abstraktní sekvenční diagram procesu této rezoluce. Jako názvy jednotlivých procesů doplňte názvy kontaktovaných serverů. Do protokolu také uveďte, jaký byl typ DNS rezoluce z pohledu programu \texttt{dig}.
+%%
+%%
+%%
+%% zpráv si \texttt{dig} a \texttt{bind} vyměnili na rozhraní \texttt{localhost}?
 \end{enumerate}
 
 \section{Ukončení práce v~laboratoři}
 \begin{itemize}
-  \item Jako uživatel {\tt root} spuťte dávkou {\tt /root/isa3/clean}, která vyčistí vytvořenou konfiguraci a vypne počítač.
+  \item Jako uživatel {\tt root} spusťte dávkou {\tt /root/isa3/clean}, která vyčistí vytvořenou konfiguraci a vypne počítač.
 \end{itemize}
 
 \end{document}
+
