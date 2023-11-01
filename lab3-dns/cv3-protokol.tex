@@ -71,12 +71,15 @@ Datum:
 
 \vskip 2em
 
-\textbf{2.3} Do jakého rozsahu patří vaše veřejná IP adresa? \underline{\hspace{3.8cm}} -- \underline{\hspace{3.8cm}}\\
+\textbf{2.3} Regionální registrátor (RIR) zodpovědný za daný adresní rozsah: \underline{\hspace{6.2cm}}\\
 
-\hspace*{0.55cm} Komu je tento adresní rozsah přidělen?\hspace*{0.2cm}\underline{\hspace{3.8cm}}
+\hspace*{0.55cm} Koncový uživatel daného adresního rozsahu: \hspace*{0.2cm}\underline{\hspace{9.2cm}}\\
+
+\hspace{0.55cm} Rozsah IP adres přidělený koncovému uživateli: \underline{\hspace{4.2cm}} -- \underline{\hspace{4.2cm}}
+
 
 \section{Konfigurace vlastního serveru DNS}
-{\bf 3.15} Výstup příkazu \texttt{dig <vaše doména> soa}:
+{\bf 3.9} Výstup příkazu \texttt{dig <vaše doména> soa}:
 %\hspace*{0.7cm} Výstup příkazu \texttt{dig <vase domena> soa}:
 {
 \footnotesize\\
@@ -91,8 +94,8 @@ Datum:
 \vskip 1em
 
 }
-Výstup příkazu \texttt{dig pcuc.<vaše doména>.cz}:
-{
+\hspace*{0.8cm}Výstup příkazu \texttt{dig pcuc.<vaše doména>.cz}:
+{ 
 \footnotesize\\
 
 \hspace*{0.8cm}ANSWER SECTION:\\
@@ -103,7 +106,7 @@ Výstup příkazu \texttt{dig pcuc.<vaše doména>.cz}:
 %\hspace*{0.8cm}ADDITIONAL SECTION:\\
 %
 }
-Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače:
+{\bf 3.15} Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače:
 {
 \footnotesize\\
 
@@ -117,10 +120,10 @@ Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho 
 %
 }
 
-\textbf{3.19} Doplňte sekvenční diagram popisující posloupnost dotazů při rezoluci DNS. Do diagramu napište jména a IP adresy serverů DNS, na které dotaz směroval. Využijte výstup z programu {\tt dig} a zachycené komunikace v programu Wireshark. 
+\textbf{3.20} Doplňte sekvenční diagram popisující posloupnost dotazů při rezoluci DNS. Do diagramu napište jména a IP adresy serverů DNS, na které dotaz směroval. Využijte výstup z programu {\tt dig} a zachycené komunikace v programu Wireshark. 
 \\
 \\
-\hspace*{0.8cm}Typ rezoluce: % \textbf{ITERATIVNÍ / REKURZIVNÍ}
+%\hspace*{0.8cm}Typ rezoluce: % \textbf{ITERATIVNÍ / REKURZIVNÍ}
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.8]{dns-rezoluce.pdf}

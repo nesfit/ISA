@@ -49,7 +49,7 @@ Služba DNS slouží k ukládání a vyhledávání záznamů DNS v globálním 
 \begin{enumerate}
     \item Zadejte do terminálu příkaz \texttt{whois vutbr.cz}. Prohlédněte si zobrazené informace o této doméně. Zapište do protokolu, ve kterém roce byla doména v systému Whois zaregistrována.
     \item Zjistěte IP adresu vašeho počítače. Využijte například  webovou stránku \url{www.fit.vut.cz}, která zobrazí vaši veřejnou IP adresu vpravo dole. Pomocí příkazu \texttt{ip address show} zjistěte nakonfigurovanou IP adresu vašeho počítače. Adresy zapište do protokolu a vysvětlete, proč se liší. 
-    \item Pomocí služby Whois zjistěte, do jakého rozsahu IP adres patří vaše veřejná IP adresa a komu je rozsah přidělen. Použijte příkaz \texttt{whois <IP-adresa>}. Výsledek zapište do protokolu.
+    \item Pomocí služby Whois zjistěte, do jakého rozsahu IP adres patří vaše veřejná IP adresa, který regionální registrátor (RIR) daný rozsah spravuje a jakému koncového uživateli je tento rozsah IP adres přidělen. Použijte příkaz \texttt{whois <IP-adresa>}. Výsledek zapište do protokolu.
 \end{enumerate}
 
 \section{Konfigurace vlastního DNS serveru}
@@ -95,12 +95,12 @@ zone "xlogin00.cz" IN {
   \item V souboru {\tt /etc/resolv.conf} nastavte ručně adresu lokálního serveru DNS na IP adresu {\tt 127.0.0.1}. Řádek {\tt search netlab.fit.vutbr.cz} můžete smazat. 
   \item Ověřte vytvořenou konfigurace následujícími příkazy. Výstupy vybraných příkazů zapište do laboratorního protokolu. 
     \begin{itemize}
-        \item {\tt ping server.xlogin00.cz}
-        \item {\tt ping pcuc.xlogin00.cz}
         \item {\tt dig xlogin00.cz soa}
         \item {\tt dig xlogin00.cz ns}
         \item {\tt dig server.xlogin00.cz}
         \item {\tt dig pcuc.xlogin00.cz}
+        \item {\tt ping server.xlogin00.cz}
+        \item {\tt ping pcuc.xlogin00.cz}
     \end{itemize}
 
   \item Nakonfigurujte také reverzní záznamy pro vaši doménu. Protože počítače ve vaší doméně ukazují na adresy v rozsahu 10.10.10.0/8, bude potřeba vytvořit doménu pro reverzní záznamy se jménem \texttt{10.10.10.in-addr.arpa}. Pro vytvoření využijte šablonu v souboru {\tt /root/isa3/db.127}, kterou zkopírujte do adresáře {\tt /var/named} pod názvem {\tt 10.10.10}.
@@ -144,6 +144,16 @@ zone "0.168.192.in-addr.arpa" IN {
         \item {\tt dig -x 10.10.10.1}
     \end{itemize}
 
+  \item Předveďte výsledky konfigurace vyučujícímu pomocí následujících testů:
+\begin{verbatim}
+  dig xlogin00.cz soa       # řetězec xlogin00.cz nahraďte svou doménou
+  dig pcuc.xlogin00.cz
+  dig server.xlogin00.cz
+
+  dig -x 10.10.10.xxx       # zde vložte IP adresu svého počítače
+  dig -x 10.10.10.1
+\end{verbatim}
+
 %  \item Upravte IP adresu výchozího DNS serveru tímto postupem:
 %  \begin{itemize}
 %    \item Na konec souboru {\tt /etc/sysconfig/network-scripts/ifcfg-Wired\char`_connection\char`_1} přidejte následující dva řádky:\\
@@ -175,7 +185,7 @@ zone "0.168.192.in-addr.arpa" IN {
   
   \item Zastavte zachytávání provozu DNS v programu Wireshark.
 
-  \item Proveďte analýzu rezoluce na základě výpisu programu {\tt dig}. Do protokolu zapište, na které servery se dotazy DNS posílali a v jakém pořadí. Do protokolu zapište IP adresy a doménová jména serverů. Výstup můžete zkontrolovat podle zachyceného provozu ve Wiresharku, využijte zobrazení toků v menu {\tt Statistics/Flow Graph}. 
+  \item Proveďte analýzu rezoluce na základě výpisu programu {\tt dig}. Do protokolu zapište, na které servery se dotazy DNS posílali a v jakém pořadí. Do protokolu zapište IP adresy a doménová jména serverů. Výstup můžete také zkontrolovat podle zachyceného provozu ve Wiresharku, využijte zobrazení toků v menu {\tt Statistics/Flow Graph}. 
 
 %%zachycený DNS provoz. Do protokolu doplňte abstraktní sekvenční diagram procesu této rezoluce. Jako názvy jednotlivých procesů doplňte názvy kontaktovaných serverů. Do protokolu také uveďte, jaký byl typ DNS rezoluce z pohledu programu \texttt{dig}.
 %%
