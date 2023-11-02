@@ -40,11 +40,11 @@
 V této úloze budeme konfigurovat klienta SIP pro komunikaci se svým sousedem bez použití ústředny (spojení typu peer-to-peer). Součástí úlohy je také odchycení komunikace a její analýza. Další informace k IP telefonii a protokolu SIP najdete v laboratorním manuálu, kapitola \ref{sip}. 
 
 \begin{enumerate}
-    \item Spusťte aplikaci Jitsi.\footnote{Pokud aplikace není na počítači nainstalovaná, stáhněte ji z \url{https://desktop.jitsi.org/Main/Download.html} a nainstalujte na lokální počítači. Zvolte distribuci Jitsi Desktop Stable pro MS Windows.} 
+    \item Spusťte aplikaci Jitsi.\footnote{Pokud aplikace není na počítači nainstalovaná, stáhněte ji z \url{https://desktop.jitsi.org/Main/Download.html} a nainstalujte na lokální počítači. Zvolte distribuci Jitsi Desktop Stable pro MS Windows.} Povolte přístup přes Windows Firewall. Aplikace běží na pozadí, vyvoláte ji přes ikonu na stavové řádce a položku Show. 
     \item V menu {\tt Tools} $\rightarrow$ {\tt Options} $\rightarrow$ {\tt Accounts} vytvořte nový účet. V poli {\tt Network} zvolte možnost {\tt SIP}. Jako {\tt SIP id} použijte své přihlašovací jméno, {\tt např. xlogin00}, heslo nezadávejte.
     \begin{figure}[h]
     	\centering
-    	\includegraphics[scale=0.37]{img/account_p2p.png}
+    	\includegraphics[scale=0.30]{img/account_p2p.png}
     	\caption{Nastavení účtu SIP.}
     	\label{fig:sip_account}
     \end{figure}
@@ -60,9 +60,10 @@ V této úloze budeme konfigurovat klienta SIP pro komunikaci se svým sousedem 
  
    \item Proveďte analýzu navázaného spojení ve Wiresharku. Využijte menu {\tt Telephony $\rightarrow$ VoIP Calls}, kde uvidíte jednotlivé zaznamenané hovory. Vyberte příslušný hovor a zobrazte jeho průběh volbou {\tt Flow}.  Můžete také přehrát zachycený audio přenos tlačítkem {\tt Play Streams}.
      
-    \item Do protokolu zakreslete průběh komunikace VoIP mezi oběma klienty. Doplňte IP adresy a porty použité pro signalizaci a transport hlasových dat. Analýzou příkazu INVITE zjistíte seznam podporovaných kodeků na straně volajícího. Nalezené informace zapište do protokolu a uveďte, který kodek byl vybrán pro komunikaci. 
+    \item Do protokolu zakreslete průběh komunikace SIP a RTP mezi oběma klienty. Doplňte IP adresy a porty použité pro signalizaci a transport hlasových dat. Analýzou příkazu INVITE zjistíte seznam podporovaných kodeků na straně volajícího. Nalezené informace zapište do protokolu a uveďte, který kodek byl vybrán pro komunikaci. 
 
-      Názvy a čísla podporovaných kodeků si strany vymění protokolem SDP, který je zapouzdřen v těle příkazů {\tt INVITE} a {\tt OK}:
+      {\small
+      Poznámka: Názvy a čísla podporovaných kodeků si strany vymění protokolem SDP, který je zapouzdřen v těle příkazů {\tt INVITE} a {\tt OK}, viz následující obrázek.
 \begin{figure}[h!]
   \centering
   \includegraphics[scale=0.65]{img/3a.png}
@@ -73,7 +74,7 @@ V této úloze budeme konfigurovat klienta SIP pro komunikaci se svým sousedem 
   \centering
   \includegraphics[scale=0.65]{img/3b.png}
 \end{figure}
-
+      }
   \item Po ukončení analýzy zrušte v aplikaci Jitsi vámi vytvořený účet, viz menu {\tt Tools} $\rightarrow$ {\tt Options} $\rightarrow$ {\tt Accounts} $\rightarrow$ {\tt Delete}. 
 \end{enumerate}
 
@@ -94,7 +95,9 @@ V další části cvičení budeme pracovat v aplikaci Jitsi s novým účtem, k
         \label{fig:registration1}
       \end{figure}
       
-    \item V záložce {\tt Connection} nastavte v políčku {\tt Proxy} IP adresu serveru SIP na hodnotu {\tt 10.10.10.222}. Číslo portu zadejte {\tt 5060}, viz obrázek č. \ref{fig:registration2}. 
+    \item V záložce {\tt Connection} nastavte v políčku {\tt Proxy} IP adresu serveru SIP, kterou vám zadá vyučující. 
+      %na hodnotu {\tt 10.10.10.222}.
+      Číslo portu zadejte {\tt 5060}, viz obrázek č. \ref{fig:registration2}. 
       \begin{figure}[h!]
         \centering
         \includegraphics[scale=0.6]{img/jitsi-registration2b.png}
