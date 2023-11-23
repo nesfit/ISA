@@ -75,10 +75,10 @@ Obecné informace o systému Syslog můžete najít v laboratorním manuálu, ka
   tail -f /var/log/messages | grep <doménové_jméno_klienta>    # např.  hXX
 \end{verbatim} 
   \item Ze zachycených paketů zjistěte, na jakém portu a jakým protokolem jsou zprávy Syslog zasílány.
-  \item Na klientovi otevřete nový terminál. Zde se přihlašte a odhlašte jako {\tt root}, což způsobí vygenerování událostí Syslog, které jsou pak zaslány na server. Do protokolu zapište obsah dvou vygenerovaných zpráv souvisejích s autorizací uživatele.
+  \item Na klientovi otevřete nový terminál. Zde se přihlaste a odhlaste jako {\tt root}, což způsobí vygenerování událostí Syslog, které jsou pak zaslány na server. Do protokolu zapište obsah dvou vygenerovaných zpráv souvisejících s autorizací uživatele.
 \end{enumerate}
 
-\section{Monitorání toků NetFlow}
+\section{Monitorování toků NetFlow}
 Systém NetFlow slouží pro sběr a přenos statistik o jednotlivých tocích, které komunikují po síti. Záznamy NetFlow, s~nimiž budeme během cvičení pracovat, jsou pořízeny ze sítě VUT a~anonymizovány. Další informaci o NetFlow je možné najít v laboratorním manuálu, kapitole \ref{netflow}.
 \begin{enumerate}
   \item Na počítači se v adresáři {\tt /root/isa5/} nachází anonymizovaný soubor s daty NetFlow, viz soubor \texttt{nfcapd.202211242155.anon}. Tento soubor bude vstupem pro program  {\tt nfdump}, který využijeme pro prohledávání záznamů NetFlow.
@@ -135,7 +135,7 @@ Protokol ICMP slouží pro dohledávání problémů v počítačové síti na v
 \begin{verbatim}
   ping -s 1500 -M do www.fit.vutbr.cz    # příklad testu        
 \end{verbatim}
-    \item Pro testování maximální velikosti IPv6 datagramu se přihlašte pomocí {\tt ssh} na svůj studentský účet na serveru {\tt merlin.fit.vutbr.cz}. Pomocí nástroje {\tt ping6} určete maximální velikost IPv6 datagramu na cestě k serveru \texttt{www.fit.vutbr.cz}.
+    \item Pro testování maximální velikosti IPv6 datagramu se přihlaste pomocí {\tt ssh} na svůj studentský účet na serveru {\tt merlin.fit.vutbr.cz}. Pomocí nástroje {\tt ping6} určete maximální velikost IPv6 datagramu na cestě k serveru \texttt{www.fit.vutbr.cz}.
     \item Analýzou paketů ICMP  zjistěte zapouzdření zpráv ICMP a velikost jednotlivých vrstev.
     \item Výsledné hodnoty zapište do protokolu. 
   \end{enumerate}
