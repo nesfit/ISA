@@ -35,8 +35,19 @@ Datum:\\
         \item IP adresa a port klienta:
         \item Transportní protokol: 
     \end{itemize}
-    \item [1.11] Vypište hodnoty políček {\tt FACILITY} a {\tt SEVERITY} ve vámi vybraném paketu Syslog.
-    \vspace{15mm}
+  \item [1.11]  Do následující tabulky vyplňte hodnoty z hlavičky a těla zpráv Syslog týkající se přihlášení {\tt root}:
+    
+    \begin{tabular}{|p{3cm}|p{3cm}|p{92mm}|}
+      \hline
+      \bf Facility & \bf Severity & \bf Message (without timestamp)\\
+      \hline
+      &&\\
+      &&\\
+      \hline
+      && \\
+      && \\
+      \hline
+    \end{tabular}
 \end{itemize}
 
 \section{Monitorování toků NetFlow}
@@ -46,8 +57,8 @@ Datum:\\
 
 \begin{tabular}{|p{2cm}|p{3cm}|c||p{2cm}|p{3cm}|c|}
   \hline
-  \multicolumn{3}{|c||}{Top 3 IPs by sent bytes} & \multicolumn{3}{|c|}{Top 3 IPs received bytes} \\\hline
-IP adresa  & Přeneseno bytů  & \% provozu & IP adresa  & Přeneseno bytů  & \% provozu \\ \hline
+  \multicolumn{3}{|c||}{\bf Top 3 IPs by sent bytes} & \multicolumn{3}{|c|}{\bf Top 3 IPs received bytes} \\\hline
+\bf IP adresa  & \bf Přeneseno bytů  &  \bf\% provozu & \bf IP adresa  & \bf Přeneseno bytů  & \bf \% provozu \\ \hline
       &                 &           &&&   \\   \hline
       &                 &           &&&   \\  \hline
       &                 &           &&&   \\   \hline
@@ -57,8 +68,8 @@ IP adresa  & Přeneseno bytů  & \% provozu & IP adresa  & Přeneseno bytů  & \
 
 \begin{tabular}{|p{2cm}|p{3cm}|c||p{2cm}|p{3cm}|c|}
 \hline
-  \multicolumn{3}{|c||}{Top 3 ports by flows} & \multicolumn{3}{|c|}{Top 3 ports by bytes} \\\hline
-Port  & Počet toků  & \% provozu & Port & Počet bytů & \% provozu \\ \hline
+  \multicolumn{3}{|c||}{\bf Top 3 ports by flows} & \multicolumn{3}{|c|}{\bf Top 3 ports by bytes} \\\hline
+\bf Port  & \bf Počet toků  & \bf \% provozu & \bf Port & \bf Počet bytů & \bf \% provozu \\ \hline
       &                  &       &&& \\  \hline
       &                  &       &&& \\  \hline
       &                  &       &&& \\  \hline
@@ -67,25 +78,29 @@ Port  & Počet toků  & \% provozu & Port & Počet bytů & \% provozu \\ \hline
 
 \section{Monitorování sítě pomocí SNMP}
 \begin{itemize}
-    \item [3.1] Základní informace o systému:
-    \begin{itemize}
-        \item Jméno systému:
-         \vspace{3mm}
-        \item Název a verze OS:
-         \vspace{3mm}
-        \item Doba běhu systému (ve dnech, hodinách, min a sec):
-         \vspace{3mm}
-    \end{itemize}
-    \item [3.2] Vypište IP adresu a MAC adresu tří sousedních počítačů získané ze SNMP:
+  \item [3.1] Základní informace o systému:
+  
+      \begin{tabular}{|l|p{6cm}|p{4cm}|}
+        \hline
+        & \bf Hodnota & \bf \bf OID\\
+        \hline
+        Jméno systému & & \\
+        \hline
+        Název a verze OS & & \\
+        \hline
+        Doba běhu systému (d/h/m/s) &&\\
+        \hline
+    \end{tabular}
+    \item [3.2] Vypište IP adresu a MAC adresu implicitní brány a dvou sousedních počítačů získané ze SNMP. Podle prefixu MAC adresy určete výrobce sítové karty:
     
-\begin{tabular}{|p{5cm}|p{7cm}|}
+\begin{tabular}{|p{4cm}|p{6cm}|p{52mm}|}
 \hline
-IP adresa  & MAC adresa   \\ \hline
-      &     \\   \hline
-      &     \\   \hline
-      &     \\   \hline
+\bf IP adresa  & \bf MAC adresa & \bf Výrobce   \\ \hline
+  &    &     \\   \hline
+  &    &     \\   \hline
+  &    &     \\   \hline
 \end{tabular}
-    \item[3.3] Název síťového rozhraní na serveru {\tt isa2} připojeného do internetu: 
+%    \item[3.3] Název síťového rozhraní na serveru {\tt isa2} připojeného do internetu: 
 \end{itemize}
 
 \section{Monitorování sítě pomocí ICMP}
@@ -94,10 +109,10 @@ IP adresa  & MAC adresa   \\ \hline
   \item [4.2] Vypište velikost hlaviček IP, ICMP a maximální velikost obsahu zachycených ICMP paketů:
 
     \vspace{2mm}
-    \begin{tabular}{|c|c|c|c|p{3cm}|}  \hline
-     Protokol  & Hlavička IP (B)  & Hlavička ICMP (B)  & Obsah ICMP (B) & Součet (B) \\ \hline
-     IPv4      &     &       &         &   \\   \hline
-     IPv6      &     &       &         &     \\  \hline
+    \begin{tabular}{|c|c|c|c|}  \hline
+     Protokol  & Hlavička IP (B)  & Hlavička ICMP (B)  & Zjištěná max. velikost obsahu \\ \hline
+     IPv4      &     &       &      \\   \hline
+     IPv6      &     &       &      \\  \hline
 \end{tabular}
 
     \vspace{2mm}
