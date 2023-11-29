@@ -114,7 +114,7 @@ Další informace ke službě SNMP lze najít v laboratorním manuálu, kapitole
 \begin{verbatim}
   snmpwalk -v2c -c public isa2.netlab.fit.vutbr.cz system
 \end{verbatim}
-\item Pomocí protokolu SNMP vypište tabulku ARP na serveru {\tt isa2}. Z dané tabulce zjistěte  hodnoty IP adres a MAC adres alespoň tří počítačů v laboratoři . Pro vyhledání použijte objekt SNMP \texttt{ipNetToMedia}. Přehlednější výpis dat získáte použitím příkazu \texttt{snmptable}, který má stejnou syntax jako \texttt{snmpwalk}. Pro vyhledání OUI pro danou MAC adresu můžete využít portál na adrese \url{https://wireshark.org/tools/oui-lookup.html}. Nalezené informace zapište do protokolu. 
+\item Pomocí protokolu SNMP vypište tabulku ARP na serveru {\tt isa2}. Z dané tabulce zjistěte  hodnoty IP adres a MAC adres implicitní brány a dvou sousedních počítačů v laboratoři. Pro vyhledání použijte objekt SNMP \texttt{ipNetToMedia}. Přehlednější výpis dat získáte použitím příkazu \texttt{snmptable}, který má stejnou syntax jako \texttt{snmpwalk}. Pro vyhledání OUI pro danou MAC adresu můžete využít portál na adrese \url{https://wireshark.org/tools/oui-lookup.html}. Nalezené informace zapište do protokolu. 
 \begin{verbatim}
   snmptable -v2c -c public isa2.netlab.fit.vutbr.cz ipNetToMedia
 \end{verbatim}
