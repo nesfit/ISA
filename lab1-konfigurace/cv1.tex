@@ -60,10 +60,10 @@ pod uživatelem \texttt{root}. Další informace k práci s programem Wireshark 
 \begin{enumerate}
   \item Nastavte v programu Wireshark vstupní filtr (tzv. {\em capture filter}) pro zachytávání provozu HTTP. Uvažujte komunikaci HTTP na standardním portu (viz {\tt /etc/services}). Zapište použitý filtr do protokolu.
   \item Spusťte zachytávání síťového provozu v programu Wireshark.
-  \item Ve webovém prohlížeči si otevřete stránku \texttt{http://cphoto.fit.vutbr.cz}.
+  \item Ve webovém prohlížeči si otevřete stránku \texttt{http://httpforever.com}.
   \item Ukončete zachytávání síťového provozu ve Wiresharku. 
   \item Vypište zdrojovou a cílovou IPv4 adresu a MAC adresu zachycené komunikace\footnote{Komunikaci OCSP můžete ignorovat. Slouží k ověřování certifikátů.}. Vysvětlete, jaký typ síťového zařízení či aplikace daná adresa popisuje.
-  \item Klikněte pravým tlačítkem na libovolný paket komunikace a zobrazte komunikaci TCP (volba {\em Follow TCP stream}) a HTTP (volba {\em Follow HTTP stream}). Popište do protokolu, v čem se liší zobrazená data. 
+  \item Klikněte pravým tlačítkem na libovolný paket komunikace a zobrazte komunikaci TCP (volba {\em Follow TCP stream}) a HTTP (volba {\em Follow HTTP stream}). Popište do protokolu, v čem se liší zobrazená data. Pokud se data neliší, ověřte, že Vámi zachycená komunikace obsahuje data stránky a ne jenom odpověď se stavovým kódem (\texttt{304 Not Modified}, cachovaná odpověď).
   \item Zrušte filtr pro zachytávání provozu.
   \item Spusťte znovu zachytávání síťové komunikace bez použití vstupního filtru.
   \item Pomocí příkaz \texttt{ip neighbour flush dev enp2s0} (spusťte jako {\tt root}) odstraňte ARP záznamy z tabulky ARP. Pomocí příkazu {\tt ping} vygenerujte ICMP na libovolný server.
