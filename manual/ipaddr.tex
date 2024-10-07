@@ -58,9 +58,9 @@ Protokoly IPv4 a IPv6 tedy komunikují v síti nezávisle na sobě, využívají
 \subsubsection{Formátování adres IPv6}
 Adresa IPv6 se na rozdíl od IPv4 adresy zapisuje v hexadecimální podobě. Jedna hexadecimální číslice reprezentuje čtyřbitové číslo, tj. k reprezentaci 128bitové adresy potřebujeme 32 hexadecimálních číslic. V adrese IPv6 se hexadecimální číslice rozdělují do skupin oddělených dvojtečkou (:). Adresu IPv6 tvoří osm čtveřic hexadecimálních číslic. Standardní formát adresy IPv6 je {\tt X:X:X:X:X:X:X:X}, kde {\tt X} je čtveřice hexadecimálních číslic reprezentující 16 bitů. 
 \begin{verbatim}
-Příklady plného zápisu adresy IPv56: 2001:067c:1220:080e:00ad:6c49:759f:3267
-                                     fe80:0000:0000:0000:01cb:0238:26f4:359e
-                                     0000:0000:0000:0000:0000:0000:0000:0001
+Příklady plného zápisu adresy IPv6: 2001:067c:1220:080e:00ad:6c49:759f:3267
+                                    fe80:0000:0000:0000:01cb:0238:26f4:359e
+                                    0000:0000:0000:0000:0000:0000:0000:0001
 \end{verbatim}
 V praxi se zapisují adresy IPv6 ve zjednodušeném formátu. Standard RFC 5952 \cite{rfc5952} definuje pro zápis adresy následující pravidla:
 \begin{enumerate}
@@ -136,7 +136,7 @@ Formát základních typů adres IPv6 je znázorněn v tabulce \ref{obr:IPv6_typ
 
 %V následujícím textu se podíváme na formáty nejběžnějších typů adres IPv6. 
 \subsubsection{Linková adresa IPv6 (LLA, link-local address)}
-Tato adresa se obvykle vytváří automaticky na rozhraní stanice. Používá se pro konfiguraci stanic. Prefix adres LLA je fe80::/10, za kterým následuje 54 nulových bitů a 64bitový identifikátor rozhraní (interface ID).
+Tato adresa se obvykle vytváří automaticky na rozhraní stanice. Používá se pro konfiguraci stanic. Prefix adres LLA je fe80::/10, za kterým následuje 56 nulových bitů a 64bitový identifikátor rozhraní (interface ID).
 \begin{table}[h]
   \begin{center}
     \begin{tabular}{|c|c|c|}
