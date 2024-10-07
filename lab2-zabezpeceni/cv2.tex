@@ -50,7 +50,7 @@
 Pro automatizovanou synchronizaci hodin na síťových zařízeních se využívá protokol NTP (Network Time Protocol), viz kapitolu \ref{ntp} v laboratorním manuálu. Správná synchronizace  času je nezbytná pro zajištění bezpečnosti zejména kvůli časovým razítkům omezujícím platnost klíčů, certifikátů či elektronických podpisů.
 
 \begin{enumerate}
-  \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda na počítači běží služba \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Příkazem {\tt chronyc -n sources} zkontrolujte seznam serverů, které váš počítač používá
+  \item Příkazem {\tt systemctl status chronyd.service} zjistěte, zda na počítači běží služba \texttt{chronyd} pro synchronizaci času pomocí protokolu NTP. Příkazem {\tt chronyc sources} zkontrolujte seznam serverů, které váš počítač používá
     pro synchronizaci času.
 
   \item Do protokolu vyplňte IP adresy nakonfigurovaných serverů NTP. 
@@ -61,7 +61,7 @@ Pro automatizovanou synchronizaci hodin na síťových zařízeních se využív
     nahraďte implicitní server NTP CentOS ({\tt *.centos.pool.ntp.org}) za server na FIT ({\tt ntp.fit.vutbr.cz}), viz {\tt man chrony.conf}.  
   \item Restartujte démona NTP příkazem {\tt systemctl restart chronyd.service}.
   \item Ověřte pomocí příkazu {\tt systemctl status chronyd.service}, zda služba běží. Pokud neběží, zjistěte chybu příkazem {\tt journalctl -u chronyd}. Případnou chybu opravte v konfiguraci a~službu {\tt chronyd} znovu restartujte.
-  \item Pomocí příkazu {\tt chronyc -n sources} ověřte, zda je čas správně synchronizován se serverem NTP na FIT.
+  \item Pomocí příkazu {\tt chronyc sources} ověřte, zda je čas správně synchronizován se serverem NTP na FIT.
 
 \end{enumerate}
 
@@ -105,17 +105,19 @@ Nástroj SSH (Secure Shell) se používá pro bezpečné připojení na vzdálen
     \begin{enumerate}
       \item Oba veřejné klíče zkopírujte na vzdálený počítač hYY do souboru \verb|.ssh/authorized_keys|. Můžete využít následující postup:
         \begin{itemize}
-          \item Klíč uživatele {\tt user} zkopírujte příkazem {\tt ssh-copy-id}, viz {\tt man ssh-copy-id}: \\
+          \item Klíč uživatele {\tt user} zkopírujte příkazem {\tt ssh-copy-id} (viz {\tt man ssh-copy-id}): \\
             {\verb&ssh-copy-id -i ~user/.ssh/id_rsa.pub user@hYY&}
           \item Na vzdáleném počítači nastavte správně přístupová práva k souboru:\\
-            {\verb&ssh user@hYY "chmod g-w ~/.ssh/authorized_keys"&} 
-          \item Zkopírujte na vzdálený počítač také veřejný klíč uživatele {\tt root} (pod uživatelem {\tt root}): \\
+            {\verb&ssh user@hYY "chmod 600 ~/.ssh/authorized_keys"&} 
+          \item Pod uživatelem {\tt root} zkopírujte na vzdálený počítač také veřejný klíč uživatele {\tt root}: \\
             {\verb&ssh-copy-id -i /root/.ssh/id_rsa.pub root@hYY&}
           \item Zkontrolujte obsah obou souborů a ověřte, zda jsou klíče přidány: \\
             {\verb&ssh user@hYY "cat ~user/.ssh/authorized_keys"&} \\
             {\verb&ssh root@hYY "cat /root/.ssh/authorized_keys"&}
         \end{itemize}
-      \item Zkuste se znovu přihlásit jako \texttt{user} i jako \texttt{root} na vzdálený počítač hYY.
+      \item Zkuste se znovu přihlásit (pod uživatelem {\tt user}) jako \texttt{user} i 
+      (pod uživatelem {\tt root})
+      jako \texttt{root} na vzdálený počítač hYY.
       Vzdálená sezení opět ukončete příkazem {\tt exit} nebo stiskem {\tt Ctrl-D}.
 
       \item Do protokolu uveďte, jaká hesla bylo nutné zadat při přihlášení. Vysvětlete význam souboru \texttt{authorized\_keys}.
@@ -209,3 +211,4 @@ V této budeme analyzovat zabezpečený přenos pomocí TLS (Transport Layer Sec
 
 \end{document}
 %% END OF FILE
+
