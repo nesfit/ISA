@@ -8,7 +8,7 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{url}
-\renewcommand{\arraystretch}{1.27}
+\renewcommand{\arraystretch}{2.1}
 
 \title{Systém DNS\\
 {\bf\large ISA - Laboratorní cvičení č.3}\\
@@ -60,26 +60,26 @@ Datum:
 
 \vspace{-6mm}
 
-\section{Služba Whois}
-\textbf{2.1} Ve kterém roce byla zaregistrována doména {\tt vutbr.cz}? \underline{\hspace{3cm}}\\
+% \section{Služba Whois}
+% \textbf{2.1} Ve kterém roce byla zaregistrována doména {\tt vutbr.cz}? \underline{\hspace{3cm}}\\
 
-\textbf{2.2} IP adresa vašeho počítače (rozhraní \texttt{enp2s0}): \underline{\hspace{3.8cm}}\\
+% \textbf{2.2} IP adresa vašeho počítače (rozhraní \texttt{enp2s0}): \underline{\hspace{3.8cm}}\\
 
-\hspace*{0.55cm} Zjištěná veřejná IP adresa: \underline{\hspace{3.8cm}}\\
+% \hspace*{0.55cm} Zjištěná veřejná IP adresa: \underline{\hspace{3.8cm}}\\
 
-\hspace*{0.55cm} Proč se veřejná adresa neshoduje s nakonfigurovanou adresou?\underline{\hspace{65mm}}\\
+% \hspace*{0.55cm} Proč se veřejná adresa neshoduje s nakonfigurovanou adresou?\underline{\hspace{65mm}}\\
 
-\vskip 2em
+% \vskip 2em
 
-\textbf{2.3} Regionální registrátor (RIR) zodpovědný za daný adresní rozsah: \underline{\hspace{6.2cm}}\\
+% \textbf{2.3} Regionální registrátor (RIR) zodpovědný za daný adresní rozsah: \underline{\hspace{6.2cm}}\\
 
-\hspace*{0.55cm} Koncový uživatel daného adresního rozsahu: \hspace*{0.2cm}\underline{\hspace{9.2cm}}\\
+% \hspace*{0.55cm} Koncový uživatel daného adresního rozsahu: \hspace*{0.2cm}\underline{\hspace{9.2cm}}\\
 
-\hspace{0.55cm} Rozsah IP adres přidělený koncovému uživateli: \underline{\hspace{4.2cm}} -- \underline{\hspace{4.2cm}}
+% \hspace{0.55cm} Rozsah IP adres přidělený koncovému uživateli: \underline{\hspace{4.2cm}} -- \underline{\hspace{4.2cm}}
 
 
 \section{Konfigurace vlastního serveru DNS}
-{\bf 3.9} Výstup příkazu \texttt{dig <vaše doména> soa}:
+{\bf 2.9} Výstup příkazu \texttt{dig <vaše doména> soa}:
 %\hspace*{0.7cm} Výstup příkazu \texttt{dig <vase domena> soa}:
 {
 \footnotesize\\
@@ -106,7 +106,7 @@ Datum:
 %\hspace*{0.8cm}ADDITIONAL SECTION:\\
 %
 }
-{\bf 3.15} Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače:
+{\bf 2.15} Výstup příkazu \texttt{dig -x 10.10.10.1xx}, kde {\tt xx} je číslo vašeho počítače:
 {
 \footnotesize\\
 
@@ -120,7 +120,7 @@ Datum:
 %
 }
 
-\textbf{3.20} Doplňte sekvenční diagram popisující posloupnost dotazů při rezoluci DNS. Do diagramu napište jména a IP adresy serverů DNS, na které dotaz směroval. Využijte výstup z programu {\tt dig} a zachycené komunikace v programu Wireshark. 
+\textbf{2.21} Doplňte sekvenční diagram popisující posloupnost dotazů při rezoluci DNS. Do diagramu napište jména a IP adresy serverů DNS, na které dotaz směroval. Využijte výstup z programu {\tt dig} a zachycené komunikace v programu Wireshark. 
 \\
 \\
 %\hspace*{0.8cm}Typ rezoluce: % \textbf{ITERATIVNÍ / REKURZIVNÍ}
