@@ -48,7 +48,7 @@ Služba DNS slouží k~ukládání a~vyhledávání záznamů DNS v~globálním 
 % \section{Služba Whois}
 % \begin{enumerate}
 %     \item Zadejte do terminálu příkaz \texttt{whois vutbr.cz}. Prohlédněte si zobrazené informace o této doméně. Zapište do protokolu, ve kterém roce byla doména v systému Whois zaregistrována.
-%     \item Zjistěte IP adresu vašeho počítače. Využijte například  webovou stránku \url{www.fit.vut.cz}, která zobrazí vaši veřejnou IP adresu vpravo dole. Pomocí příkazu \texttt{ip address show} zjistěte nakonfigurovanou IP adresu vašeho počítače. Adresy zapište do protokolu a vysvětlete, proč se liší.
+%     \item Zjistěte IP adresu vašeho počítače. Využijte například webovou stránku \url{www.fit.vut.cz}, která zobrazí vaši veřejnou IP adresu vpravo dole. Pomocí příkazu \texttt{ip address show} zjistěte nakonfigurovanou IP adresu vašeho počítače. Adresy zapište do protokolu a vysvětlete, proč se liší.
 %     \item Pomocí služby Whois zjistěte, do jakého rozsahu IP adres patří vaše veřejná IP adresa, který regionální registrátor (RIR) daný rozsah spravuje a jakému koncového uživateli je tento rozsah IP adres přidělen. Použijte příkaz \texttt{whois <IP-adresa>}. Výsledek zapište do protokolu.
 % \end{enumerate}
 
@@ -61,7 +61,7 @@ Služba DNS slouží k~ukládání a~vyhledávání záznamů DNS v~globálním 
   \item Upravte zónový soubor vaší domény {\tt xlogin00.cz} tak, aby obsahoval následující informace:
     \begin{enumerate}
       \item hodnota \texttt{TTL},
-      \item název primárního serveru DNS bude  {\tt ns1.xlogin00.cz},
+      \item název primárního serveru DNS bude {\tt ns1.xlogin00.cz},
       \item e-mailová adresa na správce DNS bude {\tt admin@xlogin00.cz},
       \item sériové číslo záznamu SOA zapište ve tvaru {\tt yyyymmdd}, které odpovídá datu poslední změny,
       \item vytvořte překlad doménového jména serveru {\tt ns1.xlogin00.cz} na IP adresu vašeho počítače,
@@ -163,7 +163,7 @@ zone "0.168.192.in-addr.arpa" IN {
     %    \item Vypněte a znovu zapněte síťové rozhraní {\tt enp2s0} příkazy: {\tt ifdown Wired\char`_connection\char`_1}; {\tt ifup Wired\char`_connection\char`_1}
 %  \end{itemize}
 
-  % \item V~programu Wireshark začněte zachytávat  komunikaci DNS na rozhraní {\tt loopback}.
+  % \item V~programu Wireshark začněte zachytávat komunikaci DNS na rozhraní {\tt loopback}.
   % \item V~terminálu zadejte {\tt ping PCUC.xlogin00.cz} a ověřte, zda došlo ke správnému překladu doméno\-vého jména na IP adresu. Prohlédněte si jednotlivé části dotazu a odpovědi DNS zachycené programem Wireshark.
   % \item Otestujte funkčnost dalších záznamů DNS:\\
   %   {\tt ping server.xlogin00.cz},\\
@@ -181,7 +181,7 @@ zone "0.168.192.in-addr.arpa" IN {
   %   {\tt nslookup -type=NS xlogin.cz}, \\
   %   {\tt nslookup 10.10.10.1xx}.
 
-  \item V~terminálu zadejte příkaz \texttt{dig nes.fit.vutbr.cz +trace +nodnssec}, který provede rezoluci daného doménového jména a~vypíše  její podrobný průběh.
+  \item V~terminálu zadejte příkaz \texttt{dig nes.fit.vutbr.cz +trace +nodnssec}, který provede rezoluci daného doménového jména a~vypíše její podrobný průběh.
 
   \item \label{wireshark_step} Spusťte záchyt paketů v~programu Wireshark.
 
