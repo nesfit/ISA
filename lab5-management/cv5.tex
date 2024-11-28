@@ -106,7 +106,7 @@ Protokol SNMP slouží k~získání informací či statistických údajů o~zvol
 \begin{verbatim}
 snmpwalk -v<protokol> -c <community string> <host> <object>
 \end{verbatim}
-Další informace ke službě SNMP lze najít v~laboratorním manuálu, kapitole \ref{snmp}. Pro výpis OID v~numerickém tvaru, použijte přepínač \verb|-On|.
+Další informace ke službě SNMP lze najít v~laboratorním manuálu, kapitole \ref{snmp}. Pro výpis OID v~numerickém tvaru použijte přepínač \verb|-On|.
 
 \begin{enumerate}
 \item Vyhledejte základní informace o~serveru {\tt isa2.netlab.fit.vutbr.cz}.  Použijte příkaz {\tt snmpwalk}\footnote{Pokud příkaz {\tt snmpwalk} není dostupný, doinstalujte balíček \texttt{net-snmp-utils} příkazem \texttt{yum install net-snmp-utils}.} pro vyhledání objektu \texttt{system}. % Pro připojení použijte privátní IP adresu serveru \texttt{10.10.10.1}.
