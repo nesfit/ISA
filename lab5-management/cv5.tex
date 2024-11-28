@@ -53,7 +53,7 @@ Obecné informace o systému Syslog můžete najít v laboratorním manuálu, ka
 \begin{verbatim}
   firewall-cmd --add-port=514/udp
 \end{verbatim}
-  \item  Na klientovi nakonfigurujte démona {\tt rsyslog} tak, aby odesílal veškeré zprávy z klienta na serveru pomocí UDP.
+  \item  Na klientovi nakonfigurujte démona {\tt rsyslog} tak, aby odesílal veškeré zprávy z klienta na server pomocí UDP.
     Do souboru {\tt /etc/rsyslog.conf} přidejte na konec konfiguračního souboru následující pravidlo:
 \begin{verbatim} 
   *.*  @<doménové_jméno_serveru>:<číslo_portu>
