@@ -87,7 +87,7 @@ Systém NetFlow slouží pro sběr a přenos statistik o~jednotlivých tocích, 
       \item Zjistěte v~manuálové stránce, k~čemu slouží přepínače {\tt -r, -s, -n, -O, -A}.
       \item V~části {\tt EXAMPLES} manuálové stránky se podívejte na příklady použití nástroje {\tt nfdump}.
     \end{itemize}
-  \item Vyhledejte deset nejvíce komunikujících uzlů podle počtu odeslaných bajtů. První tři zapište do protokolu.
+  \item Vyhledejte deset nejvíce komunikujících uzlů podle počtu odeslaných bytů. První tři zapište do protokolu.
 \begin{verbatim}
   nfdump -r /root/isa5/nfcapd.202211242155.anon -s srcip/bytes -n 10
 \end{verbatim}
@@ -96,7 +96,7 @@ Systém NetFlow slouží pro sběr a přenos statistik o~jednotlivých tocích, 
 \begin{verbatim}
   nfdump -r /root/isa5/nfcapd.202211242155.anon -s port/bytes
 \end{verbatim}
-  \item Všimněte si rozdílů v~přenosech podle přenesených toků a bajtů. Vypište statistiky použití nejvíce vytížených portů řazené podle počtu toků a bytů do protokolu.
+  \item Všimněte si rozdílů v~přenosech podle přenesených toků a bytů. Vypište statistiky použití nejvíce vytížených portů řazené podle počtu toků a bytů do protokolu.
 \end{enumerate}
 %\end{itemize}
 
