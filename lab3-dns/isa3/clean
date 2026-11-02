@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Reset the lab machine to its default state after a student session.
+
+ISA=/root/isa3
+
+systemctl stop named.service
+
+rm -f  /etc/dhcp/* /etc/radvd.conf /etc/*reso*
+rm -rf /var/named/* /etc/named/*          # -r: also removes data/ dynamic/ slaves/ and anything students created there
+rm -f  /home/user/.ssh/*
+# rm -f /root/.ssh/*                      # root's home is /root, not /home/root (this would also delete authorized_keys)
+
+# default.tar carries correct owner/group/mode (root:named, named:named) and has no etc/ or var/ entries
+tar -C / --overwrite --same-owner --same-permissions -xf "$ISA/default.tar"
+restorecon -RF /etc/named.conf /etc/named /var/named
+
+chmod 0555 "$ISA"
+chmod 0444 "$ISA"/*
+chmod 0544 "$ISA/clean"
+
+systemctl restart NetworkManager.service   # network.service does not exist on CentOS Stream 10
+
+shutdown -h now
